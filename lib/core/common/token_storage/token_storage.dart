@@ -7,5 +7,6 @@ abstract class TokenStorage {
     required String accessToken,
     required String refreshToken,
   });
-  TaskEither<Failure, Tokens> getTokens();
+  TaskEither<Failure, Tokens?> getTokens();
+  TaskEither<Failure, void> deleteTokens();
 }

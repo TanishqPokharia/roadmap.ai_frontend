@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/common/navigation_page.dart';
 import 'package:roadmap_ai/features/auth/presentation/screens/auth_page.dart';
+import 'package:roadmap_ai/features/auth/presentation/screens/splash_page.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/create_post_page.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/post_page.dart';
 import 'package:roadmap_ai/router/routes.dart';
@@ -12,20 +13,15 @@ import 'package:web/web.dart' as web;
 final class AppRouter {
   static GoRouter get router => _router;
   static final GoRouter _router = GoRouter(
-    initialLocation: AppRoutes.home,
-    // redirect: (context, state) {
-    //   // in web check if cookie is set
-    //   // if cookie is set redirect to home
-    //   // else redirect to auth
-    //   if (kIsWeb) {
-    //     final cookie = web.document.cookie;
-    //     if (cookie.isNotEmpty || state.uri.queryParameters['test'] == 'true') {
-    //       return '/home';
-    //     }
-    //   }
-    //   return '/auth';
-    // },
+    initialLocation: AppRoutes.splash,
     routes: [
+      GoRoute(
+        path: '/',
+        name: AppRoutes.splash,
+        pageBuilder: (context, state) {
+          return MaterialPage(child: const SplashPage());
+        },
+      ),
       GoRoute(
         path: '/auth',
         name: AppRoutes.auth,

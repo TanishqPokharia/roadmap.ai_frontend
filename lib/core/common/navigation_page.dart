@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
+import 'package:roadmap_ai/features/auth/presentation/providers/logout/logout_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/explore_page.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/your_posts_page.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/animated_menu_overlay.dart';
@@ -10,14 +13,14 @@ import 'package:roadmap_ai/features/roadmap/presentation/screens/create_roadmap_
 import 'package:roadmap_ai/features/roadmap/presentation/screens/saved_roadmaps_page.dart';
 import 'package:roadmap_ai/themes/colors.dart';
 
-class NavigationPage extends StatefulWidget {
+class NavigationPage extends ConsumerStatefulWidget {
   const NavigationPage({super.key});
 
   @override
-  State<NavigationPage> createState() => _NavigationPageState();
+  ConsumerState<NavigationPage> createState() => _NavigationPageState();
 }
 
-class _NavigationPageState extends State<NavigationPage> {
+class _NavigationPageState extends ConsumerState<NavigationPage> {
   int _selectedPageIndex = 0;
   final _pages = [
     ExplorePage(),
@@ -31,6 +34,22 @@ class _NavigationPageState extends State<NavigationPage> {
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
+
+    ref.listen(logoutNotifierProvider, (prev, next) {
+      if (next.hasError) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(next.error.toString())));
+      }
+
+      if (next.hasValue && next.value == LogoutState.success) {
+        context.go('/auth');
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Logged out successfully')));
+      }
+    });
+
     if (kIsWeb) {
       return Scaffold(
         appBar: PreferredSize(

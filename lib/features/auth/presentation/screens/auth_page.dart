@@ -1,9 +1,11 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
+import 'package:roadmap_ai/features/auth/presentation/providers/login/login_notifier.dart';
 import 'package:roadmap_ai/features/auth/presentation/widgets/feature_item.dart';
 import 'package:roadmap_ai/features/auth/presentation/widgets/log_in_card.dart';
 import 'package:roadmap_ai/features/auth/presentation/widgets/sign_up_card.dart';
@@ -41,6 +43,21 @@ class _AuthPageState extends ConsumerState<AuthPage> {
     final colorScheme = context.colorScheme;
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
+
+    ref.listen(loginNotifierProvider, (previous, next) {
+      if (next.hasError) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(next.error.toString())));
+      }
+
+      if (next.hasValue && next.value != LoginState.initial) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Logged in successfully!')));
+        context.go('/home');
+      }
+    });
 
     return Scaffold(
       body: Stack(

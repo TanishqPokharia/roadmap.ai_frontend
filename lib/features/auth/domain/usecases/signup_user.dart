@@ -13,16 +13,20 @@ class SignupUser implements Usecase<SignupUserParams, void> {
 
   @override
   TaskEither<Failure, void> call(SignupUserParams params) {
-    final signupResult = _repository.signUp(
+    // if on web, no need to save tokens in secure storage
+    if (kIsWeb) {
+      return _repository.signUpWeb(
+        email: params.email,
+        password: params.password,
+        username: params.username,
+      );
+    }
+    final signupResult = _repository.signUpMobile(
       email: params.email,
       password: params.password,
       username: params.username,
     );
 
-    // if on web, no need to save tokens in secure storage
-    if (kIsWeb) {
-      return signupResult;
-    }
     // otherwise store the tokens
     return signupResult.flatMap(
       (tokens) => _tokenStorage.saveTokens(

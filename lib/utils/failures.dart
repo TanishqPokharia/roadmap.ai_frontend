@@ -32,7 +32,7 @@ class ServerFailure extends Failure {
   ServerFailure(super.message);
 
   @override
-  String toString() => 'ServerFailure: $message';
+  String toString() => 'Server Error: $message';
 }
 
 // fix all the below
@@ -41,19 +41,19 @@ class BadRequestFailure extends Failure {
   BadRequestFailure(super.message);
 
   @override
-  String toString() => 'BadRequestFailure: $message';
+  String toString() => 'BadRequest: $message';
 }
 
 class ForbiddenFailure extends Failure {
   ForbiddenFailure(super.message);
 
   @override
-  String toString() => 'ForbiddenFailure: $message';
+  String toString() => 'Forbidden: $message';
 }
 
 class UnknownFailure extends Failure {
   UnknownFailure(super.message);
 
   @override
-  String toString() => 'UnknownFailure: $message';
+  String toString() => 'Unknown: $message';
 }

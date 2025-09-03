@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:roadmap_ai/features/auth/presentation/providers/logout/logout_notifier.dart';
 
-class AnimatedMenuOverlay extends StatefulWidget {
+class AnimatedMenuOverlay extends ConsumerStatefulWidget {
   final VoidCallback onDismiss;
 
   const AnimatedMenuOverlay({super.key, required this.onDismiss});
@@ -9,7 +12,7 @@ class AnimatedMenuOverlay extends StatefulWidget {
   AnimatedMenuOverlayState createState() => AnimatedMenuOverlayState();
 }
 
-class AnimatedMenuOverlayState extends State<AnimatedMenuOverlay>
+class AnimatedMenuOverlayState extends ConsumerState<AnimatedMenuOverlay>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
@@ -56,42 +59,18 @@ class AnimatedMenuOverlayState extends State<AnimatedMenuOverlay>
     // First close the menu with animation
     dismissMenu();
 
-    // Then show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          icon: Icon(Icons.warning_outlined),
-          iconColor: Colors.red,
-          title: Text('Confirm Logout'),
-          content: Text('Are you sure you want to logout?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                // Perform actual logout logic here
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Logged out successfully!'),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
-              },
-              child: Text(
-                'Logout',
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ),
-            ),
-          ],
-        );
-      },
-    );
+    // Add a small delay to ensure the menu is closed before showing dialog
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (!context.mounted) return;
+
+      // Then show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return LogoutAlertDialog();
+        },
+      );
+    });
   }
 
   Widget _buildMenuOption(
@@ -105,7 +84,12 @@ class AnimatedMenuOverlayState extends State<AnimatedMenuOverlay>
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: InkWell(
-        onTap: onTap,
+        onTap: () {
+          // Add safety check before executing tap
+          if (mounted) {
+            onTap();
+          }
+        },
         hoverColor: Theme.of(context).hoverColor,
         splashColor: Theme.of(context).splashColor,
         child: Padding(
@@ -245,6 +229,39 @@ class AnimatedMenuOverlayState extends State<AnimatedMenuOverlay>
           ],
         ),
       ),
+    );
+  }
+}
+
+class LogoutAlertDialog extends ConsumerWidget {
+  const LogoutAlertDialog({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return AlertDialog(
+      icon: Icon(Icons.warning_outlined),
+      iconColor: Colors.red,
+      title: Text('Confirm Logout'),
+      content: Text('Are you sure you want to logout?'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            context.pop();
+          },
+          child: Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            // Use mounted instead of context.mounted since we're in a StatefulWidget
+            ref.read(logoutNotifierProvider.notifier).logout();
+            context.pop();
+          },
+          child: Text(
+            'Logout',
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
+          ),
+        ),
+      ],
     );
   }
 }
