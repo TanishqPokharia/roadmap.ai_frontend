@@ -14,6 +14,7 @@ class RoadmapUtils {
         userId: roadmap.userId,
         title: roadmap.title,
         goals: const [],
+        description: roadmap.description,
       );
     }
 
@@ -52,6 +53,7 @@ class RoadmapUtils {
       id: roadmap.id,
       userId: roadmap.userId,
       title: roadmap.title,
+      description: roadmap.description,
       goals: newGoals,
     );
   }

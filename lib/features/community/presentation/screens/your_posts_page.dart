@@ -118,6 +118,8 @@ class YourPostsPage extends ConsumerWidget {
           id: 'roadmap1',
           userId: currentUser.id,
           title: 'Flutter Development for Beginners',
+          description:
+              'A comprehensive roadmap to learn Flutter development, covering basics to advanced topics.',
           goals: _getDummyGoals(),
         ),
         description:
@@ -134,6 +136,8 @@ class YourPostsPage extends ConsumerWidget {
           id: 'roadmap2',
           userId: currentUser.id,
           title: 'Machine Learning Career Path',
+          description:
+              'A comprehensive roadmap to learn machine learning, covering algorithms, tools, and best practices.',
           goals: _getDummyGoals(),
         ),
         description:
@@ -150,6 +154,8 @@ class YourPostsPage extends ConsumerWidget {
           id: 'roadmap3',
           userId: currentUser.id,
           title: 'Full-Stack Web Development',
+          description:
+              'A comprehensive roadmap to learn full-stack web development, covering frontend and backend technologies.',
           goals: _getDummyGoals(),
         ),
         description:

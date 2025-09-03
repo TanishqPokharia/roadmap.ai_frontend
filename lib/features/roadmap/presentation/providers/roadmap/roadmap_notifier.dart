@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
-import 'package:roadmap_ai/features/community/presentation/screens/post_page.dart';
+import 'package:roadmap_ai/features/roadmap/domain/usecases/generate_roadmap/generate_roadmap.dart';
 
 part 'roadmap_notifier.g.dart';
 
@@ -11,10 +11,20 @@ class RoadmapNotifier extends _$RoadmapNotifier {
     return null;
   }
 
-  Future<void> getRoadmap(String prompt) async {
+  Future<void> getRoadmap(String description) async {
     state = const AsyncLoading();
-    await Future.delayed(Duration(seconds: 2));
-    state = AsyncData(roadmap);
+    final roadmap = await ref
+        .read(generateRoadmapProvider)
+        .call(GenerateRoadmapParams(description: description))
+        .run();
+    roadmap.fold(
+      (failure) {
+        state = AsyncError(failure, StackTrace.current);
+      },
+      (r) {
+        state = AsyncData(r);
+      },
+    );
   }
 
   Future<void> resetRoadmap() async {

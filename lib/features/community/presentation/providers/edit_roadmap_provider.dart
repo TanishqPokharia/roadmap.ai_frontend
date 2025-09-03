@@ -27,6 +27,7 @@ class EditRoadmapNotifier extends _$EditRoadmapNotifier {
       userId: state.userId,
       title: title,
       goals: state.goals,
+      description: state.description,
     );
   }
 
@@ -43,7 +44,9 @@ class EditRoadmapNotifier extends _$EditRoadmapNotifier {
     state = Roadmap(
       id: state.id,
       userId: state.userId,
+
       title: state.title,
+      description: state.description,
       goals: updatedGoals,
     );
   }
@@ -61,6 +64,7 @@ class EditRoadmapNotifier extends _$EditRoadmapNotifier {
       id: state.id,
       userId: state.userId,
       title: state.title,
+      description: state.description,
       goals: updatedGoals,
     );
   }
@@ -75,6 +79,7 @@ class EditRoadmapNotifier extends _$EditRoadmapNotifier {
       id: state.id,
       userId: state.userId,
       title: state.title,
+      description: state.description,
       goals: updatedGoals,
     );
   }
@@ -105,6 +110,7 @@ class EditRoadmapNotifier extends _$EditRoadmapNotifier {
       userId: state.userId,
       title: state.title,
       goals: updatedGoals,
+      description: state.description,
     );
   }
 
@@ -143,6 +149,7 @@ class EditRoadmapNotifier extends _$EditRoadmapNotifier {
       userId: state.userId,
       title: state.title,
       goals: updatedGoals,
+      description: state.description,
     );
   }
 
@@ -164,6 +171,7 @@ class EditRoadmapNotifier extends _$EditRoadmapNotifier {
       userId: state.userId,
       title: state.title,
       goals: updatedGoals,
+      description: state.description,
     );
   }
 
@@ -198,6 +206,7 @@ class EditRoadmapNotifier extends _$EditRoadmapNotifier {
       userId: state.userId,
       title: state.title,
       goals: updatedGoals,
+      description: state.description,
     );
   }
 
@@ -234,6 +243,7 @@ class EditRoadmapNotifier extends _$EditRoadmapNotifier {
       userId: state.userId,
       title: state.title,
       goals: updatedGoals,
+      description: state.description,
     );
   }
 }

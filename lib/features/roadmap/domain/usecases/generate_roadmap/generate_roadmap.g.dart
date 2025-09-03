@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'dio_provider.dart';
+part of 'generate_roadmap.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dioHash() => r'1a305884ef0683e842f0cb42aa9a4babfbeaab6b';
+String _$generateRoadmapHash() => r'ad756aabc98e1bbe0c44cf4627caf6a245bc961d';
 
-/// See also [dio].
-@ProviderFor(dio)
-final dioProvider = AutoDisposeProvider<Dio>.internal(
-  dio,
-  name: r'dioProvider',
+/// See also [generateRoadmap].
+@ProviderFor(generateRoadmap)
+final generateRoadmapProvider = AutoDisposeProvider<GenerateRoadmap>.internal(
+  generateRoadmap,
+  name: r'generateRoadmapProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$dioHash,
+      : _$generateRoadmapHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef DioRef = AutoDisposeProviderRef<Dio>;
+typedef GenerateRoadmapRef = AutoDisposeProviderRef<GenerateRoadmap>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

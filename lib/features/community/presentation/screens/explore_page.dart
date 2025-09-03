@@ -48,6 +48,8 @@ class ExplorePage extends StatelessWidget {
                         'Learn how to scrape data from websites using Python.',
                     roadmap: Roadmap(
                       title: 'Web Scraping in Python Roadmap',
+                      description:
+                          'A comprehensive roadmap to learn web scraping using Python, covering libraries, techniques, and best practices.',
                       userId: '12345',
                       goals: [],
                       id: '1',

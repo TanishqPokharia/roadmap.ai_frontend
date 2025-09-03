@@ -47,7 +47,6 @@ class AuthDatasourceImpl implements AuthDatasource {
       },
       (error, stackTrace) {
         log('Login failed', error: error, stackTrace: stackTrace);
-        if (error is Failure) return error;
         if (error is DioException) {
           if (error.response != null) {
             return httpErrorHandler(error.response!.statusCode ?? 0);
@@ -55,6 +54,8 @@ class AuthDatasourceImpl implements AuthDatasource {
             return UnknownFailure(error.response.toString());
           }
         }
+
+        if (error is Failure) return error;
 
         return UnknownFailure(error.toString());
       },
@@ -82,7 +83,6 @@ class AuthDatasourceImpl implements AuthDatasource {
       },
       (error, stackTrace) {
         log('SignUp failed', error: error, stackTrace: stackTrace);
-        if (error is Failure) return error;
         if (error is DioException) {
           if (error.response != null) {
             return httpErrorHandler(error.response!.statusCode ?? 0);
@@ -90,6 +90,8 @@ class AuthDatasourceImpl implements AuthDatasource {
             return UnknownFailure(error.response.toString());
           }
         }
+
+        if (error is Failure) return error;
 
         return UnknownFailure(error.toString());
       },
@@ -116,7 +118,6 @@ class AuthDatasourceImpl implements AuthDatasource {
       },
       (error, stackTrace) {
         log('isLoggedInWeb check failed', error: error, stackTrace: stackTrace);
-        if (error is Failure) return error;
         if (error is DioException) {
           if (error.response != null) {
             return httpErrorHandler(error.response!.statusCode ?? 0);
@@ -124,6 +125,8 @@ class AuthDatasourceImpl implements AuthDatasource {
             return UnknownFailure(error.response.toString());
           }
         }
+
+        if (error is Failure) return error;
 
         return UnknownFailure(error.toString());
       },
@@ -195,7 +198,6 @@ class AuthDatasourceImpl implements AuthDatasource {
       },
       (error, stackTrace) {
         log('SignUpWeb failed', error: error, stackTrace: stackTrace);
-        if (error is Failure) return error;
         if (error is DioException) {
           if (error.response != null) {
             return httpErrorHandler(error.response!.statusCode ?? 0);
@@ -203,6 +205,7 @@ class AuthDatasourceImpl implements AuthDatasource {
             return UnknownFailure(error.response.toString());
           }
         }
+        if (error is Failure) return error;
 
         return UnknownFailure(error.toString());
       },
@@ -227,7 +230,6 @@ class AuthDatasourceImpl implements AuthDatasource {
       },
       (error, stackTrace) {
         log('LogoutWeb failed', error: error, stackTrace: stackTrace);
-        if (error is Failure) return error;
         if (error is DioException) {
           if (error.response != null) {
             return httpErrorHandler(error.response!.statusCode ?? 0);
@@ -235,6 +237,7 @@ class AuthDatasourceImpl implements AuthDatasource {
             return UnknownFailure(error.response.toString());
           }
         }
+        if (error is Failure) return error;
 
         return UnknownFailure(error.toString());
       },

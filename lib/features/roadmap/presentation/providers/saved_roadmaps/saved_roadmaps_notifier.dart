@@ -17,6 +17,8 @@ class SavedRoadmapsNotifier extends _$SavedRoadmapsNotifier {
       id: 'roadmap2',
       userId: 'user123',
       title: 'Web Development Roadmap',
+      description:
+          'A comprehensive roadmap to learn full-stack web development, covering frontend and backend technologies.',
       goals: [
         Goal(
           id: 'web_goal1',
@@ -71,6 +73,8 @@ class SavedRoadmapsNotifier extends _$SavedRoadmapsNotifier {
       id: 'roadmap3',
       userId: 'user123',
       title: 'Machine Learning Roadmap',
+      description:
+          'A comprehensive roadmap to learn machine learning, covering algorithms, tools, and best practices.',
       goals: [
         Goal(
           id: 'ml_goal1',

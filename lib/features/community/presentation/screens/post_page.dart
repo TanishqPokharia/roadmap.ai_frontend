@@ -10,6 +10,8 @@ final roadmap = Roadmap(
   id: 'postId',
   userId: 'user123',
   title: 'Flutter Development Roadmap',
+  description:
+      'A comprehensive roadmap to learn Flutter development, covering basics to advanced topics.',
   goals: [
     Goal(
       id: 'goal1',

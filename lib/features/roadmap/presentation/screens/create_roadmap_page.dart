@@ -150,30 +150,30 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
           spacing: screenWidth * 0.03,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              spacing: screenWidth * 0.01,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Title',
-                  style: textTheme.titleLarge!.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextField(
-                  controller: _titleController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: buttonColor,
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
-                    hintText: 'Enter roadmap title',
-                    hintStyle: textTheme.bodyLarge!.copyWith(
-                      color: Colors.blueGrey,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            // Column(
+            //   spacing: screenWidth * 0.01,
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     Text(
+            //       'Title',
+            //       style: textTheme.titleLarge!.copyWith(
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //     ),
+            //     TextField(
+            //       controller: _titleController,
+            //       decoration: InputDecoration(
+            //         filled: true,
+            //         fillColor: buttonColor,
+            //         border: OutlineInputBorder(borderSide: BorderSide.none),
+            //         hintText: 'Enter roadmap title',
+            //         hintStyle: textTheme.bodyLarge!.copyWith(
+            //           color: Colors.blueGrey,
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: screenWidth * 0.01,

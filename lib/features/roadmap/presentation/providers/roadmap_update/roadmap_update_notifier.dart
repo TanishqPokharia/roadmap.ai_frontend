@@ -107,6 +107,7 @@ class RoadmapUpdateNotifier extends StateNotifier<Roadmap> {
       id: state.id,
       userId: state.userId,
       title: state.title,
+      description: state.description,
       goals: updatedGoals,
     );
   }
@@ -165,6 +166,7 @@ class RoadmapUpdateNotifier extends StateNotifier<Roadmap> {
       id: state.id,
       userId: state.userId,
       title: state.title,
+      description: state.description,
       goals: updatedGoals,
     );
 
