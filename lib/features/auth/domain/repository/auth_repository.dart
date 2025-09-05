@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:roadmap_ai/features/auth/domain/entities/tokens.dart';
-import 'package:roadmap_ai/utils/failures.dart';
+import 'package:roadmap_ai/core/utils/failures.dart';
 
 abstract class AuthRepository {
   TaskEither<Failure, Tokens> loginMobile({

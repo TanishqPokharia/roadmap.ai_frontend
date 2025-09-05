@@ -5,7 +5,7 @@ import 'package:roadmap_ai/features/auth/data/datasource/impl/auth_datasource_im
 import 'package:roadmap_ai/features/auth/data/datasource/interface/auth_datasource.dart';
 import 'package:roadmap_ai/features/auth/domain/entities/tokens.dart';
 import 'package:roadmap_ai/features/auth/domain/repository/auth_repository.dart';
-import 'package:roadmap_ai/utils/failures.dart';
+import 'package:roadmap_ai/core/utils/failures.dart';
 part 'auth_repository_impl.g.dart';
 
 @riverpod

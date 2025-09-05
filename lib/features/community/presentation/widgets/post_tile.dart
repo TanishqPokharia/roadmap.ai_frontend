@@ -5,7 +5,7 @@ import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/features/community/domain/entities/post.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/post_like_button.dart';
 import 'package:roadmap_ai/router/routes.dart';
-import 'package:roadmap_ai/themes/colors.dart';
+import 'package:roadmap_ai/core/themes/colors.dart';
 
 class PostTile extends StatelessWidget {
   const PostTile({super.key, required this.post});

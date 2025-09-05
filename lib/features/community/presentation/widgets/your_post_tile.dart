@@ -6,7 +6,7 @@ import 'package:roadmap_ai/features/community/presentation/widgets/post_likes_wi
 import 'package:roadmap_ai/features/community/presentation/widgets/post_views_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roadmap_ai/router/routes.dart';
-import 'package:roadmap_ai/themes/colors.dart';
+import 'package:roadmap_ai/core/themes/colors.dart';
 
 class YourPostTile extends StatelessWidget {
   const YourPostTile({super.key, required this.post, required this.views});

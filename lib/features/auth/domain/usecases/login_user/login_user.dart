@@ -6,8 +6,8 @@ import 'package:roadmap_ai/core/common/token_storage/flutter_secure_storage_toke
 import 'package:roadmap_ai/core/common/token_storage/token_storage.dart';
 import 'package:roadmap_ai/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:roadmap_ai/features/auth/domain/repository/auth_repository.dart';
-import 'package:roadmap_ai/utils/failures.dart';
-import 'package:roadmap_ai/utils/usecase.dart';
+import 'package:roadmap_ai/core/utils/failures.dart';
+import 'package:roadmap_ai/core/utils/usecase.dart';
 
 part 'login_user.g.dart';
 

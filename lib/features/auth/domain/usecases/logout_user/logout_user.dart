@@ -4,9 +4,9 @@ import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:roadmap_ai/features/auth/domain/repository/auth_repository.dart';
-import 'package:roadmap_ai/utils/failures.dart';
-import 'package:roadmap_ai/utils/no_params.dart';
-import 'package:roadmap_ai/utils/usecase.dart';
+import 'package:roadmap_ai/core/utils/failures.dart';
+import 'package:roadmap_ai/core/utils/no_params.dart';
+import 'package:roadmap_ai/core/utils/usecase.dart';
 
 part 'logout_user.g.dart';
 

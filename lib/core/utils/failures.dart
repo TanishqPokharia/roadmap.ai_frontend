@@ -51,9 +51,18 @@ class ForbiddenFailure extends Failure {
   String toString() => 'Forbidden: $message';
 }
 
+
+class TimeoutFailure extends Failure {
+  TimeoutFailure(super.message);
+
+  @override
+  String toString() => 'Timeout: $message';
+} 
+
 class UnknownFailure extends Failure {
   UnknownFailure(super.message);
 
   @override
   String toString() => 'Unknown: $message';
 }
+

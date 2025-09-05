@@ -7,8 +7,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/models/roadmap/roadmap.dart';
 import 'package:roadmap_ai/core/common/providers/dio_provider.dart';
 import 'package:roadmap_ai/features/roadmap/data/datasource/interface/roadmap_datasource.dart';
-import 'package:roadmap_ai/utils/failures.dart';
-import 'package:roadmap_ai/utils/http_error_handler.dart';
+import 'package:roadmap_ai/core/utils/failures.dart';
+import 'package:roadmap_ai/core/utils/http_error_handler.dart';
 
 part 'roadmap_datasource_impl.g.dart';
 

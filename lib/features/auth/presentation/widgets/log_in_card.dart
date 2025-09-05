@@ -5,7 +5,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/features/auth/presentation/providers/login/login_notifier.dart';
-import 'package:roadmap_ai/themes/colors.dart';
+import 'package:roadmap_ai/core/themes/colors.dart';
 import 'package:validatorless/validatorless.dart';
 
 class LogInCard extends ConsumerStatefulWidget {

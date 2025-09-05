@@ -4,7 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/token_storage/token_storage.dart';
 import 'package:roadmap_ai/features/auth/domain/entities/tokens.dart';
-import 'package:roadmap_ai/utils/failures.dart';
+import 'package:roadmap_ai/core/utils/failures.dart';
 part 'flutter_secure_storage_token_storage_impl.g.dart';
 
 @riverpod

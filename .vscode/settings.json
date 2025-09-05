@@ -1,3 +1,20 @@
 {
-  "dart.flutterSdkPath": ".fvm/versions/3.32.5"
+  "dart.flutterSdkPath": ".fvm/versions/3.32.5",
+  "dart.runPubGetOnPubspecChanges": "always",
+  "dart.openDevTools": "flutter",
+  "dart.debugExternalLibraries": false,
+  "dart.debugSdkLibraries": false,
+  "dart.analysisServerFolding": true,
+  "dart.enableSdkFormatter": true,
+  "dart.lineLength": 80,
+  "dart.completeFunctionCalls": true,
+  "dart.showTodos": true,
+  "dart.enableSnippets": true,
+  "dart.previewCommitCharacters": true,
+  "dart.enableCompletionCommitCharacters": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:roadmap_ai/core/common/token_storage/token_storage.dart';
 import 'package:roadmap_ai/features/auth/domain/repository/auth_repository.dart';
-import 'package:roadmap_ai/utils/failures.dart';
-import 'package:roadmap_ai/utils/usecase.dart';
+import 'package:roadmap_ai/core/utils/failures.dart';
+import 'package:roadmap_ai/core/utils/usecase.dart';
 import 'package:fpdart/fpdart.dart';
 
 class SignupUser implements Usecase<SignupUserParams, void> {

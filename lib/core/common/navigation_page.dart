@@ -11,7 +11,7 @@ import 'package:roadmap_ai/features/community/presentation/screens/your_posts_pa
 import 'package:roadmap_ai/features/community/presentation/widgets/animated_menu_overlay.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/screens/create_roadmap_page.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/screens/saved_roadmaps_page.dart';
-import 'package:roadmap_ai/themes/colors.dart';
+import 'package:roadmap_ai/core/themes/colors.dart';
 
 class NavigationPage extends ConsumerStatefulWidget {
   const NavigationPage({super.key});

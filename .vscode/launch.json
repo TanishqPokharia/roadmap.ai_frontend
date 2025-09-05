@@ -1,12 +1,8 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    
     "configurations": [
         {
-            "name": "roadmap_ai web",
+            "name": "Launch Flutter Web",
             "type": "dart",
             "request": "launch",
             "program": "lib/main.dart",
@@ -14,23 +10,26 @@
                 "-d",
                 "chrome",
                 "--web-experimental-hot-reload"
-            ],
+            ]
         },
         {
-            "name": "roadmap_ai",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "roadmap_ai (profile mode)",
-            "request": "launch",
+            "name": "Launch Flutter Mobile",
             "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "Flutter (Profile)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
             "flutterMode": "profile"
         },
         {
-            "name": "roadmap_ai (release mode)",
-            "request": "launch",
+            "name": "Flutter (Release)",
             "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
             "flutterMode": "release"
         }
     ]

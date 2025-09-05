@@ -6,7 +6,7 @@ import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/screens/roadmap_update_page.dart';
 import 'package:roadmap_ai/router/routes.dart';
-import 'package:roadmap_ai/themes/colors.dart';
+import 'package:roadmap_ai/core/themes/colors.dart';
 
 class SavedRoadmapTile extends StatelessWidget {
   const SavedRoadmapTile({super.key, required this.roadmap});

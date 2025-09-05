@@ -2,7 +2,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/entities/goal.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/common/entities/subgoal.dart';
-import 'package:roadmap_ai/core/utils/roadmap_utils.dart';
 
 part 'edit_roadmap_provider.g.dart';
 
@@ -16,8 +15,8 @@ class EditRoadmapNotifier extends _$EditRoadmapNotifier {
 
   // Initialize with a cleaned roadmap (no status)
   void initializeWithRoadmap(Roadmap roadmap) {
-    final cleanRoadmap = RoadmapUtils.createSharableRoadmap(roadmap);
-    state = cleanRoadmap;
+    // final cleanRoadmap = RoadmapUtils.createSharableRoadmap(roadmap);
+    state = roadmap;
   }
 
   // Update the roadmap title
@@ -34,7 +33,7 @@ class EditRoadmapNotifier extends _$EditRoadmapNotifier {
   // Add a new goal
   void addGoal() {
     final newGoal = Goal(
-      id: RoadmapUtils.generateId(),
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: 'New Goal',
       subgoals: [],
     );
@@ -89,7 +88,7 @@ class EditRoadmapNotifier extends _$EditRoadmapNotifier {
     final updatedGoals = state.goals.map((goal) {
       if (goal.id == goalId) {
         final newSubgoal = Subgoal(
-          id: RoadmapUtils.generateId(),
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
           title: 'New Subgoal',
           description: 'Description',
           duration: '1 week',

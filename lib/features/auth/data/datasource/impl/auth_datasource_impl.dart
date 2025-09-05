@@ -8,8 +8,8 @@ import 'package:roadmap_ai/core/common/token_storage/flutter_secure_storage_toke
 import 'package:roadmap_ai/core/common/token_storage/token_storage.dart';
 import 'package:roadmap_ai/features/auth/data/datasource/interface/auth_datasource.dart';
 import 'package:roadmap_ai/features/auth/data/models/tokens/tokens.dart';
-import 'package:roadmap_ai/utils/failures.dart';
-import 'package:roadmap_ai/utils/http_error_handler.dart';
+import 'package:roadmap_ai/core/utils/failures.dart';
+import 'package:roadmap_ai/core/utils/http_error_handler.dart';
 
 part 'auth_datasource_impl.g.dart';
 

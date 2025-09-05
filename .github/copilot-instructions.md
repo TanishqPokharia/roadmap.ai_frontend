@@ -28,6 +28,7 @@ Example from `roadmap.dart`, `goal.dart`, and `subgoal.dart` in `features/commun
 ## State Management
 
 - **Riverpod**: Primary state management solution
+  - Use Riverpod codegeneration syntax 
   - Use AsyncValue patterns for handling loading/error states
   - Example: `roadmap_notifier.dart` for roadmap generation state
 
@@ -54,7 +55,7 @@ Example from `roadmap.dart`, `goal.dart`, and `subgoal.dart` in `features/commun
 
 ## Form Handling
 
-- Use `TextField` with controllers for form inputs
+- Use `TextFieldForm` with `Form` for form inputs
 - Wrap with `GestureDetector` for dismissing keyboard when tapping outside
 
 ## Development Workflow
@@ -71,7 +72,7 @@ Example from `roadmap.dart`, `goal.dart`, and `subgoal.dart` in `features/commun
 
 ## Common Issues & Solutions
 
-- **Column Spacing**: Some Column widgets use custom `spacing` property from a package extension
+- **Column Spacing**: Column widgets use `spacing` property which is new and valid
 - **TextField Focus**: If text fields aren't accepting input, check if they're properly wrapped in a parent widget with correct input handling
 
 ## AI Generation
@@ -91,7 +92,7 @@ When adding a new feature:
 
 ## Styling Conventions
 
-- Use `SizedBox` for spacing between widgets
+- Use `spacing` property in Columns/Rows and `SizedBox` in other widgets for spacing
 - Use `EdgeInsets` for padding inside containers
 - Use `TextTheme` from context for consistent text styling
 - Use provided color scheme with withAlpha() for transparency

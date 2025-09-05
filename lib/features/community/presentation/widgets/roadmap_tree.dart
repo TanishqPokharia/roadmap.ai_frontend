@@ -4,6 +4,7 @@ import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/core/common/entities/goal.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/common/entities/subgoal.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RoadmapTree extends StatefulWidget {
   final Roadmap roadmap;
@@ -465,11 +466,33 @@ class _SubgoalNodeState extends State<SubgoalNode> {
                               ),
                               const SizedBox(width: 4),
                               Expanded(
-                                child: Text(
-                                  resource,
-                                  style: textTheme.bodySmall?.copyWith(
-                                    color: colorScheme.primary,
-                                    decoration: TextDecoration.underline,
+                                child: InkWell(
+                                  onTap: () async {
+                                    final uri = Uri.tryParse(resource);
+                                    if (uri != null &&
+                                        await canLaunchUrl(uri)) {
+                                      await launchUrl(
+                                        uri,
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Could not launch resource URL',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: Text(
+                                    resource,
+                                    style: textTheme.bodySmall?.copyWith(
+                                      color: colorScheme.primary,
+                                      decoration: TextDecoration.underline,
+                                    ),
                                   ),
                                 ),
                               ),
