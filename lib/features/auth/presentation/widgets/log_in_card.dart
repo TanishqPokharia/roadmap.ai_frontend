@@ -9,9 +9,9 @@ import 'package:roadmap_ai/core/themes/colors.dart';
 import 'package:validatorless/validatorless.dart';
 
 class LogInCard extends ConsumerStatefulWidget {
-  final VoidCallback? onSignUpTap;
+  final VoidCallback onSignUpTap;
 
-  const LogInCard({super.key, this.onSignUpTap});
+  const LogInCard({super.key, required this.onSignUpTap});
 
   @override
   ConsumerState<LogInCard> createState() => _LogInCardState();
@@ -152,8 +152,8 @@ class _LogInCardState extends ConsumerState<LogInCard> {
                         validator: (value) => Validatorless.multiple([
                           Validatorless.required('Password is required'),
                           Validatorless.min(
-                            6,
-                            'Password must be at least 6 characters',
+                            8,
+                            'Password must be at least 8 characters',
                           ),
                         ])(value),
                         onSaved: (newValue) {
@@ -172,58 +172,47 @@ class _LogInCardState extends ConsumerState<LogInCard> {
                           height: screenHeight * 0.05,
                           child: Consumer(
                             builder: (context, ref, _) {
-                              return ref
-                                  .watch(loginNotifierProvider)
-                                  .maybeWhen(
-                                    orElse: () {
-                                      return FilledButton(
-                                        onPressed: () {
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            _formKey.currentState!.save();
-                                            ref
-                                                .read(
-                                                  loginNotifierProvider
-                                                      .notifier,
-                                                )
-                                                .login(_email, _password);
-                                          }
-                                        },
-                                        child: Text(
-                                          'Login',
-                                          style: textTheme.titleMedium!
-                                              .copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                        ),
-                                      );
-                                    },
-
-                                    loading: () {
-                                      return Container(
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color: colorScheme.primary,
-                                          borderRadius: BorderRadius.circular(
-                                            8,
+                              return switch (ref.watch(loginNotifierProvider)) {
+                                AsyncLoading() => Container(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: colorScheme.primary,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: screenHeight * 0.025,
+                                      height: screenHeight * 0.025,
+                                      child:
+                                          LoadingAnimationWidget.staggeredDotsWave(
+                                            color: Colors.white,
+                                            size: screenHeight * 0.025,
                                           ),
-                                        ),
-                                        child: Center(
-                                          child: SizedBox(
-                                            width: screenHeight * 0.025,
-                                            height: screenHeight * 0.025,
-                                            child:
-                                                LoadingAnimationWidget.staggeredDotsWave(
-                                                  color: Colors.white,
-                                                  size: screenHeight * 0.025,
-                                                ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  );
+                                    ),
+                                  ),
+                                ),
+                                (_) => FilledButton(
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      _formKey.currentState!.save();
+                                      ref
+                                          .read(loginNotifierProvider.notifier)
+                                          .login(
+                                            email: _email,
+                                            password: _password,
+                                          );
+                                    }
+                                  },
+                                  child: Text(
+                                    'Login',
+                                    style: textTheme.titleMedium!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              };
                             },
                           ),
                         );

@@ -12,7 +12,7 @@ class LoginNotifier extends _$LoginNotifier {
     return LoginState.initial;
   }
 
-  void login(String email, String password) async {
+  void login({required String email, required String password}) async {
     state = AsyncLoading();
     final login = await ref
         .read(loginUserProvider)

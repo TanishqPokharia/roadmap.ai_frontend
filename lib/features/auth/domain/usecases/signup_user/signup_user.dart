@@ -1,9 +1,22 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:roadmap_ai/core/common/token_storage/flutter_secure_storage_token_storage_impl.dart';
 import 'package:roadmap_ai/core/common/token_storage/token_storage.dart';
+import 'package:roadmap_ai/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:roadmap_ai/features/auth/domain/repository/auth_repository.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
 import 'package:roadmap_ai/core/utils/usecase.dart';
 import 'package:fpdart/fpdart.dart';
+
+part 'signup_user.g.dart';
+
+@riverpod
+SignupUser signUpUser(Ref ref) {
+  final repository = ref.read(authRepositoryProvider);
+  final tokenStorage = ref.read(tokenStorageProvider);
+  return SignupUser(repository, tokenStorage);
+}
 
 class SignupUser implements Usecase<SignupUserParams, void> {
   final AuthRepository _repository;

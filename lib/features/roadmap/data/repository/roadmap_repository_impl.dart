@@ -24,4 +24,9 @@ class RoadmapRepositoryImpl implements RoadmapRepository {
         .getGeneratedRoadmap(description)
         .map((roadmapModel) => roadmapModel.toEntity());
   }
+
+  @override
+  TaskEither<Failure, void> saveRoadmap(Roadmap roadmap) {
+    return _datasource.saveRoadmap(RoadmapModel.fromEntity(roadmap));
+  }
 }

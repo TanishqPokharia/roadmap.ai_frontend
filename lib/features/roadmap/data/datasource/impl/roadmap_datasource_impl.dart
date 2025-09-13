@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/models/roadmap/roadmap.dart';
-import 'package:roadmap_ai/core/common/providers/dio_provider.dart';
+import 'package:roadmap_ai/core/common/dio/dio_provider.dart';
+import 'package:roadmap_ai/core/utils/datasource_error_handler.dart';
 import 'package:roadmap_ai/features/roadmap/data/datasource/interface/roadmap_datasource.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
 import 'package:roadmap_ai/core/utils/http_error_handler.dart';
@@ -33,19 +32,29 @@ class RoadmapDatasourceImpl implements RoadmapDatasource {
         }
         return RoadmapModel.fromJson(response.data['roadmap']);
       },
-      (error, stackTrace) {
-        log('Roadmap generation failed', error: error, stackTrace: stackTrace);
-        if (error is Failure) return error;
-        if (error is DioException) {
-          if (error.response != null) {
-            return httpErrorHandler(error.response!.statusCode ?? 0);
-          } else {
-            return UnknownFailure(error.response.toString());
-          }
-        }
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'GetGeneratedRoadmap failed',
+      ),
+    );
+  }
 
-        return UnknownFailure(error.toString());
+  @override
+  TaskEither<Failure, void> saveRoadmap(RoadmapModel roadmap) {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.post(
+          "/roadmap/save",
+          data: roadmap.toJson(),
+        );
+        if (response.statusCode != 201) {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
       },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Could not save roadmap',
+      ),
     );
   }
 }

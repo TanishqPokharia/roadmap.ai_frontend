@@ -7,7 +7,7 @@ part of 'edit_roadmap_provider.dart';
 // **************************************************************************
 
 String _$editRoadmapNotifierHash() =>
-    r'd3c870fa956f93e47be48d447060668324a36d02';
+    r'94d7315862b027d2f0bcb55b7373763683d6cdc3';
 
 /// Copied from Dart SDK
 class _SystemHash {

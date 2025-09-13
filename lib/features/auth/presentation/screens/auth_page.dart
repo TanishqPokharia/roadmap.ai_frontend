@@ -5,10 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
+import 'package:roadmap_ai/core/utils/failures.dart';
 import 'package:roadmap_ai/features/auth/presentation/providers/login/login_notifier.dart';
+import 'package:roadmap_ai/features/auth/presentation/providers/signup/signup_notifier.dart';
 import 'package:roadmap_ai/features/auth/presentation/widgets/feature_item.dart';
 import 'package:roadmap_ai/features/auth/presentation/widgets/log_in_card.dart';
 import 'package:roadmap_ai/features/auth/presentation/widgets/sign_up_card.dart';
+import 'package:toastification/toastification.dart';
 import 'package:typewritertext/typewritertext.dart';
 
 class AuthPage extends ConsumerStatefulWidget {
@@ -44,17 +47,51 @@ class _AuthPageState extends ConsumerState<AuthPage> {
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
 
-    ref.listen(loginNotifierProvider, (previous, next) {
-      if (next.hasError) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(next.error.toString())));
+    ref.listen(loginNotifierProvider, (_, next) {
+      if (next is AsyncError) {
+        toastification.show(
+          title: Text('Error'),
+          description: Text((next.error as Failure).message.toString()),
+          autoCloseDuration: Duration(seconds: 3),
+          type: ToastificationType.error,
+          alignment: Alignment.topRight,
+          style: ToastificationStyle.flatColored,
+        ); // snackbar
       }
 
-      if (next.hasValue && next.value != LoginState.initial) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Logged in successfully!')));
+      if (next is AsyncData && next.value != LoginState.initial) {
+        toastification.show(
+          title: Text('Success'),
+          description: Text('Logged in successfully!'),
+          type: ToastificationType.success,
+          autoCloseDuration: Duration(seconds: 3),
+          alignment: Alignment.topRight,
+          style: ToastificationStyle.flatColored,
+        ); // snackbar
+        context.go('/home');
+      }
+    });
+    ref.listen(signupNotifierProvider, (_, next) {
+      if (next is AsyncError) {
+        toastification.show(
+          title: Text('Error'),
+          description: Text((next.error as Failure).message.toString()),
+          autoCloseDuration: Duration(seconds: 3),
+          type: ToastificationType.error,
+          alignment: Alignment.topRight,
+          style: ToastificationStyle.flatColored,
+        ); // snackbar
+      }
+
+      if (next is AsyncData && next.value != SignUpState.initial) {
+        toastification.show(
+          title: Text('Success'),
+          description: Text('Signed up successfully!'),
+          type: ToastificationType.success,
+          autoCloseDuration: Duration(seconds: 3),
+          alignment: Alignment.topRight,
+          style: ToastificationStyle.flatColored,
+        );
         context.go('/home');
       }
     });

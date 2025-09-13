@@ -8,7 +8,7 @@ import 'package:roadmap_ai/core/utils/failures.dart';
 part 'flutter_secure_storage_token_storage_impl.g.dart';
 
 @riverpod
-FlutterSecureStorageTokenStorageImpl flutterSecureStorage(Ref ref) {
+FlutterSecureStorageTokenStorageImpl tokenStorage(Ref ref) {
   return FlutterSecureStorageTokenStorageImpl(const FlutterSecureStorage());
 }
 

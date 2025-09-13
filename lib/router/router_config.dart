@@ -7,8 +7,6 @@ import 'package:roadmap_ai/features/auth/presentation/screens/splash_page.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/create_post_page.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/post_page.dart';
 import 'package:roadmap_ai/router/routes.dart';
-// ignore: unused_import
-import 'package:web/web.dart' as web;
 
 final class AppRouter {
   static GoRouter get router => _router;

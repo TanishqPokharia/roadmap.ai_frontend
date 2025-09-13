@@ -91,4 +91,6 @@ class AuthRepositoryImpl implements AuthRepository {
   TaskEither<Failure, void> logoutWeb() {
     return _datasource.logoutWeb();
   }
+
+  // Refresh token methods removed - handled by RefreshTokenInterceptor
 }

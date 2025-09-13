@@ -15,6 +15,16 @@ abstract class GoalModel with _$GoalModel {
 
   factory GoalModel.fromJson(Map<String, dynamic> json) =>
       _$GoalModelFromJson(json);
+
+  factory GoalModel.fromEntity(Goal goal) {
+    return GoalModel(
+      id: goal.id,
+      title: goal.title,
+      subgoals: goal.subgoals
+          .map((subgoal) => SubgoalModel.fromEntity(subgoal))
+          .toList(),
+    );
+  }
 }
 
 extension GoalModelEntity on GoalModel {

@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:roadmap_ai/router/router_config.dart';
+import 'package:toastification/toastification.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -17,26 +18,28 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      routerConfig: AppRouter.router,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        splashFactory: NoSplash.splashFactory,
-        filledButtonTheme: FilledButtonThemeData(
-          style: FilledButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6),
+    return ToastificationWrapper(
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        routerConfig: AppRouter.router,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          splashFactory: NoSplash.splashFactory,
+          filledButtonTheme: FilledButtonThemeData(
+            style: FilledButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
             ),
           ),
-        ),
-        textTheme: GoogleFonts.interTextTheme(
-          Theme.of(context).textTheme.apply(
-            bodyColor: Colors.black,
-            displayColor: Colors.black,
+          textTheme: GoogleFonts.interTextTheme(
+            Theme.of(context).textTheme.apply(
+              bodyColor: Colors.black,
+              displayColor: Colors.black,
+            ),
           ),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
         ),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
       ),
     );
   }

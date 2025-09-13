@@ -17,6 +17,23 @@ abstract class SubgoalModel with _$SubgoalModel {
 
   factory SubgoalModel.fromJson(Map<String, dynamic> json) =>
       _$SubgoalModelFromJson(json);
+
+  factory SubgoalModel.fromEntity(Subgoal subgoal) {
+    return SubgoalModel(
+      id: subgoal.id,
+      title: subgoal.title,
+      description: subgoal.description,
+      duration: subgoal.duration,
+      resources: subgoal.resources,
+      status: subgoal.status != null
+          ? SubgoalStatusModel(
+              completed: subgoal.status!.completed,
+              completedAt: subgoal.status!.completedAt,
+              id: subgoal.status!.id,
+            )
+          : null,
+    );
+  }
 }
 
 extension SubgoalModelEntity on SubgoalModel {

@@ -14,7 +14,7 @@ part 'login_user.g.dart';
 @riverpod
 LoginUser loginUser(Ref ref) {
   final repository = ref.watch(authRepositoryProvider);
-  final tokenStorage = ref.watch(flutterSecureStorageProvider);
+  final tokenStorage = ref.watch(tokenStorageProvider);
   return LoginUser(repository, tokenStorage);
 }
 

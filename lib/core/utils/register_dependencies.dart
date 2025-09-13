@@ -9,7 +9,7 @@ import 'package:roadmap_ai/features/auth/data/repository/auth_repository_impl.da
 import 'package:roadmap_ai/features/auth/domain/repository/auth_repository.dart';
 import 'package:roadmap_ai/features/auth/domain/usecases/is_user_logged_in.dart';
 import 'package:roadmap_ai/features/auth/domain/usecases/login_user/login_user.dart';
-import 'package:roadmap_ai/features/auth/domain/usecases/signup_user.dart';
+import 'package:roadmap_ai/features/auth/domain/usecases/signup_user/signup_user.dart';
 
 void registerDependencies(GetIt sl) {
   // Token Storage

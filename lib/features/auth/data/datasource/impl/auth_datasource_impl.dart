@@ -1,11 +1,11 @@
-import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:roadmap_ai/core/common/providers/dio_provider.dart';
+import 'package:roadmap_ai/core/common/dio/dio_provider.dart';
 import 'package:roadmap_ai/core/common/token_storage/flutter_secure_storage_token_storage_impl.dart';
 import 'package:roadmap_ai/core/common/token_storage/token_storage.dart';
+import 'package:roadmap_ai/core/utils/datasource_error_handler.dart';
 import 'package:roadmap_ai/features/auth/data/datasource/interface/auth_datasource.dart';
 import 'package:roadmap_ai/features/auth/data/models/tokens/tokens.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
@@ -17,7 +17,7 @@ part 'auth_datasource_impl.g.dart';
 AuthDatasource authDatasource(Ref ref) {
   return AuthDatasourceImpl(
     ref.read(dioProvider),
-    ref.read(flutterSecureStorageProvider),
+    ref.read(tokenStorageProvider),
   );
 }
 
@@ -34,31 +34,25 @@ class AuthDatasourceImpl implements AuthDatasource {
     return TaskEither.tryCatch(
       () async {
         final response = await _dio.post(
-          '/user/login',
+          '/auth/login',
           data: {'email': email, 'password': password},
         );
 
-        if (response.statusCode != 200) {
+        if (response.statusCode == 400) {
+          throw BadRequestFailure('Invalid email or password');
+        } else if (response.statusCode == 404) {
+          throw NotFoundFailure('User not found');
+        } else if (response.statusCode != 200) {
           throw httpErrorHandler(response.statusCode ?? 0);
         }
 
         final data = response.data;
         return TokensModel.fromJson(data);
       },
-      (error, stackTrace) {
-        log('Login failed', error: error, stackTrace: stackTrace);
-        if (error is DioException) {
-          if (error.response != null) {
-            return httpErrorHandler(error.response!.statusCode ?? 0);
-          } else {
-            return UnknownFailure(error.response.toString());
-          }
-        }
-
-        if (error is Failure) return error;
-
-        return UnknownFailure(error.toString());
-      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Login on mobile failed',
+      ),
     );
   }
 
@@ -71,7 +65,7 @@ class AuthDatasourceImpl implements AuthDatasource {
     return TaskEither.tryCatch(
       () async {
         final response = await _dio.post(
-          '/user/signup',
+          '/auth/signup',
           data: {'email': email, 'password': password, 'username': username},
         );
 
@@ -81,20 +75,10 @@ class AuthDatasourceImpl implements AuthDatasource {
         final data = response.data;
         return TokensModel.fromJson(data);
       },
-      (error, stackTrace) {
-        log('SignUp failed', error: error, stackTrace: stackTrace);
-        if (error is DioException) {
-          if (error.response != null) {
-            return httpErrorHandler(error.response!.statusCode ?? 0);
-          } else {
-            return UnknownFailure(error.response.toString());
-          }
-        }
-
-        if (error is Failure) return error;
-
-        return UnknownFailure(error.toString());
-      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'SignUp on mobile failed',
+      ),
     );
   }
 
@@ -107,7 +91,7 @@ class AuthDatasourceImpl implements AuthDatasource {
   TaskEither<Failure, bool> isLoggedInWeb() {
     return TaskEither.tryCatch(
       () async {
-        final response = await _dio.get('/user/validate');
+        final response = await _dio.get('/auth/validate');
         if (response.statusCode == 200) {
           return true;
         } else if (response.statusCode == 401) {
@@ -116,20 +100,10 @@ class AuthDatasourceImpl implements AuthDatasource {
           throw httpErrorHandler(response.statusCode ?? 0);
         }
       },
-      (error, stackTrace) {
-        log('isLoggedInWeb check failed', error: error, stackTrace: stackTrace);
-        if (error is DioException) {
-          if (error.response != null) {
-            return httpErrorHandler(error.response!.statusCode ?? 0);
-          } else {
-            return UnknownFailure(error.response.toString());
-          }
-        }
-
-        if (error is Failure) return error;
-
-        return UnknownFailure(error.toString());
-      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Web Logged In check failed',
+      ),
     );
   }
 
@@ -142,37 +116,21 @@ class AuthDatasourceImpl implements AuthDatasource {
     return TaskEither.tryCatch(
       () async {
         final response = await _dio.post(
-          '/user/login',
+          '/auth/login',
           data: {'email': email, 'password': password},
         );
 
-        if (response.statusCode != 200) {
+        if (response.statusCode == 400) {
+          throw BadRequestFailure('Invalid email or password');
+        } else if (response.statusCode == 404) {
+          throw NotFoundFailure('User not found');
+        } else if (response.statusCode != 200) {
           throw httpErrorHandler(response.statusCode ?? 0);
         }
-
         return;
       },
-      (error, stackTrace) {
-        log('LoginWeb failed', error: error, stackTrace: stackTrace);
-        if (error is BadRequestFailure) {
-          return BadRequestFailure('Invalid email or password');
-        }
-
-        if (error is DioException) {
-          if (error.response?.statusCode == 400) {
-            return BadRequestFailure('Invalid email or password');
-          }
-          if (error.response != null) {
-            return httpErrorHandler(error.response!.statusCode ?? 0);
-          } else {
-            return UnknownFailure(error.response.toString());
-          }
-        }
-
-        if (error is Failure) return error;
-
-        return UnknownFailure(error.toString());
-      },
+      (error, stackTrace) =>
+          dataSourceErrorHandler(error: error, message: 'LoginWeb failed'),
     );
   }
 
@@ -186,7 +144,7 @@ class AuthDatasourceImpl implements AuthDatasource {
     return TaskEither.tryCatch(
       () async {
         final response = await _dio.post(
-          '/user/signup',
+          '/auth/signup',
           data: {'email': email, 'password': password, 'username': username},
         );
 
@@ -196,19 +154,8 @@ class AuthDatasourceImpl implements AuthDatasource {
 
         return;
       },
-      (error, stackTrace) {
-        log('SignUpWeb failed', error: error, stackTrace: stackTrace);
-        if (error is DioException) {
-          if (error.response != null) {
-            return httpErrorHandler(error.response!.statusCode ?? 0);
-          } else {
-            return UnknownFailure(error.response.toString());
-          }
-        }
-        if (error is Failure) return error;
-
-        return UnknownFailure(error.toString());
-      },
+      (error, stackTrace) =>
+          dataSourceErrorHandler(error: error, message: 'SignUpWeb failed'),
     );
   }
 
@@ -221,26 +168,17 @@ class AuthDatasourceImpl implements AuthDatasource {
   TaskEither<Failure, void> logoutWeb() {
     return TaskEither.tryCatch(
       () async {
-        final response = await _dio.get('/user/logout');
+        final response = await _dio.get('/auth/logout');
         if (response.statusCode == 200) {
           return;
         } else {
           throw httpErrorHandler(response.statusCode ?? 0);
         }
       },
-      (error, stackTrace) {
-        log('LogoutWeb failed', error: error, stackTrace: stackTrace);
-        if (error is DioException) {
-          if (error.response != null) {
-            return httpErrorHandler(error.response!.statusCode ?? 0);
-          } else {
-            return UnknownFailure(error.response.toString());
-          }
-        }
-        if (error is Failure) return error;
-
-        return UnknownFailure(error.toString());
-      },
+      (error, stackTrace) =>
+          dataSourceErrorHandler(error: error, message: 'LogoutWeb failed'),
     );
   }
+
+  // Refresh token methods removed - handled by RefreshTokenInterceptor
 }

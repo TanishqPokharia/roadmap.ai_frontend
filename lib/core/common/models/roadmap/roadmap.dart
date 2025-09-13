@@ -17,6 +17,16 @@ abstract class RoadmapModel with _$RoadmapModel {
 
   factory RoadmapModel.fromJson(Map<String, dynamic> json) =>
       _$RoadmapModelFromJson(json);
+
+  factory RoadmapModel.fromEntity(Roadmap roadmap) {
+    return RoadmapModel(
+      id: roadmap.id,
+      userId: roadmap.userId,
+      title: roadmap.title,
+      goals: roadmap.goals.map((goal) => GoalModel.fromEntity(goal)).toList(),
+      description: roadmap.description,
+    );
+  }
 }
 
 extension RoadmapModelEntity on RoadmapModel {

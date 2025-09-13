@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'login_notifier.dart';
+part of 'save_roadmap_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loginNotifierHash() => r'876db0782d4a7c24ca660bb698720c8d2711b779';
+String _$saveRoadmapNotifierHash() =>
+    r'7136b7e2b5ae68d23c42b77e79670ce9e65d80fa';
 
-/// See also [LoginNotifier].
-@ProviderFor(LoginNotifier)
-final loginNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<LoginNotifier, LoginState>.internal(
-      LoginNotifier.new,
-      name: r'loginNotifierProvider',
+/// See also [SaveRoadmapNotifier].
+@ProviderFor(SaveRoadmapNotifier)
+final saveRoadmapNotifierProvider =
+    AutoDisposeAsyncNotifierProvider<SaveRoadmapNotifier, bool>.internal(
+      SaveRoadmapNotifier.new,
+      name: r'saveRoadmapNotifierProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$loginNotifierHash,
+          : _$saveRoadmapNotifierHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$LoginNotifier = AutoDisposeAsyncNotifier<LoginState>;
+typedef _$SaveRoadmapNotifier = AutoDisposeAsyncNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

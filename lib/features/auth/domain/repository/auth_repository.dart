@@ -25,4 +25,5 @@ abstract class AuthRepository {
   TaskEither<Failure, bool> isLoggedInWeb();
   TaskEither<Failure, void> logoutMobile();
   TaskEither<Failure, void> logoutWeb();
+  // Refresh token methods removed - handled by RefreshTokenInterceptor
 }
