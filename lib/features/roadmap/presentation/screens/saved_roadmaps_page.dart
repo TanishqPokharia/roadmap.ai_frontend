@@ -14,7 +14,6 @@ class SavedRoadmapsPage extends ConsumerWidget {
     final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
     final savedRoadmapsProvider = ref.watch(savedRoadmapsNotifierProvider);
-
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
       child: Column(
@@ -41,7 +40,7 @@ class SavedRoadmapsPage extends ConsumerWidget {
           Expanded(
             child: savedRoadmapsProvider.when(
               data: (data) {
-                if (data.isEmpty) {
+                if (data.roadmaps.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -73,12 +72,12 @@ class SavedRoadmapsPage extends ConsumerWidget {
                 return ListView.separated(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   itemBuilder: (context, index) {
-                    final roadmap = data[index];
+                    final roadmap = data.roadmaps[index];
                     return SavedRoadmapTile(roadmap: roadmap);
                   },
                   separatorBuilder: (context, index) =>
                       SizedBox(height: screenHeight * 0.03),
-                  itemCount: data.length,
+                  itemCount: data.roadmaps.length,
                 );
               },
               loading: () {

@@ -4,6 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/models/roadmap/roadmap.dart';
 import 'package:roadmap_ai/core/common/dio/dio_provider.dart';
+import 'package:roadmap_ai/core/common/models/roadmap_metadata/roadmap_metadata.dart';
 import 'package:roadmap_ai/core/utils/datasource_error_handler.dart';
 import 'package:roadmap_ai/features/roadmap/data/datasource/interface/roadmap_datasource.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
@@ -45,7 +46,7 @@ class RoadmapDatasourceImpl implements RoadmapDatasource {
       () async {
         final response = await _dio.post(
           "/roadmap/save",
-          data: roadmap.toJson(),
+          data: {"roadmap": roadmap.toJson()},
         );
         if (response.statusCode != 201) {
           throw httpErrorHandler(response.statusCode ?? 0);
@@ -54,6 +55,32 @@ class RoadmapDatasourceImpl implements RoadmapDatasource {
       (error, stackTrace) => dataSourceErrorHandler(
         error: error,
         message: 'Could not save roadmap',
+      ),
+    );
+  }
+
+  @override
+  TaskEither<Failure, List<RoadmapMetadataModel>> getSavedRoadmaps(
+    int limit,
+    int skip,
+  ) {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.get(
+          "/roadmap",
+          queryParameters: {"limit": limit, "skip": skip},
+        );
+        if (response.statusCode != 200) {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+        final roadmaps = (response.data['roadmaps'] as List<dynamic>)
+            .map((e) => RoadmapMetadataModel.fromJson(e))
+            .toList();
+        return roadmaps;
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Could not fetch saved roadmaps',
       ),
     );
   }

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:roadmap_ai/core/common/entities/roadmap_metadata.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
-import 'package:roadmap_ai/features/roadmap/presentation/screens/roadmap_update_page.dart';
 import 'package:roadmap_ai/router/routes.dart';
 import 'package:roadmap_ai/core/themes/colors.dart';
 
 class SavedRoadmapTile extends StatelessWidget {
   const SavedRoadmapTile({super.key, required this.roadmap});
-  final Roadmap roadmap;
+  final RoadmapMetadata roadmap;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,6 @@ class SavedRoadmapTile extends StatelessWidget {
     final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
     final colorScheme = context.colorScheme;
-    final completion = calculateProgress(roadmap);
     return Row(
       mainAxisSize: MainAxisSize.min,
       spacing: screenWidth * 0.03,
@@ -27,10 +26,13 @@ class SavedRoadmapTile extends StatelessWidget {
           spacing: screenHeight * 0.01,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              roadmap.title,
-              style: textTheme.titleLarge!.copyWith(
-                fontWeight: FontWeight.w700,
+            SizedBox(
+              width: screenWidth * 0.3,
+              child: Text(
+                roadmap.title,
+                style: textTheme.titleLarge!.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             Row(
@@ -39,7 +41,7 @@ class SavedRoadmapTile extends StatelessWidget {
                 SizedBox(
                   width: screenWidth * 0.3,
                   child: LinearProgressIndicator(
-                    value: completion,
+                    value: double.parse(roadmap.progress) / 100,
                     backgroundColor: colorScheme.primary.withAlpha(50),
                     valueColor: AlwaysStoppedAnimation<Color>(
                       colorScheme.primary,
@@ -48,12 +50,12 @@ class SavedRoadmapTile extends StatelessWidget {
                     minHeight: 8,
                   ),
                 ),
-                Text('${(completion * 100.0).toStringAsFixed(2)}%'),
+                Text('${(double.parse(roadmap.progress))}%'),
               ],
             ),
 
             Text(
-              'Contains ${roadmap.goals.length} goals',
+              'Contains ${roadmap.goalsCount} goals',
               style: textTheme.bodyMedium!.copyWith(color: Colors.blueGrey),
             ),
             SizedBox(),
@@ -65,17 +67,17 @@ class SavedRoadmapTile extends StatelessWidget {
                   child: FilledButton(
                     onPressed: () {
                       // Navigate to RoadmapUpdatePage
-                      Navigator.of(context)
-                          .push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  RoadmapUpdatePage(roadmap: roadmap),
-                            ),
-                          )
-                          .then((updatedRoadmap) {
-                            // Handle the updated roadmap if needed
-                            // This could trigger a refresh of the parent page
-                          });
+                      // Navigator.of(context)
+                      //     .push(
+                      //       MaterialPageRoute(
+                      //         builder: (context) =>
+                      //             RoadmapUpdatePage(roadmap: roadmap),
+                      //       ),
+                      //     )
+                      //     .then((updatedRoadmap) {
+                      //       // Handle the updated roadmap if needed
+                      //       // This could trigger a refresh of the parent page
+                      //     });
                     },
                     style: FilledButton.styleFrom(
                       backgroundColor: buttonColor,

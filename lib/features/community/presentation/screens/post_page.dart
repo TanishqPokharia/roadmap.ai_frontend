@@ -145,96 +145,99 @@ class PostPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Row(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Posted by ',
-                        style: textTheme.bodyMedium!.copyWith(
-                          color: Colors.blueGrey,
-                          fontWeight: FontWeight.bold,
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                child: Row(
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Posted by ',
+                          style: textTheme.bodyMedium!.copyWith(
+                            color: Colors.blueGrey,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Text(
-                        'John Doe',
-                        style: textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                          color: colorScheme.primary,
+                        Text(
+                          'John Doe',
+                          style: textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                            color: colorScheme.primary,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: screenWidth * 0.01),
-                      ClipOval(
-                        child: Image.network(
-                          "https://images.squarespace-cdn.com/content/v1/58c9706f9f7456a4a142c10c/1507640476287-41GORCK3VY3BD0MLRTIZ/success-man-small1.jpg",
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
+                        SizedBox(width: screenWidth * 0.01),
+                        ClipOval(
+                          child: Image.network(
+                            "https://images.squarespace-cdn.com/content/v1/58c9706f9f7456a4a142c10c/1507640476287-41GORCK3VY3BD0MLRTIZ/success-man-small1.jpg",
+                            width: 40,
+                            height: 40,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: screenWidth * 0.01),
-                      Text(
-                        'on 25th December 2022',
-                        style: textTheme.bodyMedium!.copyWith(
-                          color: Colors.blueGrey,
-                          fontWeight: FontWeight.bold,
+                        SizedBox(width: screenWidth * 0.01),
+                        Text(
+                          'on 25th December 2022',
+                          style: textTheme.bodyMedium!.copyWith(
+                            color: Colors.blueGrey,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(width: screenWidth * 0.02),
-                  Row(
-                    spacing: 10,
-                    children: [
-                      Column(
-                        spacing: 5,
-                        children: [
-                          IconButton.filled(
-                            onPressed: () {},
-                            style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(
-                                colorScheme.primary.withAlpha(30),
+                      ],
+                    ),
+                    SizedBox(width: screenWidth * 0.02),
+                    Row(
+                      spacing: 10,
+                      children: [
+                        Column(
+                          spacing: 5,
+                          children: [
+                            IconButton.filled(
+                              onPressed: () {},
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                  colorScheme.primary.withAlpha(30),
+                                ),
+                                shape: WidgetStatePropertyAll(CircleBorder()),
                               ),
-                              shape: WidgetStatePropertyAll(CircleBorder()),
+                              icon: Icon(Icons.favorite, color: Colors.pink),
                             ),
-                            icon: Icon(Icons.favorite, color: Colors.pink),
-                          ),
-                          Text(
-                            '124',
-                            style: textTheme.bodyMedium!.copyWith(
-                              color: Colors.blueGrey,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: screenWidth * 0.01),
-                      Column(
-                        spacing: 5,
-                        children: [
-                          IconButton.filled(
-                            onPressed: () {},
-                            style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(
-                                colorScheme.primary.withAlpha(30),
+                            Text(
+                              '124',
+                              style: textTheme.bodyMedium!.copyWith(
+                                color: Colors.blueGrey,
+                                fontWeight: FontWeight.bold,
                               ),
-                              shape: WidgetStatePropertyAll(CircleBorder()),
                             ),
-                            icon: Icon(Icons.bookmark, color: Colors.blue),
-                          ),
-                          Text(
-                            'Saved',
-                            style: textTheme.bodyMedium!.copyWith(
-                              color: Colors.blueGrey,
-                              fontWeight: FontWeight.bold,
+                          ],
+                        ),
+                        SizedBox(width: screenWidth * 0.01),
+                        Column(
+                          spacing: 5,
+                          children: [
+                            IconButton.filled(
+                              onPressed: () {},
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                  colorScheme.primary.withAlpha(30),
+                                ),
+                                shape: WidgetStatePropertyAll(CircleBorder()),
+                              ),
+                              icon: Icon(Icons.bookmark, color: Colors.blue),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+                            Text(
+                              'Saved',
+                              style: textTheme.bodyMedium!.copyWith(
+                                color: Colors.blueGrey,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: screenHeight * 0.02),
               Center(
@@ -253,7 +256,7 @@ class PostPage extends StatelessWidget {
                   width: screenWidth / 2,
                   child: Text(
                     "Laboris ullamco Lorem dolore laborum id ex quis laborum dolore dolore. Reprehenderit culpa ullamco eu tempor adipisicing cupidatat nostrud excepteur amet do reprehenderit ex eiusmod. Ullamco officia ullamco do ex anim sit do et Lorem. Sunt aute reprehenderit velit exercitation excepteur eu sunt ea culpa mollit labore. Officia velit exercitation veniam velit ullamco id eiusmod eiusmod ullamco sit laboris ea mollit. Exercitation magna nisi occaecat in anim est amet veniam. Quis irure magna Lorem dolore in.",
-                    style: textTheme.bodyMedium!.copyWith(
+                    style: textTheme.titleMedium!.copyWith(
                       color: Colors.blueGrey,
                     ),
                     textAlign: TextAlign.justify,

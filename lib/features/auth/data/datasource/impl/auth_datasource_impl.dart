@@ -10,6 +10,7 @@ import 'package:roadmap_ai/features/auth/data/datasource/interface/auth_datasour
 import 'package:roadmap_ai/features/auth/data/models/tokens/tokens.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
 import 'package:roadmap_ai/core/utils/http_error_handler.dart';
+import 'package:roadmap_ai/features/auth/data/models/user_details/user_details.dart';
 
 part 'auth_datasource_impl.g.dart';
 
@@ -180,5 +181,47 @@ class AuthDatasourceImpl implements AuthDatasource {
     );
   }
 
-  // Refresh token methods removed - handled by RefreshTokenInterceptor
+  @override
+  TaskEither<Failure, UserDetailsModel> getUserDetails() {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.get('/auth/details');
+        if (response.statusCode == 200) {
+          final data = response.data;
+          return UserDetailsModel.fromJson(data);
+        } else {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Could not get user details',
+      ),
+    );
+  }
+
+  @override
+  TaskEither<Failure, String> updateAvatar(MultipartFile image) {
+    return TaskEither.tryCatch(
+      () async {
+        final formData = FormData.fromMap({'avatar': image});
+        final response = await _dio.post(
+          '/auth/avatar/update',
+          data: formData,
+          options: Options(headers: {'Content-Type': 'multipart/form-data'}),
+        );
+
+        if (response.statusCode == 200) {
+          final data = response.data;
+          return data['avatar'] as String;
+        } else {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Could not update avatar',
+      ),
+    );
+  }
 }

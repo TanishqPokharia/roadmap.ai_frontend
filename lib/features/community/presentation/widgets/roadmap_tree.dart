@@ -476,15 +476,17 @@ class _SubgoalNodeState extends State<SubgoalNode> {
                                         mode: LaunchMode.externalApplication,
                                       );
                                     } else {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            'Could not launch resource URL',
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Could not launch resource URL',
+                                            ),
                                           ),
-                                        ),
-                                      );
+                                        );
+                                      }
                                     }
                                   },
                                   child: Text(

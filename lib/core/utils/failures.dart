@@ -13,6 +13,14 @@ class TokenStorageFailure extends Failure {
   String toString() => 'TokenStorageFailure: $message';
 }
 
+// File Failures
+class FilePickerFailure extends Failure {
+  FilePickerFailure(super.message);
+
+  @override
+  String toString() => 'FilePickerFailure: $message';
+}
+
 // Http Failures
 
 class UnauthorizedFailure extends Failure {
@@ -51,13 +59,12 @@ class ForbiddenFailure extends Failure {
   String toString() => 'Forbidden: $message';
 }
 
-
 class TimeoutFailure extends Failure {
   TimeoutFailure(super.message);
 
   @override
   String toString() => 'Timeout: $message';
-} 
+}
 
 class UnknownFailure extends Failure {
   UnknownFailure(super.message);
@@ -65,4 +72,3 @@ class UnknownFailure extends Failure {
   @override
   String toString() => 'Unknown: $message';
 }
-

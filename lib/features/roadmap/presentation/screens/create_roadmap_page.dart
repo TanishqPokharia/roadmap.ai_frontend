@@ -96,13 +96,9 @@ class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           spacing: screenWidth * 0.02,
                           children: [
-                            ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxWidth: 300,
-                                minWidth: 100,
-                                maxHeight: 100,
-                                minHeight: 50,
-                              ),
+                            SizedBox(
+                              width: screenWidth * 0.15,
+                              height: screenHeight * 0.05,
                               child: FilledButton(
                                 onPressed: ref
                                     .read(roadmapNotifierProvider.notifier)
@@ -110,56 +106,50 @@ class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage> {
                                 child: Text('Generate Another Roadmap'),
                               ),
                             ),
-                            ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxWidth: 300,
-                                minWidth: 100,
-                                maxHeight: 100,
-                                minHeight: 50,
-                              ),
+                            SizedBox(
+                              width: screenWidth * 0.15,
+                              height: screenHeight * 0.05,
                               child: switch (ref.watch(
                                 saveRoadmapNotifierProvider,
                               )) {
-                                AsyncLoading() => Container(
-                                  decoration: BoxDecoration(
-                                    color: colorScheme.primary,
-                                    borderRadius: BorderRadius.circular(8),
+                                AsyncLoading() => FilledButton(
+                                  onPressed: null,
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: colorScheme.primary,
+                                    disabledBackgroundColor:
+                                        colorScheme.primary,
                                   ),
-                                  child: Center(
-                                    child: SizedBox(
-                                      width: screenHeight * 0.025,
-                                      height: screenHeight * 0.025,
-                                      child:
-                                          LoadingAnimationWidget.staggeredDotsWave(
-                                            color: Colors.white,
-                                            size: screenHeight * 0.025,
-                                          ),
-                                    ),
+                                  child: SizedBox(
+                                    width: screenHeight * 0.025,
+                                    height: screenHeight * 0.025,
+                                    child:
+                                        LoadingAnimationWidget.staggeredDotsWave(
+                                          color: Colors.white,
+                                          size: screenHeight * 0.025,
+                                        ),
                                   ),
                                 ),
                                 AsyncData(:final value) when value == true =>
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: colorScheme.primary,
-                                      borderRadius: BorderRadius.circular(8),
+                                  FilledButton.icon(
+                                    onPressed: null,
+                                    style: FilledButton.styleFrom(
+                                      backgroundColor: colorScheme.primary,
+                                      disabledBackgroundColor:
+                                          colorScheme.primary,
                                     ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Icon(
-                                          Icons.check_circle_rounded,
-                                          color: Colors.white,
-                                        ),
-                                        Text(
-                                          'Saved',
-                                          style: textTheme.bodyMedium!.copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
+                                    label: Text(
+                                      'Saved',
+                                      style: textTheme.bodyMedium!.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
+
+                                    icon: Icon(
+                                      Icons.check_circle_rounded,
+                                      color: Colors.white,
+                                    ),
+                                    iconAlignment: IconAlignment.end,
                                   ),
                                 _ => FilledButton(
                                   onPressed: () {
@@ -195,7 +185,9 @@ class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage> {
                           ),
                         ),
                         Animate(
-                          effects: [BlurEffect(duration: Duration(seconds: 5))],
+                          effects: [
+                            FadeEffect(duration: Duration(milliseconds: 500)),
+                          ],
                           child: RoadmapTree(roadmap: roadmapProvider.value!),
                         ),
                       ],

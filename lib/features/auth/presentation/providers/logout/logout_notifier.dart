@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/features/auth/domain/usecases/logout_user/logout_user.dart';
 import 'package:roadmap_ai/core/utils/no_params.dart';

@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:roadmap_ai/features/auth/data/models/tokens/tokens.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
+import 'package:roadmap_ai/features/auth/data/models/user_details/user_details.dart';
 
 abstract class AuthDatasource {
   TaskEither<Failure, TokensModel> loginMobile({
@@ -25,5 +27,6 @@ abstract class AuthDatasource {
   TaskEither<Failure, bool> isLoggedInWeb();
   TaskEither<Failure, void> logoutMobile();
   TaskEither<Failure, void> logoutWeb();
-  // Refresh token methods removed - handled by RefreshTokenInterceptor
+  TaskEither<Failure, UserDetailsModel> getUserDetails();
+  TaskEither<Failure, String> updateAvatar(MultipartFile image);
 }

@@ -5,6 +5,7 @@ import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/core/themes/colors.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/providers/roadmap/roadmap_notifier.dart';
+import 'package:roadmap_ai/features/roadmap/presentation/widgets/hover_shadow.dart';
 
 class RoadmapCreationCard extends ConsumerStatefulWidget {
   const RoadmapCreationCard({super.key});
@@ -35,6 +36,7 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = context.screenWidth;
+    final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
     final roadmapProvider = ref.watch(roadmapNotifierProvider);
     return Card(
@@ -72,36 +74,35 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
               ],
             ),
             Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: 300,
-                  minWidth: 100,
-                  maxHeight: 100,
-                  minHeight: 50,
-                ),
-                child: switch (roadmapProvider) {
-                  AsyncLoading() => FilledButton.icon(
-                    onPressed: () {},
-                    label: SizedBox(),
-                    iconAlignment: IconAlignment.end,
-                    icon: LoadingAnimationWidget.fourRotatingDots(
-                      color: Colors.white,
-                      size: 20,
+              child: LayoutBuilder(
+                builder: (context, constraints) => SizedBox(
+                  width: constraints.maxWidth * 0.2,
+                  height: 50,
+                  child: switch (roadmapProvider) {
+                    AsyncLoading() => FilledButton(
+                      onPressed: () {},
+                      child: LoadingAnimationWidget.fourRotatingDots(
+                        color: Colors.white,
+                        size: 20,
+                      ),
                     ),
-                  ),
-                  _ => FilledButton.icon(
-                    onPressed: () {
-                      if (_descriptionController.text.isNotEmpty) {
-                        ref
-                            .read(roadmapNotifierProvider.notifier)
-                            .getRoadmap(_descriptionController.text);
-                      }
-                    },
-                    iconAlignment: IconAlignment.end,
-                    icon: Icon(Icons.auto_awesome_rounded),
-                    label: const Text('Generate Roadmap'),
-                  ),
-                },
+                    _ => HoverShadow(
+                      shadowColor: colorScheme.primary.withAlpha(100),
+                      child: FilledButton.icon(
+                        onPressed: () {
+                          if (_descriptionController.text.isNotEmpty) {
+                            ref
+                                .read(roadmapNotifierProvider.notifier)
+                                .getRoadmap(_descriptionController.text);
+                          }
+                        },
+                        iconAlignment: IconAlignment.end,
+                        icon: Icon(Icons.auto_awesome_rounded),
+                        label: const Text('Generate Roadmap'),
+                      ),
+                    ),
+                  },
+                ),
               ),
             ),
           ],

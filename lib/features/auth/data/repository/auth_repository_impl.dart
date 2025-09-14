@@ -1,9 +1,11 @@
+import 'package:dio/src/multipart_file.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/features/auth/data/datasource/impl/auth_datasource_impl.dart';
 import 'package:roadmap_ai/features/auth/data/datasource/interface/auth_datasource.dart';
 import 'package:roadmap_ai/features/auth/domain/entities/tokens.dart';
+import 'package:roadmap_ai/features/auth/domain/entities/user_details.dart';
 import 'package:roadmap_ai/features/auth/domain/repository/auth_repository.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
 part 'auth_repository_impl.g.dart';
@@ -92,5 +94,19 @@ class AuthRepositoryImpl implements AuthRepository {
     return _datasource.logoutWeb();
   }
 
-  // Refresh token methods removed - handled by RefreshTokenInterceptor
+  @override
+  TaskEither<Failure, UserDetails> getUserDetails() {
+    return _datasource.getUserDetails().map(
+      (userDetailsModel) => UserDetails(
+        username: userDetailsModel.username,
+        email: userDetailsModel.email,
+        avatarUrl: userDetailsModel.avatarUrl,
+      ),
+    );
+  }
+
+  @override
+  TaskEither<Failure, String> updateAvatar(MultipartFile image) {
+    return _datasource.updateAvatar(image);
+  }
 }

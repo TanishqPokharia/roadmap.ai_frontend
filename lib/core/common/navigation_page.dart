@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
+import 'package:roadmap_ai/core/common/providers/navigation_notifier.dart';
 import 'package:roadmap_ai/features/auth/presentation/providers/logout/logout_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/explore_page.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/your_posts_page.dart';
@@ -21,7 +22,6 @@ class NavigationPage extends ConsumerStatefulWidget {
 }
 
 class _NavigationPageState extends ConsumerState<NavigationPage> {
-  int _selectedPageIndex = 0;
   final _pages = [
     ExplorePage(),
     YourPostsPage(),
@@ -34,15 +34,16 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
+    final selectedPageIndex = ref.watch(navigationNotifierProvider);
 
-    ref.listen(logoutNotifierProvider, (prev, next) {
-      if (next.hasError) {
+    ref.listen(logoutNotifierProvider, (_, next) {
+      if (next is AsyncError) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(next.error.toString())));
       }
 
-      if (next.hasValue && next.value == LogoutState.success) {
+      if (next is AsyncData && next.value == LogoutState.success) {
         context.go('/auth');
         ScaffoldMessenger.of(
           context,
@@ -92,14 +93,14 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
                     ),
                   ],
                   onItemSelected: (index) {
-                    setState(() {
-                      _selectedPageIndex = index;
-                    });
+                    ref
+                        .read(navigationNotifierProvider.notifier)
+                        .setSelectedIndex(index);
                   },
-                  selectedIndex: _selectedPageIndex,
+                  selectedIndex: selectedPageIndex,
                 ),
               ),
-              if (_selectedPageIndex == 0)
+              if (selectedPageIndex == 0)
                 SizedBox(
                   width: screenWidth * 0.3,
                   height: screenHeight * 0.05,
@@ -144,7 +145,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
             ],
           ),
         ),
-        body: _pages[_selectedPageIndex],
+        body: _pages[selectedPageIndex],
       );
     }
     return Scaffold();
