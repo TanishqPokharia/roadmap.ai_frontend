@@ -10,4 +10,5 @@ abstract class RoadmapDatasource {
     int limit,
     int skip,
   );
+  TaskEither<Failure, RoadmapModel> getRoadmapById(String roadmapId);
 }

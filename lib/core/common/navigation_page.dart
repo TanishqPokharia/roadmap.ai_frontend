@@ -7,6 +7,7 @@ import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/core/common/providers/navigation_notifier.dart';
 import 'package:roadmap_ai/features/auth/presentation/providers/logout/logout_notifier.dart';
+import 'package:roadmap_ai/features/auth/presentation/providers/profile/profile_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/explore_page.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/your_posts_page.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/animated_menu_overlay.dart';
@@ -136,10 +137,26 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
                 ),
               SizedBox(width: screenHeight * 0.02),
               ProfilePopupMenu(
-                child: CircleAvatar(
-                  backgroundColor: Colors.blueGrey,
-                  child: Icon(Icons.person, size: 30, color: Colors.white),
-                ),
+                child: ref
+                    .watch(profileNotifierProvider)
+                    .when(
+                      data: (user) => CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          user.userDetails.avatarUrl,
+                        ),
+                        radius: 24,
+                        backgroundColor: colorScheme.primary,
+                      ),
+                      loading: () => const CircleAvatar(
+                        radius: 24,
+                        backgroundColor: Colors.grey,
+                      ),
+                      error: (_, __) => const CircleAvatar(
+                        radius: 24,
+                        backgroundColor: Colors.grey,
+                        child: Icon(Icons.error, color: Colors.white),
+                      ),
+                    ),
               ),
               SizedBox(width: 16),
             ],

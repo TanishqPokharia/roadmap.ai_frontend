@@ -1,107 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:roadmap_ai/core/common/entities/goal.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/common/entities/subgoal.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
-import 'package:roadmap_ai/features/roadmap/presentation/providers/roadmap_update/roadmap_update_notifier.dart';
 
-class RoadmapUpdatePage extends ConsumerWidget {
-  final Roadmap roadmap;
-
-  const RoadmapUpdatePage({super.key, required this.roadmap});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final screenHeight = context.screenHeight;
-    final screenWidth = context.screenWidth;
-    final textTheme = context.textTheme;
-    final colorScheme = context.colorScheme;
-
-    // Watch the mutable roadmap state
-    final updatedRoadmap = ref.watch(roadmapUpdateProvider(roadmap));
-    return Scaffold(
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        backgroundColor: colorScheme.surface,
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: screenHeight * 0.02),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    updatedRoadmap.title,
-                    style: textTheme.headlineMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                // Save button
-                FilledButton.icon(
-                  onPressed: () async {
-                    // Show loading indicator
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) =>
-                          const Center(child: CircularProgressIndicator()),
-                    );
-
-                    // Save changes
-                    await ref
-                        .read(roadmapUpdateProvider(roadmap).notifier)
-                        .saveChanges();
-
-                    // Dismiss loading indicator (but stay on this page)
-                    if (context.mounted) {
-                      Navigator.of(context).pop(); // Dismiss dialog only
-
-                      // Show a success message
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Progress updated successfully'),
-                          backgroundColor: Colors.green,
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
-                    }
-                  },
-                  icon: Icon(Icons.save, size: 18),
-                  label: Text('Save Progress'),
-                  style: FilledButton.styleFrom(padding: EdgeInsets.all(20)),
-                ),
-              ],
-            ),
-            Text(
-              'Mark subgoals as completed or in progress',
-              style: textTheme.bodyLarge!.copyWith(color: Colors.blueGrey),
-            ),
-            SizedBox(height: screenHeight * 0.03),
-            Expanded(
-              child: EditableRoadmapTree(
-                roadmap: updatedRoadmap,
-                onToggleCompletion: (goalId, subgoalId) {
-                  ref
-                      .read(roadmapUpdateProvider(roadmap).notifier)
-                      .toggleSubgoalCompletion(goalId, subgoalId);
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// Widget that replicates the RoadmapTree but with editable completion status
 class EditableRoadmapTree extends StatefulWidget {
   final Roadmap roadmap;
   final Function(String, String) onToggleCompletion;
@@ -124,14 +27,11 @@ class _EditableRoadmapTreeState extends State<EditableRoadmapTree> {
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       itemCount: widget.roadmap.goals.length,
       itemBuilder: (context, index) {
-        return Padding(
-          padding: EdgeInsets.only(bottom: 10),
-          child: EditableGoalNode(
-            index: index,
-            haveDivider: index < widget.roadmap.goals.length - 1,
-            goal: widget.roadmap.goals[index],
-            onToggleCompletion: widget.onToggleCompletion,
-          ),
+        return EditableGoalNode(
+          index: index,
+          haveDivider: index < widget.roadmap.goals.length - 1,
+          goal: widget.roadmap.goals[index],
+          onToggleCompletion: widget.onToggleCompletion,
         );
       },
     );
@@ -169,17 +69,6 @@ class _EditableGoalNodeState extends State<EditableGoalNode> {
   static const double kDividerVerticalMargin = 0.0; // Reduced from 5.0
   static const double kSubgoalBottomSpacing = 25.0; // Increased from 20.0
 
-  // Constants for subgoal height calculations
-  static const double kBaseHeight = 40.0;
-  static const double kSubgoalBaseHeight = 60.0;
-  static const double kSubgoalExpandedExtra = 100.0;
-  static const double kSubgoalSpacing = 10.0;
-  static const double kTopPadding = 30.0;
-  static const double kBottomPadding = 30.0;
-  static const double kResourceBaseHeight = 20.0;
-  static const double kResourceItemHeight = 20.0;
-  static const double kStatusHeight = 25.0;
-
   @override
   void initState() {
     super.initState();
@@ -197,50 +86,55 @@ class _EditableGoalNodeState extends State<EditableGoalNode> {
 
   // Calculate the required divider height based on subgoals
   double _calculateDividerHeight() {
-    // If there are no subgoals, return a default height
-    if (widget.goal.subgoals.isEmpty) {
+    if (!_isExpanded || widget.goal.subgoals.isEmpty) {
       return kDefaultDividerHeight;
     }
 
-    // Base height for the divider
     double totalHeight = 0;
 
-    // Calculate height based on number of subgoals and their expanded state
-    double estimatedSubgoalsHeight = 0;
+    // Add height for the goal title and its spacing
+    totalHeight += 40; // Goal title height and spacing
 
+    // Add top padding from the subgoals container
+    totalHeight += 20; // top padding
+
+    // Calculate height for each subgoal dynamically
     for (int i = 0; i < widget.goal.subgoals.length; i++) {
-      // Add base height for each subgoal
-      estimatedSubgoalsHeight += kSubgoalBaseHeight;
+      // Base collapsed height for each subgoal
+      double subgoalHeight = 90; // kCollapsedHeight from subgoal node
 
-      // Add extra height if this subgoal is expanded
+      // Add expanded height if this subgoal is expanded
       if (i < _expandedSubgoals.length && _expandedSubgoals[i]) {
-        // Extra height for expanded state
-        estimatedSubgoalsHeight += kSubgoalExpandedExtra;
+        subgoalHeight += 90; // kExpandedExtraHeight
 
-        // Add additional height for resources if present
+        // Add height for resources if present
         final subgoal = widget.goal.subgoals[i];
         if (subgoal.resources.isNotEmpty) {
-          estimatedSubgoalsHeight +=
-              kResourceBaseHeight +
-              (subgoal.resources.length * kResourceItemHeight);
+          subgoalHeight += 20 + (subgoal.resources.length * 20);
         }
 
         // Add height for status if present
         if (subgoal.status != null) {
-          estimatedSubgoalsHeight += kStatusHeight;
+          subgoalHeight += 25;
         }
       }
 
-      // Add spacing between subgoals
-      estimatedSubgoalsHeight += kSubgoalSpacing;
+      // Add card padding and connection padding
+      subgoalHeight += 25; // 15 (card padding) + 10 (extra connection padding)
+
+      totalHeight += subgoalHeight;
+
+      // Add spacing between subgoals (10px margin from AnimatedContainer)
+      if (i < widget.goal.subgoals.length - 1) {
+        totalHeight += 10;
+      }
     }
 
-    // Add top padding, bottom padding, and base height
-    totalHeight =
-        kBaseHeight + estimatedSubgoalsHeight + kTopPadding + kBottomPadding;
+    // Add the extra bottom spacing
+    totalHeight += kSubgoalBottomSpacing + 10;
 
-    // Add additional buffer to ensure the connector fully reaches the next goal
-    return totalHeight + 20;
+    // Add some buffer to ensure complete connection
+    return totalHeight + 10;
   }
 
   @override

@@ -11,7 +11,7 @@ import 'package:roadmap_ai/core/utils/usecase.dart';
 
 part 'login_user.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 LoginUser loginUser(Ref ref) {
   final repository = ref.watch(authRepositoryProvider);
   final tokenStorage = ref.watch(tokenStorageProvider);

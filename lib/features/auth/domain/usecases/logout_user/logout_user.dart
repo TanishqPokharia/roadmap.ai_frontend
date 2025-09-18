@@ -10,7 +10,7 @@ import 'package:roadmap_ai/core/utils/usecase.dart';
 
 part 'logout_user.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 LogoutUser logoutUser(Ref ref) {
   final repository = ref.watch(authRepositoryProvider);
   return LogoutUser(repository);

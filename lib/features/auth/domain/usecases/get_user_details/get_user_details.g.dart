@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'save_roadmap.dart';
+part of 'get_user_details.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveRoadmapHash() => r'aa23a4fc9edc5587ca2e9d3041bcd89fba1441d6';
+String _$getUserDetailsHash() => r'6ada1b41e0a373b3455de669fe7e8ce19fc0eb12';
 
-/// See also [saveRoadmap].
-@ProviderFor(saveRoadmap)
-final saveRoadmapProvider = Provider<SaveRoadmap>.internal(
-  saveRoadmap,
-  name: r'saveRoadmapProvider',
+/// See also [getUserDetails].
+@ProviderFor(getUserDetails)
+final getUserDetailsProvider = Provider<GetUserDetails>.internal(
+  getUserDetails,
+  name: r'getUserDetailsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$saveRoadmapHash,
+      : _$getUserDetailsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef SaveRoadmapRef = ProviderRef<SaveRoadmap>;
+typedef GetUserDetailsRef = ProviderRef<GetUserDetails>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

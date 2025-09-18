@@ -11,7 +11,7 @@ import 'package:fpdart/fpdart.dart';
 
 part 'signup_user.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 SignupUser signUpUser(Ref ref) {
   final repository = ref.read(authRepositoryProvider);
   final tokenStorage = ref.read(tokenStorageProvider);

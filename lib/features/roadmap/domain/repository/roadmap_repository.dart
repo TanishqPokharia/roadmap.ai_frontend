@@ -10,4 +10,5 @@ abstract class RoadmapRepository {
     int limit,
     int skip,
   );
+  TaskEither<Failure, Roadmap> getRoadmapById(String roadmapId);
 }

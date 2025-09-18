@@ -270,12 +270,12 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
             ),
 
             // Roadmap Section - Using SliverToBoxAdapter with a simple display version
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth / 4),
-              sliver: SliverToBoxAdapter(
-                child: EditableRoadmapSection(roadmap: widget.roadmap),
-              ),
-            ),
+            // SliverPadding(
+            //   padding: EdgeInsets.symmetric(horizontal: screenWidth / 4),
+            //   sliver: SliverToBoxAdapter(
+            //     child: EditableRoadmapSection(roadmap: widget.roadmap),
+            //   ),
+            // ),
 
             // Bottom padding
             SliverPadding(

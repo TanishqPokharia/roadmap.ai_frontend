@@ -205,7 +205,7 @@ class AuthDatasourceImpl implements AuthDatasource {
     return TaskEither.tryCatch(
       () async {
         final formData = FormData.fromMap({'avatar': image});
-        final response = await _dio.post(
+        final response = await _dio.patch(
           '/auth/avatar/update',
           data: formData,
           options: Options(headers: {'Content-Type': 'multipart/form-data'}),
@@ -214,9 +214,13 @@ class AuthDatasourceImpl implements AuthDatasource {
         if (response.statusCode == 200) {
           final data = response.data;
           return data['avatar'] as String;
-        } else {
-          throw httpErrorHandler(response.statusCode ?? 0);
         }
+
+        if (response.statusCode == 500) {
+          throw ServerFailure(response.data['error']);
+        }
+
+        throw httpErrorHandler(response.statusCode ?? 0);
       },
       (error, stackTrace) => dataSourceErrorHandler(
         error: error,

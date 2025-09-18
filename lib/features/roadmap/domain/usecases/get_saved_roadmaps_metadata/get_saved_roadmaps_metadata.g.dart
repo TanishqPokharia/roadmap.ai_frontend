@@ -7,12 +7,12 @@ part of 'get_saved_roadmaps_metadata.dart';
 // **************************************************************************
 
 String _$getSavedRoadmapsMetadataHash() =>
-    r'2690dfab071d7f53d8a38be376374dbe6e545a4a';
+    r'c604c2f2b565064faf054a4ab797e99beb73e6d2';
 
 /// See also [getSavedRoadmapsMetadata].
 @ProviderFor(getSavedRoadmapsMetadata)
 final getSavedRoadmapsMetadataProvider =
-    AutoDisposeProvider<GetSavedRoadmapsMetadata>.internal(
+    Provider<GetSavedRoadmapsMetadata>.internal(
       getSavedRoadmapsMetadata,
       name: r'getSavedRoadmapsMetadataProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -24,7 +24,6 @@ final getSavedRoadmapsMetadataProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef GetSavedRoadmapsMetadataRef =
-    AutoDisposeProviderRef<GetSavedRoadmapsMetadata>;
+typedef GetSavedRoadmapsMetadataRef = ProviderRef<GetSavedRoadmapsMetadata>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

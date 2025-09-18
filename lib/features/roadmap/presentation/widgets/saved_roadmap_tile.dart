@@ -66,18 +66,10 @@ class SavedRoadmapTile extends StatelessWidget {
                   height: screenHeight * 0.035,
                   child: FilledButton(
                     onPressed: () {
-                      // Navigate to RoadmapUpdatePage
-                      // Navigator.of(context)
-                      //     .push(
-                      //       MaterialPageRoute(
-                      //         builder: (context) =>
-                      //             RoadmapUpdatePage(roadmap: roadmap),
-                      //       ),
-                      //     )
-                      //     .then((updatedRoadmap) {
-                      //       // Handle the updated roadmap if needed
-                      //       // This could trigger a refresh of the parent page
-                      //     });
+                      context.goNamed(
+                        AppRoutes.roadmapView,
+                        pathParameters: {'roadmapId': roadmap.id},
+                      );
                     },
                     style: FilledButton.styleFrom(
                       backgroundColor: buttonColor,

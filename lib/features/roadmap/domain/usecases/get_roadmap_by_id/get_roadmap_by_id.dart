@@ -7,26 +7,26 @@ import 'package:roadmap_ai/core/utils/usecase.dart';
 import 'package:roadmap_ai/features/roadmap/data/repository/roadmap_repository_impl.dart';
 import 'package:roadmap_ai/features/roadmap/domain/repository/roadmap_repository.dart';
 
-part 'save_roadmap.g.dart';
+part 'get_roadmap_by_id.g.dart';
 
-@Riverpod(keepAlive: true)
-SaveRoadmap saveRoadmap(Ref ref) {
+@riverpod
+GetRoadmapById getRoadmapById(Ref ref) {
   final repository = ref.read(roadmapRepositoryProvider);
-  return SaveRoadmap(repository);
+  return GetRoadmapById(repository);
 }
 
-class SaveRoadmap implements Usecase<SaveRoadmapParams, void> {
+class GetRoadmapById implements Usecase<GetRoadmapByIdParams, Roadmap> {
   final RoadmapRepository _repository;
 
-  SaveRoadmap(this._repository);
+  GetRoadmapById(this._repository);
   @override
-  TaskEither<Failure, void> call(SaveRoadmapParams params) {
-    return _repository.saveRoadmap(params.roadmap);
+  TaskEither<Failure, Roadmap> call(GetRoadmapByIdParams params) {
+    return _repository.getRoadmapById(params.roadmapId);
   }
 }
 
-class SaveRoadmapParams {
-  final Roadmap roadmap;
+class GetRoadmapByIdParams {
+  final String roadmapId;
 
-  SaveRoadmapParams({required this.roadmap});
+  GetRoadmapByIdParams({required this.roadmapId});
 }

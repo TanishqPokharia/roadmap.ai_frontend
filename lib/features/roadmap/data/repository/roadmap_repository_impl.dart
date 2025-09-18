@@ -44,4 +44,11 @@ class RoadmapRepositoryImpl implements RoadmapRepository {
               roadmapMetadataModels.map((model) => model.toEntity()).toList(),
         );
   }
+
+  @override
+  TaskEither<Failure, Roadmap> getRoadmapById(String roadmapId) {
+    return _datasource
+        .getRoadmapById(roadmapId)
+        .map((roadmapModel) => roadmapModel.toEntity());
+  }
 }

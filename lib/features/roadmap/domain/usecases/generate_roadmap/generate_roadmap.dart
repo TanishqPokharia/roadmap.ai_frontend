@@ -9,7 +9,7 @@ import 'package:roadmap_ai/core/utils/usecase.dart';
 
 part 'generate_roadmap.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 GenerateRoadmap generateRoadmap(Ref ref) {
   final repository = ref.read(roadmapRepositoryProvider);
   final usecase = GenerateRoadmap(repository);

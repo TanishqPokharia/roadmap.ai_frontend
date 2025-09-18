@@ -31,6 +31,16 @@
             "request": "launch",
             "program": "lib/main.dart",
             "flutterMode": "release"
+        },
+        {
+            "name": "roadmap_ai (Flutter Chrome)",
+            "program": "lib/main.dart",
+            "deviceId": "chrome",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--web-port=8080"
+            ]
         }
     ]
 }

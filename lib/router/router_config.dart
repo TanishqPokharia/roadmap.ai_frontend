@@ -3,9 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/common/navigation_page.dart';
 import 'package:roadmap_ai/features/auth/presentation/screens/auth_page.dart';
+import 'package:roadmap_ai/features/auth/presentation/screens/profile_page.dart';
 import 'package:roadmap_ai/features/auth/presentation/screens/splash_page.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/create_post_page.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/post_page.dart';
+import 'package:roadmap_ai/features/roadmap/presentation/screens/roadmap_view_page.dart';
 import 'package:roadmap_ai/router/routes.dart';
 
 final class AppRouter {
@@ -34,6 +36,21 @@ final class AppRouter {
           return MaterialPage(child: NavigationPage());
         },
         routes: [
+          GoRoute(
+            path: '/roadmap/view/:roadmapId',
+            name: AppRoutes.roadmapView,
+            pageBuilder: (context, state) {
+              final roadmapId = state.pathParameters['roadmapId'] as String;
+              return MaterialPage(child: RoadmapViewPage(roadmapId: roadmapId));
+            },
+          ),
+          GoRoute(
+            path: '/profile',
+            name: AppRoutes.profile,
+            pageBuilder: (context, state) {
+              return MaterialPage(child: const ProfilePage());
+            },
+          ),
           GoRoute(
             path: '/post',
             name: AppRoutes.post,

@@ -7,7 +7,7 @@ import 'package:roadmap_ai/features/auth/data/datasource/impl/auth_datasource_im
 import 'package:roadmap_ai/features/auth/data/datasource/interface/auth_datasource.dart';
 import 'package:roadmap_ai/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:roadmap_ai/features/auth/domain/repository/auth_repository.dart';
-import 'package:roadmap_ai/features/auth/domain/usecases/is_user_logged_in.dart';
+import 'package:roadmap_ai/features/auth/domain/usecases/is_user_logged_in/is_user_logged_in.dart';
 import 'package:roadmap_ai/features/auth/domain/usecases/login_user/login_user.dart';
 import 'package:roadmap_ai/features/auth/domain/usecases/signup_user/signup_user.dart';
 

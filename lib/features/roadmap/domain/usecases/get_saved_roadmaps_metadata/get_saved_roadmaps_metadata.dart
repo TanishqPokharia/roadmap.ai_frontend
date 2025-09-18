@@ -9,7 +9,7 @@ import 'package:roadmap_ai/features/roadmap/domain/repository/roadmap_repository
 
 part 'get_saved_roadmaps_metadata.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 GetSavedRoadmapsMetadata getSavedRoadmapsMetadata(Ref ref) {
   return GetSavedRoadmapsMetadata(ref.read(roadmapRepositoryProvider));
 }

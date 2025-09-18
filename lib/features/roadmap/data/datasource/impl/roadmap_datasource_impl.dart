@@ -84,4 +84,21 @@ class RoadmapDatasourceImpl implements RoadmapDatasource {
       ),
     );
   }
+
+  @override
+  TaskEither<Failure, RoadmapModel> getRoadmapById(String roadmapId) {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.get("/roadmap/$roadmapId");
+        if (response.statusCode != 200) {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+        return RoadmapModel.fromJson(response.data['roadmap']);
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Could not fetch roadmap by ID',
+      ),
+    );
+  }
 }
