@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -41,22 +44,48 @@ class RefreshTokenInterceptor extends Interceptor {
   final TokenStorage tokenStorage;
   final Dio _dio;
 
+  // Prevent multiple concurrent refresh attempts
+  static bool _isRefreshing = false;
+  static final List<Completer<bool>> _refreshCompleters = [];
+
   RefreshTokenInterceptor(this.tokenStorage, this._dio);
 
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (!_shouldRefreshToken(err)) {
-      handler.next(err);
-      return;
-    }
+  Future<void> onResponse(
+    Response response,
+    ResponseInterceptorHandler handler,
+  ) async {
+    try {
+      if (!_shouldRefreshToken(response)) {
+        handler.next(response);
+        return;
+      }
 
-    // Attempt to refresh tokens and retry the request
-    final success = await _handleTokenRefreshAndRetry(err.requestOptions);
+      log(
+        '401 response detected, attempting token refresh for: ${response.requestOptions.path}',
+      );
 
-    if (success != null) {
-      handler.resolve(success);
-    } else {
-      handler.next(err); // Pass original error if refresh/retry failed
+      // Attempt to refresh tokens and retry the request
+      final success = await _handleTokenRefreshAndRetry(
+        response.requestOptions,
+      );
+
+      if (success != null) {
+        log('Token refresh successful, retrying original request');
+        handler.resolve(success);
+      } else {
+        log('Token refresh failed, passing through original 401 response');
+        handler.next(
+          response,
+        ); // Pass original response if refresh/retry failed
+      }
+    } catch (e, stackTrace) {
+      log(
+        'Error in refresh token interceptor',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      handler.next(response);
     }
   }
 
@@ -65,19 +94,48 @@ class RefreshTokenInterceptor extends Interceptor {
   Future<Response?> _handleTokenRefreshAndRetry(
     RequestOptions originalRequest,
   ) async {
-    // Step 1: Refresh tokens using self-contained logic
-    final refreshSuccess = await _refreshTokens();
-    if (!refreshSuccess) return null;
-
-    // Step 2: Prepare request with new token (mobile only)
-    final updatedRequest = await _prepareRequestWithNewToken(originalRequest);
-    if (updatedRequest == null) return null;
-
-    // Step 3: Retry the request
     try {
+      // Prevent multiple concurrent refresh attempts
+      if (_isRefreshing) {
+        // Wait for the ongoing refresh to complete
+        final completer = Completer<bool>();
+        _refreshCompleters.add(completer);
+        final refreshSuccess = await completer.future;
+
+        if (!refreshSuccess) return null;
+      } else {
+        // Step 1: Refresh tokens using self-contained logic
+        _isRefreshing = true;
+        final refreshSuccess = await _refreshTokens();
+
+        // Notify all waiting requests of the result
+        for (final completer in _refreshCompleters) {
+          completer.complete(refreshSuccess);
+        }
+        _refreshCompleters.clear();
+        _isRefreshing = false;
+
+        if (!refreshSuccess) return null;
+      }
+
+      // Step 2: Prepare request with new token (mobile only)
+      final updatedRequest = await _prepareRequestWithNewToken(originalRequest);
+      if (updatedRequest == null) return null;
+
+      // Step 3: Retry the request
       return await _dio.fetch(updatedRequest);
-    } catch (_) {
-      return null; // Retry failed
+    } catch (e, stackTrace) {
+      // Reset refresh state on error
+      if (_isRefreshing) {
+        for (final completer in _refreshCompleters) {
+          completer.complete(false);
+        }
+        _refreshCompleters.clear();
+        _isRefreshing = false;
+      }
+
+      log('Token refresh and retry failed', error: e, stackTrace: stackTrace);
+      return null;
     }
   }
 
@@ -89,7 +147,8 @@ class RefreshTokenInterceptor extends Interceptor {
       } else {
         return await _refreshTokensMobile();
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      log('Token refresh failed', error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -99,24 +158,29 @@ class RefreshTokenInterceptor extends Interceptor {
     try {
       // Get current refresh token from storage
       final tokensResult = await tokenStorage.getTokens().run();
-      final refreshToken = tokensResult.fold(
-        (_) => null,
-        (tokens) => tokens?.refreshToken,
-      );
+      final refreshToken = tokensResult.fold((failure) {
+        log('Failed to get tokens from storage: $failure');
+        return null;
+      }, (tokens) => tokens?.refreshToken);
 
       if (refreshToken == null) {
+        log('No refresh token available');
         return false;
       }
 
-      // Make refresh request
+      // Make refresh request with timeout
       final response = await _dio.post(
         '/auth/refresh',
-        options: Options(headers: {'Authorization': 'Bearer $refreshToken'}),
+        options: Options(
+          headers: {'Authorization': 'Bearer $refreshToken'},
+          sendTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
+        ),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && response.data != null) {
         // Parse new tokens
-        final data = response.data;
+        final data = response.data as Map<String, dynamic>;
         final tokensModel = TokensModel.fromJson(data);
 
         // Save new tokens to storage
@@ -127,10 +191,19 @@ class RefreshTokenInterceptor extends Interceptor {
             )
             .run();
 
-        return saveResult.isRight();
+        final success = saveResult.isRight();
+        if (success) {
+          log('Tokens refreshed successfully');
+        } else {
+          log('Failed to save new tokens to storage');
+        }
+        return success;
+      } else {
+        log('Refresh request failed with status: ${response.statusCode}');
+        return false;
       }
-      return false;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      log('Mobile token refresh failed', error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -140,7 +213,8 @@ class RefreshTokenInterceptor extends Interceptor {
     try {
       final response = await _dio.post('/auth/refresh');
       return response.statusCode == 200;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      log('Web token refresh failed', error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -169,19 +243,40 @@ class RefreshTokenInterceptor extends Interceptor {
     );
   }
 
-  bool _shouldRefreshToken(DioException err) {
-    if (err.response?.statusCode != 401) return false;
+  bool _shouldRefreshToken(Response response) {
+    // Only attempt refresh on 401 Unauthorized responses
+    if (response.statusCode != 401) return false;
+
+    log('Checking if 401 response should trigger token refresh');
 
     // Check error message for token-related issues, default to true for 401s
-    final responseData = err.response?.data;
+    final responseData = response.data;
     if (responseData is Map<String, dynamic>) {
       final errorMessage =
           responseData['error']?.toString().toLowerCase() ?? '';
+      final message = responseData['message']?.toString().toLowerCase() ?? '';
+
+      log('Response error: $errorMessage, message: $message');
+
+      // Don't refresh if it's explicitly not a token issue
+      if (errorMessage.contains('invalid credentials') ||
+          message.contains('invalid credentials') ||
+          errorMessage.contains('wrong password') ||
+          message.contains('wrong password')) {
+        log('Not attempting refresh - invalid credentials');
+        return false;
+      }
+
+      // Refresh for token-related errors or empty errors (default 401 behavior)
       return errorMessage.isEmpty ||
+          message.isEmpty ||
           errorMessage.contains('expire') ||
-          errorMessage.contains('token');
+          errorMessage.contains('token') ||
+          message.contains('expire') ||
+          message.contains('token');
     }
 
-    return true; // Treat any 401 as token issue
+    log('Treating 401 as token issue - will attempt refresh');
+    return true; // Treat any 401 as token issue if no specific error info
   }
 }

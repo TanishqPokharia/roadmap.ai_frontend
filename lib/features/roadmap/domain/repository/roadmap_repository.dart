@@ -11,4 +11,10 @@ abstract class RoadmapRepository {
     int skip,
   );
   TaskEither<Failure, Roadmap> getRoadmapById(String roadmapId);
+  TaskEither<Failure, void> updateRoadmapSubgoalStatus({
+    required String roadmapId,
+    required String goalId,
+    required String subgoalId,
+    required bool isCompleted,
+  });
 }

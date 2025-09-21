@@ -8,6 +8,19 @@ class SubgoalStatus {
     this.completedAt,
     required this.id,
   });
+
+  // a copyWith method
+  SubgoalStatus copyWith({
+    bool? isCompleted,
+    DateTime? completedAt,
+    String? id,
+  }) {
+    return SubgoalStatus(
+      completed: isCompleted ?? completed,
+      completedAt: completedAt ?? this.completedAt,
+      id: id ?? this.id,
+    );
+  }
 }
 
 class Subgoal {
@@ -26,4 +39,23 @@ class Subgoal {
     required this.status,
     required this.id,
   });
+
+  // a copyWith method
+  Subgoal copyWith({
+    String? title,
+    String? description,
+    String? duration,
+    List<String>? resources,
+    SubgoalStatus? status,
+    String? id,
+  }) {
+    return Subgoal(
+      title: title ?? this.title,
+      description: description ?? this.description,
+      duration: duration ?? this.duration,
+      resources: resources ?? this.resources,
+      status: status ?? this.status,
+      id: id ?? this.id,
+    );
+  }
 }

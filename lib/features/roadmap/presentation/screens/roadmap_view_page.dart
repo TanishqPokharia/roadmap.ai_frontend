@@ -25,8 +25,10 @@ class RoadmapViewPage extends ConsumerWidget {
       body: ref
           .watch(roadmapView)
           .when(
-            data: (roadmap) =>
-                _RoadmapContent(roadmapId: roadmapId, roadmap: roadmap),
+            data: (roadmapState) => _RoadmapContent(
+              roadmapId: roadmapId,
+              roadmap: roadmapState.roadmap,
+            ),
             loading: () => const _LoadingContent(),
             error: (error, stack) => _ErrorContent(
               error: error,

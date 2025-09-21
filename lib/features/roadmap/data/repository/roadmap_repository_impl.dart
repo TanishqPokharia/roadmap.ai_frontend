@@ -51,4 +51,19 @@ class RoadmapRepositoryImpl implements RoadmapRepository {
         .getRoadmapById(roadmapId)
         .map((roadmapModel) => roadmapModel.toEntity());
   }
+
+  @override
+  TaskEither<Failure, void> updateRoadmapSubgoalStatus({
+    required String roadmapId,
+    required String goalId,
+    required String subgoalId,
+    required bool isCompleted,
+  }) {
+    return _datasource.updateRoadmapSubgoalStatus(
+      roadmapId: roadmapId,
+      goalId: goalId,
+      subgoalId: subgoalId,
+      isCompleted: isCompleted,
+    );
+  }
 }

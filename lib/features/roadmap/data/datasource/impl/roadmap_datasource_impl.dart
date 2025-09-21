@@ -101,4 +101,27 @@ class RoadmapDatasourceImpl implements RoadmapDatasource {
       ),
     );
   }
+
+  @override
+  TaskEither<Failure, void> updateRoadmapSubgoalStatus({
+    required String roadmapId,
+    required String goalId,
+    required String subgoalId,
+    required bool isCompleted,
+  }) {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.patch(
+          "/roadmap/$roadmapId/$goalId/$subgoalId/$isCompleted",
+        );
+        if (response.statusCode != 200) {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Could not update subgoal status',
+      ),
+    );
+  }
 }

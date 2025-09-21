@@ -7,7 +7,7 @@ part of 'roadmap_view_notifier.dart';
 // **************************************************************************
 
 String _$roadmapViewNotifierHash() =>
-    r'08b6a395330fae1167c1d1e97f394cd8142302cc';
+    r'f25a338f5fa8e7032f96e82bff0b8ed8a82f7d33';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,10 +31,10 @@ class _SystemHash {
 }
 
 abstract class _$RoadmapViewNotifier
-    extends BuildlessAutoDisposeAsyncNotifier<Roadmap> {
+    extends BuildlessAutoDisposeAsyncNotifier<RoadmapViewState> {
   late final String roadmapId;
 
-  FutureOr<Roadmap> build(String roadmapId);
+  FutureOr<RoadmapViewState> build(String roadmapId);
 }
 
 /// See also [RoadmapViewNotifier].
@@ -42,7 +42,7 @@ abstract class _$RoadmapViewNotifier
 const roadmapViewNotifierProvider = RoadmapViewNotifierFamily();
 
 /// See also [RoadmapViewNotifier].
-class RoadmapViewNotifierFamily extends Family<AsyncValue<Roadmap>> {
+class RoadmapViewNotifierFamily extends Family<AsyncValue<RoadmapViewState>> {
   /// See also [RoadmapViewNotifier].
   const RoadmapViewNotifierFamily();
 
@@ -75,7 +75,11 @@ class RoadmapViewNotifierFamily extends Family<AsyncValue<Roadmap>> {
 
 /// See also [RoadmapViewNotifier].
 class RoadmapViewNotifierProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<RoadmapViewNotifier, Roadmap> {
+    extends
+        AutoDisposeAsyncNotifierProviderImpl<
+          RoadmapViewNotifier,
+          RoadmapViewState
+        > {
   /// See also [RoadmapViewNotifier].
   RoadmapViewNotifierProvider(String roadmapId)
     : this._internal(
@@ -104,7 +108,9 @@ class RoadmapViewNotifierProvider
   final String roadmapId;
 
   @override
-  FutureOr<Roadmap> runNotifierBuild(covariant RoadmapViewNotifier notifier) {
+  FutureOr<RoadmapViewState> runNotifierBuild(
+    covariant RoadmapViewNotifier notifier,
+  ) {
     return notifier.build(roadmapId);
   }
 
@@ -125,7 +131,7 @@ class RoadmapViewNotifierProvider
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<RoadmapViewNotifier, Roadmap>
+  AutoDisposeAsyncNotifierProviderElement<RoadmapViewNotifier, RoadmapViewState>
   createElement() {
     return _RoadmapViewNotifierProviderElement(this);
   }
@@ -146,14 +152,18 @@ class RoadmapViewNotifierProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin RoadmapViewNotifierRef on AutoDisposeAsyncNotifierProviderRef<Roadmap> {
+mixin RoadmapViewNotifierRef
+    on AutoDisposeAsyncNotifierProviderRef<RoadmapViewState> {
   /// The parameter `roadmapId` of this provider.
   String get roadmapId;
 }
 
 class _RoadmapViewNotifierProviderElement
     extends
-        AutoDisposeAsyncNotifierProviderElement<RoadmapViewNotifier, Roadmap>
+        AutoDisposeAsyncNotifierProviderElement<
+          RoadmapViewNotifier,
+          RoadmapViewState
+        >
     with RoadmapViewNotifierRef {
   _RoadmapViewNotifierProviderElement(super.provider);
 
