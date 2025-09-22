@@ -34,7 +34,7 @@ class YourPostsPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Your Roadmaps',
+                'Your Posts',
                 style: textTheme.headlineLarge!.copyWith(
                   fontWeight: FontWeight.bold,
                 ),

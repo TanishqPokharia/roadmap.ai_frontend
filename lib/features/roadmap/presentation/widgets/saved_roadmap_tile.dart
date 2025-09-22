@@ -94,30 +94,46 @@ class SavedRoadmapTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                Consumer(
-                  builder: (context, ref, child) {
-                    return SizedBox(
-                      height: screenHeight * 0.035,
-                      child: OutlinedButton(
-                        onPressed: () {
-                          context.goNamed(AppRoutes.createPost, extra: roadmap);
-                        },
-                        style: OutlinedButton.styleFrom(
-                          textStyle: textTheme.bodyMedium,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: colorScheme.primary),
-                            borderRadius: BorderRadius.circular(8),
+                if (!roadmap.isPosted)
+                  Consumer(
+                    builder: (context, ref, child) {
+                      return SizedBox(
+                        height: screenHeight * 0.035,
+                        child: OutlinedButton(
+                          onPressed: () {
+                            context.goNamed(
+                              AppRoutes.createPost,
+                              extra: roadmap,
+                            );
+                          },
+                          style: OutlinedButton.styleFrom(
+                            textStyle: textTheme.bodyMedium,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(color: colorScheme.primary),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
                           ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
+                          child: Text('Post'),
                         ),
-                        child: Text('Post'),
+                      );
+                    },
+                  )
+                // show a posted chip
+                else
+                  Chip(
+                    label: Text(
+                      'Posted',
+                      style: textTheme.bodyMedium!.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
                       ),
-                    );
-                  },
-                ),
+                    ),
+                    backgroundColor: colorScheme.primary,
+                  ),
               ],
             ),
           ],

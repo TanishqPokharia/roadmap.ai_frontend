@@ -4,32 +4,32 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
 import 'package:roadmap_ai/core/utils/usecase.dart';
-import 'package:roadmap_ai/features/auth/data/repository/auth_repository_impl.dart';
-import 'package:roadmap_ai/features/auth/domain/repository/auth_repository.dart';
+import 'package:roadmap_ai/features/community/data/repository/post_repository_impl.dart';
+import 'package:roadmap_ai/features/community/domain/repository/post_repository.dart';
 
-part 'update_user_avatar.g.dart';
+part 'create_post.g.dart';
 
-@Riverpod(keepAlive: true)
-UpdateUserAvatar updateUserAvatar(Ref ref) {
-  final authRepository = ref.read(authRepositoryProvider);
-  return UpdateUserAvatar(authRepository);
+@riverpod
+CreatePost createPost(Ref ref) {
+  final repository = ref.read(postRepositoryProvider);
+  return CreatePost(repository);
 }
 
-class UpdateUserAvatar implements Usecase<UpdateUserAvatarParams, String> {
-  final AuthRepository _authRepository;
-
-  UpdateUserAvatar(this._authRepository);
+class CreatePost implements Usecase<CreatePostParams, void> {
+  final PostRepository _repository;
+  CreatePost(this._repository);
 
   @override
-  TaskEither<Failure, String> call(UpdateUserAvatarParams params) {
+  TaskEither<Failure, void> call(CreatePostParams params) {
     return TaskEither.tryCatch(
       () async {
-        if (params.image.files.isEmpty) {
+        if (params.bannerImage.files.isEmpty) {
           throw FilePickerFailure('No file selected');
         }
-        final file = params.image.files.first;
+        final file = params.bannerImage.files.first;
         MultipartFile multipartFile;
         if (kIsWeb) {
           if (file.bytes == null) {
@@ -50,11 +50,10 @@ class UpdateUserAvatar implements Usecase<UpdateUserAvatarParams, String> {
             filename: file.name,
           );
         }
-        final result = await _authRepository.updateAvatar(multipartFile).run();
-        return result.fold(
-          (failure) => throw failure,
-          (avatarUrl) => avatarUrl,
-        );
+        final result = await _repository
+            .createPost(roadmap: params.roadmap, bannerImage: multipartFile)
+            .run();
+        return result.fold((failure) => throw failure, (success) => success);
       },
       (error, stackTrace) {
         if (error is Failure) return error;
@@ -64,8 +63,9 @@ class UpdateUserAvatar implements Usecase<UpdateUserAvatarParams, String> {
   }
 }
 
-class UpdateUserAvatarParams {
-  final FilePickerResult image;
+class CreatePostParams {
+  final Roadmap roadmap;
+  final FilePickerResult bannerImage;
 
-  UpdateUserAvatarParams({required this.image});
+  CreatePostParams({required this.roadmap, required this.bannerImage});
 }

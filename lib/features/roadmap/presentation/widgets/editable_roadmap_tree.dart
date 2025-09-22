@@ -13,29 +13,36 @@ import 'package:roadmap_ai/features/roadmap/presentation/widgets/add_subgoal_dia
 import 'package:roadmap_ai/features/roadmap/presentation/widgets/edit_goal_dialog.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/widgets/edit_subgoal_dialog.dart';
 
-class EditableRoadmapTree extends StatefulWidget {
+class EditableRoadmapTree extends ConsumerStatefulWidget {
   final Roadmap roadmap;
   final bool isProgressEditable;
   final bool isCustomizable;
   final bool shrinkWrap;
-  final CreatePostNotifier? createPostNotifier;
 
   const EditableRoadmapTree({
     required this.roadmap,
     required this.isProgressEditable,
     this.isCustomizable = false,
     this.shrinkWrap = false,
-    this.createPostNotifier,
     super.key,
   });
 
   @override
-  State<EditableRoadmapTree> createState() => _EditableRoadmapTreeState();
+  ConsumerState<EditableRoadmapTree> createState() =>
+      _EditableRoadmapTreeState();
 }
 
-class _EditableRoadmapTreeState extends State<EditableRoadmapTree> {
+class _EditableRoadmapTreeState extends ConsumerState<EditableRoadmapTree> {
   @override
   Widget build(BuildContext context) {
+    // Get the CreatePostNotifier if we're in customizable mode
+    final notifier = widget.isCustomizable
+        ? ref.read(createPostNotifierProvider(widget.roadmap.id).notifier)
+        : null;
+
+    print(
+      'EditableRoadmapTree - isCustomizable: ${widget.isCustomizable}, notifier: ${notifier != null ? 'available' : 'null'}',
+    );
     if (widget.shrinkWrap) {
       // For use in scrollable contexts like CustomScrollView
       return Column(
@@ -54,7 +61,6 @@ class _EditableRoadmapTreeState extends State<EditableRoadmapTree> {
                 goal: widget.roadmap.goals[index],
                 isProgressEditable: widget.isProgressEditable,
                 isCustomizable: widget.isCustomizable,
-                createPostNotifier: widget.createPostNotifier,
               );
             },
           ),
@@ -65,12 +71,12 @@ class _EditableRoadmapTreeState extends State<EditableRoadmapTree> {
                 width: double.infinity,
                 child: OutlinedButton.icon(
                   onPressed: () {
-                    if (widget.createPostNotifier != null) {
+                    if (notifier != null) {
                       showDialog(
                         context: context,
                         builder: (context) => AddGoalDialog(
                           onSave: (title) {
-                            widget.createPostNotifier!.addNewGoal(title);
+                            notifier.addNewGoal(title);
                           },
                         ),
                       );
@@ -105,7 +111,6 @@ class _EditableRoadmapTreeState extends State<EditableRoadmapTree> {
                   goal: widget.roadmap.goals[index],
                   isProgressEditable: widget.isProgressEditable,
                   isCustomizable: widget.isCustomizable,
-                  createPostNotifier: widget.createPostNotifier,
                 );
               },
             ),
@@ -117,12 +122,12 @@ class _EditableRoadmapTreeState extends State<EditableRoadmapTree> {
                 width: double.infinity,
                 child: OutlinedButton.icon(
                   onPressed: () {
-                    if (widget.createPostNotifier != null) {
+                    if (notifier != null) {
                       showDialog(
                         context: context,
                         builder: (context) => AddGoalDialog(
                           onSave: (title) {
-                            widget.createPostNotifier!.addNewGoal(title);
+                            notifier.addNewGoal(title);
                           },
                         ),
                       );
@@ -145,7 +150,7 @@ class _EditableRoadmapTreeState extends State<EditableRoadmapTree> {
   }
 }
 
-class EditableGoalNode extends StatefulWidget {
+class EditableGoalNode extends ConsumerStatefulWidget {
   const EditableGoalNode({
     super.key,
     required this.goal,
@@ -154,7 +159,6 @@ class EditableGoalNode extends StatefulWidget {
     this.haveDivider = true,
     this.isProgressEditable = false,
     this.isCustomizable = false,
-    this.createPostNotifier,
   });
 
   final Goal goal;
@@ -163,13 +167,12 @@ class EditableGoalNode extends StatefulWidget {
   final bool haveDivider;
   final bool isProgressEditable;
   final bool isCustomizable;
-  final CreatePostNotifier? createPostNotifier;
 
   @override
-  State<EditableGoalNode> createState() => _EditableGoalNodeState();
+  ConsumerState<EditableGoalNode> createState() => _EditableGoalNodeState();
 }
 
-class _EditableGoalNodeState extends State<EditableGoalNode> {
+class _EditableGoalNodeState extends ConsumerState<EditableGoalNode> {
   bool _isExpanded = false;
 
   // List to track expanded state of subgoals
@@ -252,6 +255,11 @@ class _EditableGoalNodeState extends State<EditableGoalNode> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the CreatePostNotifier if we're in customizable mode
+    final notifier = widget.isCustomizable
+        ? ref.read(createPostNotifierProvider(widget.roadmapId).notifier)
+        : null;
+
     final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
     final colorScheme = context.colorScheme;
@@ -322,12 +330,11 @@ class _EditableGoalNodeState extends State<EditableGoalNode> {
                                     builder: (context) => EditGoalDialog(
                                       goal: widget.goal,
                                       onSave: (newTitle) {
-                                        if (widget.createPostNotifier != null) {
-                                          widget.createPostNotifier!
-                                              .setGoalTitle(
-                                                widget.goal.id,
-                                                newTitle,
-                                              );
+                                        if (notifier != null) {
+                                          notifier.setGoalTitle(
+                                            widget.goal.id,
+                                            newTitle,
+                                          );
                                         } else {
                                           // TODO: Implement goal edit functionality with roadmap notifier
                                           print(
@@ -381,8 +388,6 @@ class _EditableGoalNodeState extends State<EditableGoalNode> {
                                     isProgressEditable:
                                         widget.isProgressEditable,
                                     isCustomizable: widget.isCustomizable,
-                                    createPostNotifier:
-                                        widget.createPostNotifier,
                                     onExpansionChanged: (expanded) {
                                       // Update the expanded state of this subgoal
                                       if (i < _expandedSubgoals.length) {
@@ -398,7 +403,10 @@ class _EditableGoalNodeState extends State<EditableGoalNode> {
                                     padding: EdgeInsets.only(left: 20, top: 10),
                                     child: OutlinedButton.icon(
                                       onPressed: () {
-                                        if (widget.createPostNotifier != null) {
+                                        print(
+                                          'Add Subgoal button pressed - notifier: ${notifier != null ? 'available' : 'null'}',
+                                        );
+                                        if (notifier != null) {
                                           showDialog(
                                             context: context,
                                             builder: (context) =>
@@ -413,20 +421,15 @@ class _EditableGoalNodeState extends State<EditableGoalNode> {
                                                         required List<String>
                                                         resources,
                                                       }) {
-                                                        widget
-                                                            .createPostNotifier!
-                                                            .addNewSubgoal(
-                                                              goalId: widget
-                                                                  .goal
-                                                                  .id,
-                                                              title: title,
-                                                              description:
-                                                                  description,
-                                                              duration:
-                                                                  duration,
-                                                              resources:
-                                                                  resources,
-                                                            );
+                                                        notifier.addNewSubgoal(
+                                                          goalId:
+                                                              widget.goal.id,
+                                                          title: title,
+                                                          description:
+                                                              description,
+                                                          duration: duration,
+                                                          resources: resources,
+                                                        );
                                                       },
                                                 ),
                                           );
@@ -500,7 +503,6 @@ class EditableSubgoalNode extends ConsumerStatefulWidget {
     this.isLast = false,
     this.isProgressEditable = false,
     this.isCustomizable = false,
-    this.createPostNotifier,
     this.onExpansionChanged,
   });
   final String roadmapId;
@@ -511,7 +513,6 @@ class EditableSubgoalNode extends ConsumerStatefulWidget {
   final bool isLast;
   final bool isProgressEditable;
   final bool isCustomizable;
-  final CreatePostNotifier? createPostNotifier;
   final Function(bool)? onExpansionChanged;
 
   @override
@@ -560,6 +561,11 @@ class _EditableSubgoalNodeState extends ConsumerState<EditableSubgoalNode> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the CreatePostNotifier if we're in customizable mode
+    final notifier = widget.isCustomizable
+        ? ref.read(createPostNotifierProvider(widget.roadmapId).notifier)
+        : null;
+
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
     final isCompleted = widget.subgoal.status?.completed ?? false;
@@ -664,15 +670,14 @@ class _EditableSubgoalNodeState extends ConsumerState<EditableSubgoalNode> {
                               builder: (context) => EditSubgoalDialog(
                                 subgoal: widget.subgoal,
                                 onSave: (newTitle, newDescription, newResources) {
-                                  if (widget.createPostNotifier != null) {
-                                    widget.createPostNotifier!
-                                        .setSubgoalDetails(
-                                          widget.goalId,
-                                          widget.subgoal.id,
-                                          newTitle,
-                                          newDescription,
-                                          newResources,
-                                        );
+                                  if (notifier != null) {
+                                    notifier.setSubgoalDetails(
+                                      widget.goalId,
+                                      widget.subgoal.id,
+                                      newTitle,
+                                      newDescription,
+                                      newResources,
+                                    );
                                   } else {
                                     // TODO: Implement subgoal edit functionality with roadmap notifier
                                     print(

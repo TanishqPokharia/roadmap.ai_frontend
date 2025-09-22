@@ -38,7 +38,7 @@ class SavedRoadmapsNotifier extends _$SavedRoadmapsNotifier {
     });
   }
 
-  void resetRoadmaps() async {
+  void refresh() async {
     _skip = 0;
     _roadmaps.clear();
     _canGetMore = true;

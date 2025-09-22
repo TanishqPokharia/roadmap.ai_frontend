@@ -41,7 +41,7 @@ class ProfileNotifier extends _$ProfileNotifier {
     );
   }
 
-  void changeAvatar(FilePickerResult? file) async {
+  void changeAvatar(FilePickerResult file) async {
     final currentState = state as AsyncData<ProfileState>;
     state = const AsyncLoading();
     final changedAvatar = await ref

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RoadmapMetadataModel {
 
- String get id; String get title; String get description; int get goalsCount; int get subgoalsCount; int get completedSubgoals;
+ String get id; String get title; String get description; int get goalsCount; int get subgoalsCount; int get completedSubgoals; bool get isPosted;
 /// Create a copy of RoadmapMetadataModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RoadmapMetadataModelCopyWith<RoadmapMetadataModel> get copyWith => _$RoadmapMet
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RoadmapMetadataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.goalsCount, goalsCount) || other.goalsCount == goalsCount)&&(identical(other.subgoalsCount, subgoalsCount) || other.subgoalsCount == subgoalsCount)&&(identical(other.completedSubgoals, completedSubgoals) || other.completedSubgoals == completedSubgoals));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RoadmapMetadataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.goalsCount, goalsCount) || other.goalsCount == goalsCount)&&(identical(other.subgoalsCount, subgoalsCount) || other.subgoalsCount == subgoalsCount)&&(identical(other.completedSubgoals, completedSubgoals) || other.completedSubgoals == completedSubgoals)&&(identical(other.isPosted, isPosted) || other.isPosted == isPosted));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,goalsCount,subgoalsCount,completedSubgoals);
+int get hashCode => Object.hash(runtimeType,id,title,description,goalsCount,subgoalsCount,completedSubgoals,isPosted);
 
 @override
 String toString() {
-  return 'RoadmapMetadataModel(id: $id, title: $title, description: $description, goalsCount: $goalsCount, subgoalsCount: $subgoalsCount, completedSubgoals: $completedSubgoals)';
+  return 'RoadmapMetadataModel(id: $id, title: $title, description: $description, goalsCount: $goalsCount, subgoalsCount: $subgoalsCount, completedSubgoals: $completedSubgoals, isPosted: $isPosted)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RoadmapMetadataModelCopyWith<$Res>  {
   factory $RoadmapMetadataModelCopyWith(RoadmapMetadataModel value, $Res Function(RoadmapMetadataModel) _then) = _$RoadmapMetadataModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String description, int goalsCount, int subgoalsCount, int completedSubgoals
+ String id, String title, String description, int goalsCount, int subgoalsCount, int completedSubgoals, bool isPosted
 });
 
 
@@ -65,7 +65,7 @@ class _$RoadmapMetadataModelCopyWithImpl<$Res>
 
 /// Create a copy of RoadmapMetadataModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? goalsCount = null,Object? subgoalsCount = null,Object? completedSubgoals = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? goalsCount = null,Object? subgoalsCount = null,Object? completedSubgoals = null,Object? isPosted = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -73,7 +73,8 @@ as String,description: null == description ? _self.description : description // 
 as String,goalsCount: null == goalsCount ? _self.goalsCount : goalsCount // ignore: cast_nullable_to_non_nullable
 as int,subgoalsCount: null == subgoalsCount ? _self.subgoalsCount : subgoalsCount // ignore: cast_nullable_to_non_nullable
 as int,completedSubgoals: null == completedSubgoals ? _self.completedSubgoals : completedSubgoals // ignore: cast_nullable_to_non_nullable
-as int,
+as int,isPosted: null == isPosted ? _self.isPosted : isPosted // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  int goalsCount,  int subgoalsCount,  int completedSubgoals)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  int goalsCount,  int subgoalsCount,  int completedSubgoals,  bool isPosted)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RoadmapMetadataModel() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.subgoalsCount,_that.completedSubgoals);case _:
+return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.subgoalsCount,_that.completedSubgoals,_that.isPosted);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.su
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  int goalsCount,  int subgoalsCount,  int completedSubgoals)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  int goalsCount,  int subgoalsCount,  int completedSubgoals,  bool isPosted)  $default,) {final _that = this;
 switch (_that) {
 case _RoadmapMetadataModel():
-return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.subgoalsCount,_that.completedSubgoals);case _:
+return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.subgoalsCount,_that.completedSubgoals,_that.isPosted);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.su
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  int goalsCount,  int subgoalsCount,  int completedSubgoals)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  int goalsCount,  int subgoalsCount,  int completedSubgoals,  bool isPosted)?  $default,) {final _that = this;
 switch (_that) {
 case _RoadmapMetadataModel() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.subgoalsCount,_that.completedSubgoals);case _:
+return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.subgoalsCount,_that.completedSubgoals,_that.isPosted);case _:
   return null;
 
 }
@@ -214,7 +215,7 @@ return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.su
 @JsonSerializable()
 
 class _RoadmapMetadataModel implements RoadmapMetadataModel {
-   _RoadmapMetadataModel({required this.id, required this.title, required this.description, required this.goalsCount, required this.subgoalsCount, required this.completedSubgoals});
+   _RoadmapMetadataModel({required this.id, required this.title, required this.description, required this.goalsCount, required this.subgoalsCount, required this.completedSubgoals, required this.isPosted});
   factory _RoadmapMetadataModel.fromJson(Map<String, dynamic> json) => _$RoadmapMetadataModelFromJson(json);
 
 @override final  String id;
@@ -223,6 +224,7 @@ class _RoadmapMetadataModel implements RoadmapMetadataModel {
 @override final  int goalsCount;
 @override final  int subgoalsCount;
 @override final  int completedSubgoals;
+@override final  bool isPosted;
 
 /// Create a copy of RoadmapMetadataModel
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RoadmapMetadataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.goalsCount, goalsCount) || other.goalsCount == goalsCount)&&(identical(other.subgoalsCount, subgoalsCount) || other.subgoalsCount == subgoalsCount)&&(identical(other.completedSubgoals, completedSubgoals) || other.completedSubgoals == completedSubgoals));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RoadmapMetadataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.goalsCount, goalsCount) || other.goalsCount == goalsCount)&&(identical(other.subgoalsCount, subgoalsCount) || other.subgoalsCount == subgoalsCount)&&(identical(other.completedSubgoals, completedSubgoals) || other.completedSubgoals == completedSubgoals)&&(identical(other.isPosted, isPosted) || other.isPosted == isPosted));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,goalsCount,subgoalsCount,completedSubgoals);
+int get hashCode => Object.hash(runtimeType,id,title,description,goalsCount,subgoalsCount,completedSubgoals,isPosted);
 
 @override
 String toString() {
-  return 'RoadmapMetadataModel(id: $id, title: $title, description: $description, goalsCount: $goalsCount, subgoalsCount: $subgoalsCount, completedSubgoals: $completedSubgoals)';
+  return 'RoadmapMetadataModel(id: $id, title: $title, description: $description, goalsCount: $goalsCount, subgoalsCount: $subgoalsCount, completedSubgoals: $completedSubgoals, isPosted: $isPosted)';
 }
 
 
@@ -257,7 +259,7 @@ abstract mixin class _$RoadmapMetadataModelCopyWith<$Res> implements $RoadmapMet
   factory _$RoadmapMetadataModelCopyWith(_RoadmapMetadataModel value, $Res Function(_RoadmapMetadataModel) _then) = __$RoadmapMetadataModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String description, int goalsCount, int subgoalsCount, int completedSubgoals
+ String id, String title, String description, int goalsCount, int subgoalsCount, int completedSubgoals, bool isPosted
 });
 
 
@@ -274,7 +276,7 @@ class __$RoadmapMetadataModelCopyWithImpl<$Res>
 
 /// Create a copy of RoadmapMetadataModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? goalsCount = null,Object? subgoalsCount = null,Object? completedSubgoals = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? goalsCount = null,Object? subgoalsCount = null,Object? completedSubgoals = null,Object? isPosted = null,}) {
   return _then(_RoadmapMetadataModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -282,7 +284,8 @@ as String,description: null == description ? _self.description : description // 
 as String,goalsCount: null == goalsCount ? _self.goalsCount : goalsCount // ignore: cast_nullable_to_non_nullable
 as int,subgoalsCount: null == subgoalsCount ? _self.subgoalsCount : subgoalsCount // ignore: cast_nullable_to_non_nullable
 as int,completedSubgoals: null == completedSubgoals ? _self.completedSubgoals : completedSubgoals // ignore: cast_nullable_to_non_nullable
-as int,
+as int,isPosted: null == isPosted ? _self.isPosted : isPosted // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

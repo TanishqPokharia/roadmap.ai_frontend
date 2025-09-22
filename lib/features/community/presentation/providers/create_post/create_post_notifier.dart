@@ -3,34 +3,32 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/entities/goal.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/common/entities/subgoal.dart';
+import 'package:roadmap_ai/features/community/domain/usecases/create_post/create_post.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/providers/roadmap_view/roadmap_view_notifier.dart';
+import 'package:roadmap_ai/features/roadmap/presentation/providers/saved_roadmaps/saved_roadmaps_notifier.dart';
 
 part 'create_post_notifier.g.dart';
 
 class CreatePostState {
   final Roadmap? roadmap;
-  final String? title;
-  final String? description;
   final FilePickerResult? bannerImage;
+  final bool isUploaded;
 
   CreatePostState({
     required this.roadmap,
-    this.title,
-    this.description,
     this.bannerImage,
+    this.isUploaded = false,
   });
 
   CreatePostState copyWith({
     Roadmap? roadmap,
-    String? title,
-    String? description,
     FilePickerResult? bannerImage,
+    bool? isUploaded,
   }) {
     return CreatePostState(
       roadmap: roadmap ?? this.roadmap,
-      title: title ?? this.title,
-      description: description ?? this.description,
       bannerImage: bannerImage ?? this.bannerImage,
+      isUploaded: isUploaded ?? this.isUploaded,
     );
   }
 }
@@ -44,6 +42,37 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       data: (data) => CreatePostState(roadmap: data.roadmap),
       orElse: () => CreatePostState(roadmap: null),
     );
+  }
+
+  bool isBannerSelected() {
+    return state.value?.bannerImage != null;
+  }
+
+  void createPost(String title, String description) async {
+    state = AsyncData(
+      state.value!.copyWith(
+        roadmap: state.value?.roadmap?.copyWith(
+          title: title,
+          description: description,
+        ),
+      ),
+    );
+    state = AsyncLoading();
+    final post = await ref
+        .read(createPostProvider)
+        .call(
+          CreatePostParams(
+            roadmap: state.value!.roadmap!,
+            bannerImage: state.value!.bannerImage!,
+          ),
+        )
+        .run();
+    post.fold((failure) => state = AsyncError(failure, StackTrace.current), (
+      r,
+    ) {
+      ref.read(savedRoadmapsNotifierProvider.notifier).refresh();
+      return state = AsyncData(state.value!.copyWith(isUploaded: true));
+    });
   }
 
   void addRoadmapGoal(Goal goal) {
@@ -186,14 +215,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     }).toList();
     final updatedRoadmap = state.value!.roadmap!.copyWith(goals: updatedGoals);
     state = AsyncData(state.value!.copyWith(roadmap: updatedRoadmap));
-  }
-
-  void setTitle(String title) {
-    state = AsyncData(state.value!.copyWith(title: title));
-  }
-
-  void setDescription(String description) {
-    state = AsyncData(state.value!.copyWith(description: description));
   }
 
   void setBannerImage(FilePickerResult bannerImage) {

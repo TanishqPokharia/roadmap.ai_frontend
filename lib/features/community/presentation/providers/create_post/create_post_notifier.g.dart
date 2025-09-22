@@ -7,7 +7,7 @@ part of 'create_post_notifier.dart';
 // **************************************************************************
 
 String _$createPostNotifierHash() =>
-    r'c342e4f41898e6568b5a011d380287478716be49';
+    r'7112edf357a16ab08f092960baf2395bb630b8b0';
 
 /// Copied from Dart SDK
 class _SystemHash {
