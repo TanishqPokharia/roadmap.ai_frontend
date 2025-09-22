@@ -9,7 +9,8 @@
             "args": [
                 "-d",
                 "chrome",
-                "--web-experimental-hot-reload"
+                "--web-experimental-hot-reload",
+                "--web-port=8080"
             ]
         },
         {
@@ -40,6 +41,19 @@
             "type": "dart",
             "args": [
                 "--web-port=8080"
+            ]
+        },
+        {
+            "name": "Flutter Web Server Debug",
+            "type": "dart",
+            "request": "launch",
+            "flutterMode": "debug",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "web-server",
+                "--web-port=8080",
+                "--web-experimental-hot-reload"
             ]
         }
     ]

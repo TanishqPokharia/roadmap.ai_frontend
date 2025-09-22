@@ -7,7 +7,7 @@ part of 'saved_roadmaps_notifier.dart';
 // **************************************************************************
 
 String _$savedRoadmapsNotifierHash() =>
-    r'cca0d55603f04b6078d9d47f2e36ab392fa8c7d9';
+    r'3da231d4026a316c6243527e1d8133fb0ffc4842';
 
 /// See also [SavedRoadmapsNotifier].
 @ProviderFor(SavedRoadmapsNotifier)

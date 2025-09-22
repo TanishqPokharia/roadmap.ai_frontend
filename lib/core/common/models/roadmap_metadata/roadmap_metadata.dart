@@ -11,7 +11,8 @@ abstract class RoadmapMetadataModel with _$RoadmapMetadataModel {
     required String title,
     required String description,
     required int goalsCount,
-    required String progress,
+    required int subgoalsCount,
+    required int completedSubgoals,
   }) = _RoadmapMetadataModel;
 
   factory RoadmapMetadataModel.fromJson(Map<String, dynamic> json) =>
@@ -23,7 +24,8 @@ abstract class RoadmapMetadataModel with _$RoadmapMetadataModel {
       title: roadmapMetadata.title,
       description: roadmapMetadata.description,
       goalsCount: roadmapMetadata.goalsCount,
-      progress: roadmapMetadata.progress,
+      subgoalsCount: roadmapMetadata.subgoalsCount,
+      completedSubgoals: roadmapMetadata.completedSubgoals,
     );
   }
 }
@@ -35,7 +37,8 @@ extension RoadmapMetadataModelEntity on RoadmapMetadataModel {
       title: title,
       description: description,
       goalsCount: goalsCount,
-      progress: progress,
+      subgoalsCount: subgoalsCount,
+      completedSubgoals: completedSubgoals,
     );
   }
 }

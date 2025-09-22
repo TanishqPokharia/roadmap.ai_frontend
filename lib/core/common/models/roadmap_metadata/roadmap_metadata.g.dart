@@ -13,7 +13,8 @@ _RoadmapMetadataModel _$RoadmapMetadataModelFromJson(
   title: json['title'] as String,
   description: json['description'] as String,
   goalsCount: (json['goalsCount'] as num).toInt(),
-  progress: json['progress'] as String,
+  subgoalsCount: (json['subgoalsCount'] as num).toInt(),
+  completedSubgoals: (json['completedSubgoals'] as num).toInt(),
 );
 
 Map<String, dynamic> _$RoadmapMetadataModelToJson(
@@ -23,5 +24,6 @@ Map<String, dynamic> _$RoadmapMetadataModelToJson(
   'title': instance.title,
   'description': instance.description,
   'goalsCount': instance.goalsCount,
-  'progress': instance.progress,
+  'subgoalsCount': instance.subgoalsCount,
+  'completedSubgoals': instance.completedSubgoals,
 };

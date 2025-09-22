@@ -41,7 +41,9 @@ class SavedRoadmapTile extends StatelessWidget {
                 SizedBox(
                   width: screenWidth * 0.3,
                   child: LinearProgressIndicator(
-                    value: double.parse(roadmap.progress) / 100,
+                    value: roadmap.goalsCount == 0
+                        ? 0
+                        : (roadmap.completedSubgoals / roadmap.subgoalsCount),
                     backgroundColor: colorScheme.primary.withAlpha(50),
                     valueColor: AlwaysStoppedAnimation<Color>(
                       colorScheme.primary,
@@ -50,7 +52,9 @@ class SavedRoadmapTile extends StatelessWidget {
                     minHeight: 8,
                   ),
                 ),
-                Text('${(double.parse(roadmap.progress))}%'),
+                Text(
+                  '${(roadmap.completedSubgoals / roadmap.subgoalsCount * 100).toStringAsFixed(2)}%',
+                ),
               ],
             ),
 
@@ -96,10 +100,7 @@ class SavedRoadmapTile extends StatelessWidget {
                       height: screenHeight * 0.035,
                       child: OutlinedButton(
                         onPressed: () {
-                          context.pushNamed(
-                            AppRoutes.createPost,
-                            extra: roadmap,
-                          );
+                          context.goNamed(AppRoutes.createPost, extra: roadmap);
                         },
                         style: OutlinedButton.styleFrom(
                           textStyle: textTheme.bodyMedium,

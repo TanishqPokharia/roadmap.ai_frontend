@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'roadmap_view_notifier.dart';
+part of 'create_post_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$roadmapViewNotifierHash() =>
-    r'bc019a2c7d2b59d6f796b177c2c755c8bd855aed';
+String _$createPostNotifierHash() =>
+    r'c342e4f41898e6568b5a011d380287478716be49';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,30 +30,30 @@ class _SystemHash {
   }
 }
 
-abstract class _$RoadmapViewNotifier
-    extends BuildlessAutoDisposeAsyncNotifier<RoadmapViewState> {
+abstract class _$CreatePostNotifier
+    extends BuildlessAutoDisposeAsyncNotifier<CreatePostState> {
   late final String roadmapId;
 
-  FutureOr<RoadmapViewState> build(String roadmapId);
+  FutureOr<CreatePostState> build(String roadmapId);
 }
 
-/// See also [RoadmapViewNotifier].
-@ProviderFor(RoadmapViewNotifier)
-const roadmapViewNotifierProvider = RoadmapViewNotifierFamily();
+/// See also [CreatePostNotifier].
+@ProviderFor(CreatePostNotifier)
+const createPostNotifierProvider = CreatePostNotifierFamily();
 
-/// See also [RoadmapViewNotifier].
-class RoadmapViewNotifierFamily extends Family<AsyncValue<RoadmapViewState>> {
-  /// See also [RoadmapViewNotifier].
-  const RoadmapViewNotifierFamily();
+/// See also [CreatePostNotifier].
+class CreatePostNotifierFamily extends Family<AsyncValue<CreatePostState>> {
+  /// See also [CreatePostNotifier].
+  const CreatePostNotifierFamily();
 
-  /// See also [RoadmapViewNotifier].
-  RoadmapViewNotifierProvider call(String roadmapId) {
-    return RoadmapViewNotifierProvider(roadmapId);
+  /// See also [CreatePostNotifier].
+  CreatePostNotifierProvider call(String roadmapId) {
+    return CreatePostNotifierProvider(roadmapId);
   }
 
   @override
-  RoadmapViewNotifierProvider getProviderOverride(
-    covariant RoadmapViewNotifierProvider provider,
+  CreatePostNotifierProvider getProviderOverride(
+    covariant CreatePostNotifierProvider provider,
   ) {
     return call(provider.roadmapId);
   }
@@ -70,32 +70,32 @@ class RoadmapViewNotifierFamily extends Family<AsyncValue<RoadmapViewState>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'roadmapViewNotifierProvider';
+  String? get name => r'createPostNotifierProvider';
 }
 
-/// See also [RoadmapViewNotifier].
-class RoadmapViewNotifierProvider
+/// See also [CreatePostNotifier].
+class CreatePostNotifierProvider
     extends
         AutoDisposeAsyncNotifierProviderImpl<
-          RoadmapViewNotifier,
-          RoadmapViewState
+          CreatePostNotifier,
+          CreatePostState
         > {
-  /// See also [RoadmapViewNotifier].
-  RoadmapViewNotifierProvider(String roadmapId)
+  /// See also [CreatePostNotifier].
+  CreatePostNotifierProvider(String roadmapId)
     : this._internal(
-        () => RoadmapViewNotifier()..roadmapId = roadmapId,
-        from: roadmapViewNotifierProvider,
-        name: r'roadmapViewNotifierProvider',
+        () => CreatePostNotifier()..roadmapId = roadmapId,
+        from: createPostNotifierProvider,
+        name: r'createPostNotifierProvider',
         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
             ? null
-            : _$roadmapViewNotifierHash,
-        dependencies: RoadmapViewNotifierFamily._dependencies,
+            : _$createPostNotifierHash,
+        dependencies: CreatePostNotifierFamily._dependencies,
         allTransitiveDependencies:
-            RoadmapViewNotifierFamily._allTransitiveDependencies,
+            CreatePostNotifierFamily._allTransitiveDependencies,
         roadmapId: roadmapId,
       );
 
-  RoadmapViewNotifierProvider._internal(
+  CreatePostNotifierProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -108,17 +108,17 @@ class RoadmapViewNotifierProvider
   final String roadmapId;
 
   @override
-  FutureOr<RoadmapViewState> runNotifierBuild(
-    covariant RoadmapViewNotifier notifier,
+  FutureOr<CreatePostState> runNotifierBuild(
+    covariant CreatePostNotifier notifier,
   ) {
     return notifier.build(roadmapId);
   }
 
   @override
-  Override overrideWith(RoadmapViewNotifier Function() create) {
+  Override overrideWith(CreatePostNotifier Function() create) {
     return ProviderOverride(
       origin: this,
-      override: RoadmapViewNotifierProvider._internal(
+      override: CreatePostNotifierProvider._internal(
         () => create()..roadmapId = roadmapId,
         from: from,
         name: null,
@@ -131,14 +131,14 @@ class RoadmapViewNotifierProvider
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<RoadmapViewNotifier, RoadmapViewState>
+  AutoDisposeAsyncNotifierProviderElement<CreatePostNotifier, CreatePostState>
   createElement() {
-    return _RoadmapViewNotifierProviderElement(this);
+    return _CreatePostNotifierProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is RoadmapViewNotifierProvider && other.roadmapId == roadmapId;
+    return other is CreatePostNotifierProvider && other.roadmapId == roadmapId;
   }
 
   @override
@@ -152,23 +152,23 @@ class RoadmapViewNotifierProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin RoadmapViewNotifierRef
-    on AutoDisposeAsyncNotifierProviderRef<RoadmapViewState> {
+mixin CreatePostNotifierRef
+    on AutoDisposeAsyncNotifierProviderRef<CreatePostState> {
   /// The parameter `roadmapId` of this provider.
   String get roadmapId;
 }
 
-class _RoadmapViewNotifierProviderElement
+class _CreatePostNotifierProviderElement
     extends
         AutoDisposeAsyncNotifierProviderElement<
-          RoadmapViewNotifier,
-          RoadmapViewState
+          CreatePostNotifier,
+          CreatePostState
         >
-    with RoadmapViewNotifierRef {
-  _RoadmapViewNotifierProviderElement(super.provider);
+    with CreatePostNotifierRef {
+  _CreatePostNotifierProviderElement(super.provider);
 
   @override
-  String get roadmapId => (origin as RoadmapViewNotifierProvider).roadmapId;
+  String get roadmapId => (origin as CreatePostNotifierProvider).roadmapId;
 }
 
 // ignore_for_file: type=lint

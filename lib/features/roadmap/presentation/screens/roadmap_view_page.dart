@@ -135,9 +135,7 @@ class _RoadmapContent extends ConsumerWidget {
           Expanded(
             child: EditableRoadmapTree(
               roadmap: roadmap,
-              onToggleCompletion: (goalId, subgoalId) {
-                // Remove roadmap update functionality
-              },
+              isProgressEditable: true,
             ),
           ),
         ],

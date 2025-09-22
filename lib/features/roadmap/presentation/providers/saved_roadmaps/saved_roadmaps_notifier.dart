@@ -99,4 +99,22 @@ class SavedRoadmapsNotifier extends _$SavedRoadmapsNotifier {
       },
     );
   }
+
+  void updateRoadmapProgress(
+    String roadmapId,
+    int completedSubgoals,
+    int totalSubgoals,
+  ) {
+    final index = _roadmaps.indexWhere((roadmap) => roadmap.id == roadmapId);
+    if (index == -1) return;
+
+    final updatedRoadmapMetaData = _roadmaps[index].copyWith(
+      completedSubgoals: completedSubgoals,
+    );
+    _roadmaps[index] = updatedRoadmapMetaData;
+
+    state = AsyncData(
+      SavedRoadmapsState(roadmaps: _roadmaps, canGetMore: _canGetMore),
+    );
+  }
 }

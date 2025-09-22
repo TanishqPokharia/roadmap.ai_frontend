@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RoadmapMetadataModel {
 
- String get id; String get title; String get description; int get goalsCount; String get progress;
+ String get id; String get title; String get description; int get goalsCount; int get subgoalsCount; int get completedSubgoals;
 /// Create a copy of RoadmapMetadataModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RoadmapMetadataModelCopyWith<RoadmapMetadataModel> get copyWith => _$RoadmapMet
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RoadmapMetadataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.goalsCount, goalsCount) || other.goalsCount == goalsCount)&&(identical(other.progress, progress) || other.progress == progress));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RoadmapMetadataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.goalsCount, goalsCount) || other.goalsCount == goalsCount)&&(identical(other.subgoalsCount, subgoalsCount) || other.subgoalsCount == subgoalsCount)&&(identical(other.completedSubgoals, completedSubgoals) || other.completedSubgoals == completedSubgoals));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,goalsCount,progress);
+int get hashCode => Object.hash(runtimeType,id,title,description,goalsCount,subgoalsCount,completedSubgoals);
 
 @override
 String toString() {
-  return 'RoadmapMetadataModel(id: $id, title: $title, description: $description, goalsCount: $goalsCount, progress: $progress)';
+  return 'RoadmapMetadataModel(id: $id, title: $title, description: $description, goalsCount: $goalsCount, subgoalsCount: $subgoalsCount, completedSubgoals: $completedSubgoals)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RoadmapMetadataModelCopyWith<$Res>  {
   factory $RoadmapMetadataModelCopyWith(RoadmapMetadataModel value, $Res Function(RoadmapMetadataModel) _then) = _$RoadmapMetadataModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String description, int goalsCount, String progress
+ String id, String title, String description, int goalsCount, int subgoalsCount, int completedSubgoals
 });
 
 
@@ -65,14 +65,15 @@ class _$RoadmapMetadataModelCopyWithImpl<$Res>
 
 /// Create a copy of RoadmapMetadataModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? goalsCount = null,Object? progress = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? goalsCount = null,Object? subgoalsCount = null,Object? completedSubgoals = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,goalsCount: null == goalsCount ? _self.goalsCount : goalsCount // ignore: cast_nullable_to_non_nullable
-as int,progress: null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
-as String,
+as int,subgoalsCount: null == subgoalsCount ? _self.subgoalsCount : subgoalsCount // ignore: cast_nullable_to_non_nullable
+as int,completedSubgoals: null == completedSubgoals ? _self.completedSubgoals : completedSubgoals // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  int goalsCount,  String progress)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  int goalsCount,  int subgoalsCount,  int completedSubgoals)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RoadmapMetadataModel() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.progress);case _:
+return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.subgoalsCount,_that.completedSubgoals);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.pr
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  int goalsCount,  String progress)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  int goalsCount,  int subgoalsCount,  int completedSubgoals)  $default,) {final _that = this;
 switch (_that) {
 case _RoadmapMetadataModel():
-return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.progress);case _:
+return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.subgoalsCount,_that.completedSubgoals);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.pr
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  int goalsCount,  String progress)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  int goalsCount,  int subgoalsCount,  int completedSubgoals)?  $default,) {final _that = this;
 switch (_that) {
 case _RoadmapMetadataModel() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.progress);case _:
+return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.subgoalsCount,_that.completedSubgoals);case _:
   return null;
 
 }
@@ -213,14 +214,15 @@ return $default(_that.id,_that.title,_that.description,_that.goalsCount,_that.pr
 @JsonSerializable()
 
 class _RoadmapMetadataModel implements RoadmapMetadataModel {
-   _RoadmapMetadataModel({required this.id, required this.title, required this.description, required this.goalsCount, required this.progress});
+   _RoadmapMetadataModel({required this.id, required this.title, required this.description, required this.goalsCount, required this.subgoalsCount, required this.completedSubgoals});
   factory _RoadmapMetadataModel.fromJson(Map<String, dynamic> json) => _$RoadmapMetadataModelFromJson(json);
 
 @override final  String id;
 @override final  String title;
 @override final  String description;
 @override final  int goalsCount;
-@override final  String progress;
+@override final  int subgoalsCount;
+@override final  int completedSubgoals;
 
 /// Create a copy of RoadmapMetadataModel
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RoadmapMetadataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.goalsCount, goalsCount) || other.goalsCount == goalsCount)&&(identical(other.progress, progress) || other.progress == progress));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RoadmapMetadataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.goalsCount, goalsCount) || other.goalsCount == goalsCount)&&(identical(other.subgoalsCount, subgoalsCount) || other.subgoalsCount == subgoalsCount)&&(identical(other.completedSubgoals, completedSubgoals) || other.completedSubgoals == completedSubgoals));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,goalsCount,progress);
+int get hashCode => Object.hash(runtimeType,id,title,description,goalsCount,subgoalsCount,completedSubgoals);
 
 @override
 String toString() {
-  return 'RoadmapMetadataModel(id: $id, title: $title, description: $description, goalsCount: $goalsCount, progress: $progress)';
+  return 'RoadmapMetadataModel(id: $id, title: $title, description: $description, goalsCount: $goalsCount, subgoalsCount: $subgoalsCount, completedSubgoals: $completedSubgoals)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$RoadmapMetadataModelCopyWith<$Res> implements $RoadmapMet
   factory _$RoadmapMetadataModelCopyWith(_RoadmapMetadataModel value, $Res Function(_RoadmapMetadataModel) _then) = __$RoadmapMetadataModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String description, int goalsCount, String progress
+ String id, String title, String description, int goalsCount, int subgoalsCount, int completedSubgoals
 });
 
 
@@ -272,14 +274,15 @@ class __$RoadmapMetadataModelCopyWithImpl<$Res>
 
 /// Create a copy of RoadmapMetadataModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? goalsCount = null,Object? progress = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? goalsCount = null,Object? subgoalsCount = null,Object? completedSubgoals = null,}) {
   return _then(_RoadmapMetadataModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,goalsCount: null == goalsCount ? _self.goalsCount : goalsCount // ignore: cast_nullable_to_non_nullable
-as int,progress: null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
-as String,
+as int,subgoalsCount: null == subgoalsCount ? _self.subgoalsCount : subgoalsCount // ignore: cast_nullable_to_non_nullable
+as int,completedSubgoals: null == completedSubgoals ? _self.completedSubgoals : completedSubgoals // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

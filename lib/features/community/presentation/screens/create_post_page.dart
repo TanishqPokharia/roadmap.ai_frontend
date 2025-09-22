@@ -1,14 +1,18 @@
-import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:roadmap_ai/core/common/entities/roadmap.dart';
+import 'package:roadmap_ai/core/common/entities/roadmap_metadata.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
+import 'package:roadmap_ai/features/community/presentation/providers/create_post/create_post_notifier.dart';
+import 'package:roadmap_ai/features/roadmap/presentation/widgets/editable_roadmap_tree.dart';
+import 'package:toastification/toastification.dart';
 
 class CreatePostPage extends ConsumerStatefulWidget {
-  const CreatePostPage({super.key, required this.roadmap});
-  final Roadmap roadmap;
+  const CreatePostPage({super.key, required this.roadmapMetaData});
+  final RoadmapMetadata roadmapMetaData;
 
   @override
   ConsumerState<CreatePostPage> createState() => _CreatePostPageState();
@@ -17,7 +21,6 @@ class CreatePostPage extends ConsumerStatefulWidget {
 class _CreatePostPageState extends ConsumerState<CreatePostPage> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
-  File? _bannerImage;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -40,6 +43,11 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     final textTheme = context.textTheme;
     final colorScheme = context.colorScheme;
     final screenWidth = context.screenWidth;
+    final createPostNotifier = createPostNotifierProvider(
+      widget.roadmapMetaData.id,
+    );
+    final createPostState = ref.watch(createPostNotifier);
+    final notifier = ref.read(createPostNotifier.notifier);
 
     return Scaffold(
       body: Form(
@@ -83,16 +91,22 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                 delegate: SliverChildListDelegate([
                   // Banner Image Selection
                   GestureDetector(
-                    onTap: () {
-                      // No functionality, just showing a snackbar
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Image selection functionality removed',
-                          ),
-                          backgroundColor: Colors.orange,
-                        ),
+                    onTap: () async {
+                      final image = await FilePicker.platform.pickFiles(
+                        type: FileType.image,
+                        allowMultiple: false,
                       );
+
+                      if (image == null) {
+                        toastification.show(
+                          title: Text('Error'),
+                          description: Text('No image selected'),
+                          backgroundColor: Colors.orange,
+                        );
+                        return;
+                      }
+
+                      notifier.setBannerImage(image);
                     },
                     child: Center(
                       child: DottedBorder(
@@ -109,19 +123,38 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                             color: colorScheme.surface,
                           ),
                           width: screenWidth / 2,
-                          child: _bannerImage != null
+                          child: createPostState.value?.bannerImage != null
                               ? Stack(
                                   fit: StackFit.expand,
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(12),
-                                      child: _bannerImage != null
-                                          ? Image.file(
-                                              _bannerImage!,
-                                              fit: BoxFit.cover,
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                            )
+                                      child:
+                                          createPostState.value?.bannerImage !=
+                                              null
+                                          ? kIsWeb
+                                                ? Image.network(
+                                                    createPostState
+                                                        .value!
+                                                        .bannerImage!
+                                                        .files
+                                                        .first
+                                                        .path!,
+                                                    fit: BoxFit.cover,
+                                                    width: double.infinity,
+                                                    height: double.infinity,
+                                                  )
+                                                : Image.memory(
+                                                    createPostState
+                                                        .value!
+                                                        .bannerImage!
+                                                        .files
+                                                        .first
+                                                        .bytes!,
+                                                    fit: BoxFit.cover,
+                                                    width: double.infinity,
+                                                    height: double.infinity,
+                                                  )
                                           : Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
@@ -269,12 +302,48 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
             ),
 
             // Roadmap Section - Using SliverToBoxAdapter with a simple display version
-            // SliverPadding(
-            //   padding: EdgeInsets.symmetric(horizontal: screenWidth / 4),
-            //   sliver: SliverToBoxAdapter(
-            //     child: EditableRoadmapSection(roadmap: widget.roadmap),
-            //   ),
-            // ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth / 4),
+              sliver: SliverToBoxAdapter(
+                child: createPostState.maybeWhen(
+                  data: (data) {
+                    if (data.roadmap != null) {
+                      return EditableRoadmapTree(
+                        roadmap: data.roadmap!,
+                        isProgressEditable: false,
+                        isCustomizable: true,
+                        shrinkWrap: true,
+                        createPostNotifier: notifier,
+                      );
+                    }
+                    return SizedBox(
+                      height: screenHeight * 0.3,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                    );
+                  },
+                  orElse: () => Center(
+                    child: Text(
+                      'Error loading roadmap data',
+                      style: textTheme.bodyMedium!.copyWith(
+                        color: colorScheme.error,
+                      ),
+                    ),
+                  ),
+                  loading: () => SizedBox(
+                    height: screenHeight * 0.3,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
 
             // Bottom padding
             SliverPadding(

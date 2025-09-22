@@ -10,13 +10,9 @@ class SubgoalStatus {
   });
 
   // a copyWith method
-  SubgoalStatus copyWith({
-    bool? isCompleted,
-    DateTime? completedAt,
-    String? id,
-  }) {
+  SubgoalStatus copyWith({bool? completed, DateTime? completedAt, String? id}) {
     return SubgoalStatus(
-      completed: isCompleted ?? completed,
+      completed: completed ?? this.completed,
       completedAt: completedAt ?? this.completedAt,
       id: id ?? this.id,
     );

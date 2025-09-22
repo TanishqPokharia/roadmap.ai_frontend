@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:roadmap_ai/core/common/entities/roadmap.dart';
+import 'package:roadmap_ai/core/common/entities/roadmap_metadata.dart';
 import 'package:roadmap_ai/core/common/navigation_page.dart';
 import 'package:roadmap_ai/features/auth/presentation/screens/auth_page.dart';
 import 'package:roadmap_ai/features/auth/presentation/screens/profile_page.dart';
@@ -66,8 +66,10 @@ final class AppRouter {
             path: '/createPost',
             name: AppRoutes.createPost,
             pageBuilder: (context, state) {
-              final roadmap = state.extra as Roadmap;
-              return MaterialPage(child: CreatePostPage(roadmap: roadmap));
+              final roadmap = state.extra as RoadmapMetadata;
+              return MaterialPage(
+                child: CreatePostPage(roadmapMetaData: roadmap),
+              );
             },
           ),
         ],

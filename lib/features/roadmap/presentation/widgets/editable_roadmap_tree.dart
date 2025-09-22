@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:roadmap_ai/core/common/entities/goal.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/common/entities/subgoal.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
+import 'package:roadmap_ai/core/utils/format_date.dart';
+import 'package:roadmap_ai/features/roadmap/presentation/providers/roadmap_view/roadmap_view_notifier.dart';
+import 'package:roadmap_ai/features/community/presentation/providers/create_post/create_post_notifier.dart';
+import 'package:roadmap_ai/features/roadmap/presentation/widgets/add_goal_dialog.dart';
+import 'package:roadmap_ai/features/roadmap/presentation/widgets/add_subgoal_dialog.dart';
+import 'package:roadmap_ai/features/roadmap/presentation/widgets/edit_goal_dialog.dart';
+import 'package:roadmap_ai/features/roadmap/presentation/widgets/edit_subgoal_dialog.dart';
 
 class EditableRoadmapTree extends StatefulWidget {
   final Roadmap roadmap;
-  final Function(String, String) onToggleCompletion;
+  final bool isProgressEditable;
+  final bool isCustomizable;
+  final bool shrinkWrap;
+  final CreatePostNotifier? createPostNotifier;
 
   const EditableRoadmapTree({
     required this.roadmap,
-    required this.onToggleCompletion,
+    required this.isProgressEditable,
+    this.isCustomizable = false,
+    this.shrinkWrap = false,
+    this.createPostNotifier,
     super.key,
   });
 
@@ -22,19 +36,112 @@ class EditableRoadmapTree extends StatefulWidget {
 class _EditableRoadmapTreeState extends State<EditableRoadmapTree> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      itemCount: widget.roadmap.goals.length,
-      itemBuilder: (context, index) {
-        return EditableGoalNode(
-          index: index,
-          haveDivider: index < widget.roadmap.goals.length - 1,
-          goal: widget.roadmap.goals[index],
-          onToggleCompletion: widget.onToggleCompletion,
-        );
-      },
-    );
+    if (widget.shrinkWrap) {
+      // For use in scrollable contexts like CustomScrollView
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            itemCount: widget.roadmap.goals.length,
+            itemBuilder: (context, index) {
+              return EditableGoalNode(
+                index: index,
+                roadmapId: widget.roadmap.id,
+                haveDivider: index < widget.roadmap.goals.length - 1,
+                goal: widget.roadmap.goals[index],
+                isProgressEditable: widget.isProgressEditable,
+                isCustomizable: widget.isCustomizable,
+                createPostNotifier: widget.createPostNotifier,
+              );
+            },
+          ),
+          if (widget.isCustomizable)
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    if (widget.createPostNotifier != null) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AddGoalDialog(
+                          onSave: (title) {
+                            widget.createPostNotifier!.addNewGoal(title);
+                          },
+                        ),
+                      );
+                    } else {
+                      // TODO: Add goal functionality for roadmap view
+                      print('Add new goal - roadmap view');
+                    }
+                  },
+                  icon: Icon(Icons.add),
+                  label: Text('Add Goal'),
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      );
+    } else {
+      // For use in regular contexts with Expanded
+      return Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              itemCount: widget.roadmap.goals.length,
+              itemBuilder: (context, index) {
+                return EditableGoalNode(
+                  index: index,
+                  roadmapId: widget.roadmap.id,
+                  haveDivider: index < widget.roadmap.goals.length - 1,
+                  goal: widget.roadmap.goals[index],
+                  isProgressEditable: widget.isProgressEditable,
+                  isCustomizable: widget.isCustomizable,
+                  createPostNotifier: widget.createPostNotifier,
+                );
+              },
+            ),
+          ),
+          if (widget.isCustomizable)
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    if (widget.createPostNotifier != null) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AddGoalDialog(
+                          onSave: (title) {
+                            widget.createPostNotifier!.addNewGoal(title);
+                          },
+                        ),
+                      );
+                    } else {
+                      // TODO: Add goal functionality for roadmap view
+                      print('Add new goal - roadmap view');
+                    }
+                  },
+                  icon: Icon(Icons.add),
+                  label: Text('Add Goal'),
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      );
+    }
   }
 }
 
@@ -42,15 +149,21 @@ class EditableGoalNode extends StatefulWidget {
   const EditableGoalNode({
     super.key,
     required this.goal,
+    required this.roadmapId,
     required this.index,
-    required this.onToggleCompletion,
     this.haveDivider = true,
+    this.isProgressEditable = false,
+    this.isCustomizable = false,
+    this.createPostNotifier,
   });
 
   final Goal goal;
+  final String roadmapId;
   final int index;
   final bool haveDivider;
-  final Function(String, String) onToggleCompletion;
+  final bool isProgressEditable;
+  final bool isCustomizable;
+  final CreatePostNotifier? createPostNotifier;
 
   @override
   State<EditableGoalNode> createState() => _EditableGoalNodeState();
@@ -187,14 +300,65 @@ class _EditableGoalNodeState extends State<EditableGoalNode> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          widget.goal.title,
-                          style: textTheme.titleMedium!.copyWith(
-                            color: colorScheme.primary.withAlpha(204),
-                            decoration: TextDecoration.underline,
-                            decorationColor: colorScheme.primary.withAlpha(102),
-                            fontWeight: FontWeight.w600,
-                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                widget.goal.title,
+                                style: textTheme.titleMedium!.copyWith(
+                                  color: colorScheme.primary.withAlpha(204),
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: colorScheme.primary
+                                      .withAlpha(102),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            if (widget.isCustomizable) ...[
+                              IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => EditGoalDialog(
+                                      goal: widget.goal,
+                                      onSave: (newTitle) {
+                                        if (widget.createPostNotifier != null) {
+                                          widget.createPostNotifier!
+                                              .setGoalTitle(
+                                                widget.goal.id,
+                                                newTitle,
+                                              );
+                                        } else {
+                                          // TODO: Implement goal edit functionality with roadmap notifier
+                                          print(
+                                            'Edit goal: ${widget.goal.title} -> $newTitle',
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.edit,
+                                  size: 18,
+                                  color: colorScheme.primary,
+                                ),
+                                tooltip: 'Edit Goal',
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  // TODO: Delete goal functionality
+                                  print('Delete goal: ${widget.goal.title}');
+                                },
+                                icon: Icon(
+                                  Icons.delete,
+                                  size: 18,
+                                  color: colorScheme.error,
+                                ),
+                                tooltip: 'Delete Goal',
+                              ),
+                            ],
+                          ],
                         ),
                         if (_isExpanded && widget.goal.subgoals.isNotEmpty)
                           Padding(
@@ -209,11 +373,16 @@ class _EditableGoalNodeState extends State<EditableGoalNode> {
                                   EditableSubgoalNode(
                                     subgoal: widget.goal.subgoals[i],
                                     goalId: widget.goal.id,
+                                    goalIndex: widget.index,
+                                    roadmapId: widget.roadmapId,
                                     index: i,
                                     isLast:
                                         i == widget.goal.subgoals.length - 1,
-                                    onToggleCompletion:
-                                        widget.onToggleCompletion,
+                                    isProgressEditable:
+                                        widget.isProgressEditable,
+                                    isCustomizable: widget.isCustomizable,
+                                    createPostNotifier:
+                                        widget.createPostNotifier,
                                     onExpansionChanged: (expanded) {
                                       // Update the expanded state of this subgoal
                                       if (i < _expandedSubgoals.length) {
@@ -222,6 +391,62 @@ class _EditableGoalNodeState extends State<EditableGoalNode> {
                                         });
                                       }
                                     },
+                                  ),
+                                // Add subgoal button when customizable
+                                if (widget.isCustomizable)
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 20, top: 10),
+                                    child: OutlinedButton.icon(
+                                      onPressed: () {
+                                        if (widget.createPostNotifier != null) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                AddSubgoalDialog(
+                                                  onSave:
+                                                      ({
+                                                        required String title,
+                                                        required String
+                                                        description,
+                                                        required String
+                                                        duration,
+                                                        required List<String>
+                                                        resources,
+                                                      }) {
+                                                        widget
+                                                            .createPostNotifier!
+                                                            .addNewSubgoal(
+                                                              goalId: widget
+                                                                  .goal
+                                                                  .id,
+                                                              title: title,
+                                                              description:
+                                                                  description,
+                                                              duration:
+                                                                  duration,
+                                                              resources:
+                                                                  resources,
+                                                            );
+                                                      },
+                                                ),
+                                          );
+                                        } else {
+                                          // TODO: Add subgoal functionality for roadmap view
+                                          print(
+                                            'Add subgoal to goal: ${widget.goal.title}',
+                                          );
+                                        }
+                                      },
+                                      icon: Icon(Icons.add, size: 16),
+                                      label: Text('Add Subgoal'),
+                                      style: OutlinedButton.styleFrom(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 8,
+                                        ),
+                                        textStyle: TextStyle(fontSize: 12),
+                                      ),
+                                    ),
                                   ),
                                 // Add additional space after the last subgoal
                                 SizedBox(
@@ -264,29 +489,37 @@ class _EditableGoalNodeState extends State<EditableGoalNode> {
   }
 }
 
-class EditableSubgoalNode extends StatefulWidget {
+class EditableSubgoalNode extends ConsumerStatefulWidget {
   const EditableSubgoalNode({
     super.key,
     required this.subgoal,
     required this.goalId,
+    required this.goalIndex,
+    required this.roadmapId,
     required this.index,
-    required this.onToggleCompletion,
     this.isLast = false,
+    this.isProgressEditable = false,
+    this.isCustomizable = false,
+    this.createPostNotifier,
     this.onExpansionChanged,
   });
-
+  final String roadmapId;
   final Subgoal subgoal;
   final String goalId;
+  final int goalIndex;
   final int index;
   final bool isLast;
-  final Function(String, String) onToggleCompletion;
+  final bool isProgressEditable;
+  final bool isCustomizable;
+  final CreatePostNotifier? createPostNotifier;
   final Function(bool)? onExpansionChanged;
 
   @override
-  State<EditableSubgoalNode> createState() => _EditableSubgoalNodeState();
+  ConsumerState<EditableSubgoalNode> createState() =>
+      _EditableSubgoalNodeState();
 }
 
-class _EditableSubgoalNodeState extends State<EditableSubgoalNode> {
+class _EditableSubgoalNodeState extends ConsumerState<EditableSubgoalNode> {
   bool _isExpanded = false;
 
   // Constants for divider and spacing calculations
@@ -330,7 +563,6 @@ class _EditableSubgoalNodeState extends State<EditableSubgoalNode> {
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
     final isCompleted = widget.subgoal.status?.completed ?? false;
-    final wasCompletedBefore = widget.subgoal.status?.completedAt != null;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -424,7 +656,65 @@ class _EditableSubgoalNodeState extends State<EditableSubgoalNode> {
                           ),
                         ),
                       ),
-                      if (!wasCompletedBefore) // Only show toggle if not previously completed
+                      if (widget.isCustomizable) ...[
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => EditSubgoalDialog(
+                                subgoal: widget.subgoal,
+                                onSave: (newTitle, newDescription, newResources) {
+                                  if (widget.createPostNotifier != null) {
+                                    widget.createPostNotifier!
+                                        .setSubgoalDetails(
+                                          widget.goalId,
+                                          widget.subgoal.id,
+                                          newTitle,
+                                          newDescription,
+                                          newResources,
+                                        );
+                                  } else {
+                                    // TODO: Implement subgoal edit functionality with roadmap notifier
+                                    print(
+                                      'Edit subgoal: ${widget.subgoal.title}',
+                                    );
+                                    print('New title: $newTitle');
+                                    print('New description: $newDescription');
+                                    print('New resources: $newResources');
+                                  }
+                                },
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            Icons.edit,
+                            size: 16,
+                            color: colorScheme.primary,
+                          ),
+                          tooltip: 'Edit Subgoal',
+                          constraints: BoxConstraints(
+                            minWidth: 32,
+                            minHeight: 32,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            // TODO: Delete subgoal functionality
+                            print('Delete subgoal: ${widget.subgoal.title}');
+                          },
+                          icon: Icon(
+                            Icons.delete,
+                            size: 16,
+                            color: colorScheme.error,
+                          ),
+                          tooltip: 'Delete Subgoal',
+                          constraints: BoxConstraints(
+                            minWidth: 32,
+                            minHeight: 32,
+                          ),
+                        ),
+                      ],
+                      if (widget.isProgressEditable)
                         Transform.scale(
                           scale: 0.8,
                           child: Checkbox(
@@ -434,10 +724,23 @@ class _EditableSubgoalNodeState extends State<EditableSubgoalNode> {
                               borderRadius: BorderRadius.circular(4),
                             ),
                             onChanged: (value) {
-                              widget.onToggleCompletion(
-                                widget.goalId,
-                                widget.subgoal.id,
-                              );
+                              if (!mounted) {
+                                return;
+                              }
+
+                              ref
+                                  .read(
+                                    roadmapViewNotifierProvider(
+                                      widget.roadmapId,
+                                    ).notifier,
+                                  )
+                                  .updateSubgoalStatus(
+                                    goalId: widget.goalId,
+                                    subgoalId: widget.subgoal.id,
+                                    goalIndex: widget.goalIndex,
+                                    subgoalIndex: widget.index,
+                                    isCompleted: value!,
+                                  );
                             },
                           ),
                         ),
@@ -523,22 +826,14 @@ class _EditableSubgoalNodeState extends State<EditableSubgoalNode> {
                               ? Colors.green.withAlpha(26)
                               : Colors.orange.withAlpha(26),
                           borderRadius: BorderRadius.circular(4),
-                          border: wasCompletedBefore
-                              ? Border.all(color: Colors.grey.withAlpha(100))
-                              : widget.subgoal.status!.completedAt == null &&
-                                    widget.subgoal.status!.completed
-                              ? Border.all(
-                                  color: Colors.blue.withAlpha(100),
-                                  width: 1.5,
-                                )
-                              : null,
+                          border: Border.all(color: Colors.grey.withAlpha(100)),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
                               widget.subgoal.status!.completed
-                                  ? 'Completed'
+                                  ? ' Completed on ${formatDate(widget.subgoal.status?.completedAt)}'
                                   : 'In Progress',
                               style: textTheme.bodyMedium?.copyWith(
                                 color: widget.subgoal.status!.completed
@@ -546,26 +841,26 @@ class _EditableSubgoalNodeState extends State<EditableSubgoalNode> {
                                     : Colors.orange.shade800,
                               ),
                             ),
-                            if (wasCompletedBefore) ...[
-                              SizedBox(width: 4),
-                              Icon(
-                                Icons.lock,
-                                size: 12,
-                                color: Colors.grey.shade700,
-                              ),
-                            ],
-                            // Show pending indicator if modified but not saved
-                            if (!wasCompletedBefore &&
-                                widget.subgoal.status!.completed &&
-                                widget.subgoal.status!.completedAt == null) ...[
-                              SizedBox(width: 4),
-                              Icon(
-                                Icons.pending,
-                                size: 12,
-                                color: Colors.blue.shade700,
-                              ),
-                            ],
+                            // if (wasCompletedBefore) ...[
+                            //   SizedBox(width: 4),
+                            //   Icon(
+                            //     Icons.lock,
+                            //     size: 12,
+                            //     color: Colors.grey.shade700,
+                            //   ),
                           ],
+
+                          // Show pending indicator if modified but not saved
+                          // if (!wasCompletedBefore &&
+                          //     widget.subgoal.status!.completed &&
+                          //     widget.subgoal.status!.completedAt == null) ...[
+                          //   SizedBox(width: 4),
+                          //   Icon(
+                          //     Icons.pending,
+                          //     size: 12,
+                          //     color: Colors.blue.shade700,
+                          //   ),
+                          // ],
                         ),
                       ),
                   ],
