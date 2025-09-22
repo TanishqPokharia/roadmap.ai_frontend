@@ -9,6 +9,8 @@ import 'package:roadmap_ai/core/utils/datasource_error_handler.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
 import 'package:roadmap_ai/core/utils/http_error_handler.dart';
 import 'package:roadmap_ai/features/community/data/datasource/interface/post_datasource.dart';
+import 'package:roadmap_ai/features/community/data/models/post_metadata/post_metadata.dart';
+import 'package:roadmap_ai/features/community/data/models/user_post_stats/user_post_stats.dart';
 
 part 'post_datasource_impl.g.dart';
 
@@ -48,6 +50,60 @@ class PostDatasourceImpl implements PostDatasource {
       },
       (error, stackTrace) =>
           dataSourceErrorHandler(error: error, message: 'Creating post failed'),
+    );
+  }
+
+  @override
+  TaskEither<Failure, List<PostMetadataModel>> getUserPostsMetaData({
+    int limit = 10,
+    int skip = 0,
+  }) {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.get(
+          '/post/user',
+          queryParameters: {'limit': limit, 'skip': skip},
+        );
+
+        if (response.statusCode != 200) {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+
+        final data = response.data;
+        final List<dynamic> posts = data['posts'];
+        final result = posts
+            .map(
+              (postJson) =>
+                  PostMetadataModel.fromJson(postJson as Map<String, dynamic>),
+            )
+            .toList();
+        return result;
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Fetching posts failed',
+      ),
+    );
+  }
+
+  @override
+  TaskEither<Failure, UserPostStatsModel> getUserPostStats() {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.get('/post/stats');
+
+        if (response.statusCode != 200) {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+
+        final data = response.data;
+        final stats = UserPostStatsModel.fromJson(data);
+        return stats;
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Fetching user post stats failed',
+      ),
     );
   }
 }

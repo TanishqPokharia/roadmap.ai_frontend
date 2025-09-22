@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
-import 'package:roadmap_ai/features/community/domain/entities/post.dart';
+import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/post_likes_widget.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/post_views_widget.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +10,7 @@ import 'package:roadmap_ai/core/themes/colors.dart';
 
 class YourPostTile extends StatelessWidget {
   const YourPostTile({super.key, required this.post, required this.views});
-  final Post post;
+  final PostMetadata post;
   final int views;
 
   @override
@@ -43,7 +43,7 @@ class YourPostTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  post.roadmap.title,
+                  post.title,
                   style: context.textTheme.titleLarge!.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
@@ -73,7 +73,7 @@ class YourPostTile extends StatelessWidget {
                             AppRoutes.post,
                             queryParameters: {
                               'postId': post.id,
-                              'title': post.roadmap.title,
+                              'title': post.title,
                             },
                           );
                         },
@@ -136,7 +136,7 @@ class YourPostTile extends StatelessWidget {
               child: Image.network(
                 width: screenHeight * 0.2,
                 fit: BoxFit.cover,
-                post.bannerUrl,
+                post.bannerImage,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
                   return Center(

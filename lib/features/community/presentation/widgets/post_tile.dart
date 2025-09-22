@@ -96,7 +96,7 @@ class PostTile extends StatelessWidget {
             child: Image.network(
               width: screenHeight * 0.2,
               fit: BoxFit.cover,
-              post.bannerUrl,
+              post.bannerImage,
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
                 return Center(

@@ -1,10 +1,10 @@
-class Author {
+class PostAuthor {
   final String username;
   final String email;
   final String avatar;
   final String id;
 
-  const Author({
+  const PostAuthor({
     required this.username,
     required this.email,
     required this.avatar,

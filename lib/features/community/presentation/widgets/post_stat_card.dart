@@ -12,7 +12,7 @@ class PostStatCard extends StatelessWidget {
   });
 
   final IconData icon;
-  final int value;
+  final int? value;
   final String label;
 
   @override
@@ -35,7 +35,7 @@ class PostStatCard extends StatelessWidget {
         children: [
           Icon(icon, color: colorScheme.primary, size: 24),
           SizedBox(width: 12),
-          StatCounter(value: value),
+          value != null ? StatCounter(value: value!) : Text('-'),
           Text(label, style: TextStyle(color: colorScheme.primary)),
         ],
       ),

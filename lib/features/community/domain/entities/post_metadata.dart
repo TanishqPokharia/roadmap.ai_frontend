@@ -1,23 +1,21 @@
-import 'package:roadmap_ai/core/common/entities/roadmap.dart';
+import 'package:roadmap_ai/features/community/domain/entities/post_author.dart';
 
-import 'post_author.dart';
-
-class Post {
-  final Roadmap roadmap;
-  final String description;
+class PostMetadata {
   final int likes;
   final DateTime createdAt;
   final PostAuthor author;
   final String id;
   final String bannerImage;
+  final String title;
+  final String description;
   final int views;
 
-  const Post({
-    required this.roadmap,
+  PostMetadata({
     required this.likes,
-    required this.description,
     required this.createdAt,
     required this.author,
+    required this.title,
+    required this.description,
     required this.id,
     required this.bannerImage,
     required this.views,
