@@ -131,7 +131,7 @@ class ProfilePage extends ConsumerWidget {
                     Text('$error'),
                     ElevatedButton(
                       onPressed: () {
-                        profileNotifier.refresh();
+                        ref.invalidate(profileNotifierProvider);
                       },
                       child: const Text('Retry'),
                     ),

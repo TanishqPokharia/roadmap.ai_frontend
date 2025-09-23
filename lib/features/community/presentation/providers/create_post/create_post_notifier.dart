@@ -70,7 +70,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     post.fold((failure) => state = AsyncError(failure, StackTrace.current), (
       r,
     ) {
-      ref.read(savedRoadmapsNotifierProvider.notifier).refresh();
+      ref.read(savedRoadmapsNotifierProvider.notifier).reset();
       return state = AsyncData(state.value!.copyWith(isUploaded: true));
     });
   }

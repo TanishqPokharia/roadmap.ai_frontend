@@ -33,6 +33,8 @@ class SignupNotifier extends _$SignupNotifier {
         state = AsyncError(failure, StackTrace.current);
       },
       (success) {
+        // No need to reset providers on signup - it's a new user
+        // Providers will naturally load fresh data when accessed
         state = AsyncData(SignUpState.success);
       },
     );

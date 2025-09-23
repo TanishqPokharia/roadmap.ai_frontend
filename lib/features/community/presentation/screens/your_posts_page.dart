@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
+import 'package:roadmap_ai/features/auth/presentation/providers/login/login_notifier.dart';
 import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/posts_stats/posts_stats_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/user_posts/user_posts_notifier.dart';
@@ -18,9 +19,9 @@ class YourPostsPage extends ConsumerWidget {
     final textTheme = context.textTheme;
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
+
     final userPosts = ref.watch(userPostsNotifierProvider);
     final userPostsStats = ref.watch(userPostStatsProvider);
-
     ref.listen(userPostsNotifierProvider, (_, next) {
       if (next is AsyncError) {
         final error = next.error;
@@ -135,12 +136,12 @@ class YourPostsPage extends ConsumerWidget {
                 ),
                 SizedBox(height: screenHeight * 0.03),
                 userPosts.when(
-                  data: (posts) => posts.isEmpty
+                  data: (data) => data.isEmpty
                       ? const NoPostsWidget()
                       : Builder(
                           builder: (context) {
                             final List<PostMetadata> sortedPosts = List.from(
-                              posts,
+                              data,
                             );
                             sortedPosts.sort(
                               (a, b) => b.createdAt.compareTo(a.createdAt),

@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap_metadata.dart';
+import 'package:roadmap_ai/features/auth/presentation/providers/login/login_notifier.dart';
 import 'package:roadmap_ai/features/roadmap/domain/usecases/get_saved_roadmaps_metadata/get_saved_roadmaps_metadata.dart';
 
 part 'saved_roadmaps_notifier.g.dart';
@@ -22,20 +23,44 @@ class SavedRoadmapsNotifier extends _$SavedRoadmapsNotifier {
   int _skip = 0;
   final List<RoadmapMetadata> _roadmaps = [];
   bool _canGetMore = true;
-
   @override
   FutureOr<SavedRoadmapsState> build() async {
+    ref.watch(loginNotifierProvider);
+    _skip = 0;
+    _roadmaps.clear();
+    _canGetMore = true;
+
     final roadmapsMetaData = await ref
         .read(getSavedRoadmapsMetadataProvider)
         .call(GetSavedRoadmapsMetadataParams(limit: _limit, skip: _skip))
         .run();
-    return roadmapsMetaData.fold((failure) => throw failure, (data) {
-      _roadmaps.addAll(data);
-      if (data.length < _limit) {
-        _canGetMore = false;
-      }
-      return SavedRoadmapsState(roadmaps: _roadmaps, canGetMore: _canGetMore);
-    });
+    return roadmapsMetaData.fold(
+      (failure) {
+        print('🗺️ API call failed: $failure');
+        throw failure;
+      },
+      (data) {
+        _roadmaps.addAll(data);
+
+        if (data.length < _limit) {
+          _canGetMore = false;
+        }
+
+        final result = SavedRoadmapsState(
+          roadmaps: _roadmaps,
+          canGetMore: _canGetMore,
+        );
+
+        return result;
+      },
+    );
+  }
+
+  void reset() {
+    _skip = 0;
+    _roadmaps.clear();
+    _canGetMore = true;
+    ref.invalidateSelf();
   }
 
   void refresh() async {
