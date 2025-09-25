@@ -7,8 +7,10 @@ import 'package:roadmap_ai/core/common/models/roadmap/roadmap.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
 import 'package:roadmap_ai/features/community/data/datasource/impl/post_datasource_impl.dart';
 import 'package:roadmap_ai/features/community/data/datasource/interface/post_datasource.dart';
+import 'package:roadmap_ai/features/community/data/models/post_details/post_details.dart';
 import 'package:roadmap_ai/features/community/data/models/post_metadata/post_metadata.dart';
 import 'package:roadmap_ai/features/community/data/models/user_post_stats/user_post_stats.dart';
+import 'package:roadmap_ai/features/community/domain/entities/post_details.dart';
 import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
 import 'package:roadmap_ai/features/community/domain/entities/user_post_stats.dart';
 import 'package:roadmap_ai/features/community/domain/repository/post_repository.dart';
@@ -49,5 +51,12 @@ class PostRepositoryImpl implements PostRepository {
   @override
   TaskEither<Failure, UserPostStats> getUserPostStats() {
     return _datasource.getUserPostStats().map((model) => model.toEntity());
+  }
+
+  @override
+  TaskEither<Failure, PostDetails> getPostDetails({required String postId}) {
+    return _datasource
+        .getPostDetails(postId: postId)
+        .map((model) => model.toEntity());
   }
 }

@@ -44,6 +44,7 @@ class ExplorePage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
                 child: PostTile(
                   post: Post(
+                    title: 'Web Scraping in Python Roadmap',
                     views: 20,
                     description:
                         'Learn how to scrape data from websites using Python.',

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
+import 'package:roadmap_ai/features/community/domain/entities/post_details.dart';
 import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
 import 'package:roadmap_ai/features/community/domain/entities/user_post_stats.dart';
 
@@ -15,4 +16,5 @@ abstract class PostRepository {
     int skip = 0,
   });
   TaskEither<Failure, UserPostStats> getUserPostStats();
+  TaskEither<Failure, PostDetails> getPostDetails({required String postId});
 }

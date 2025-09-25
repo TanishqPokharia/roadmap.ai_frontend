@@ -4,7 +4,7 @@ class RoadmapMetadata {
   final String description;
   final int goalsCount;
   final int subgoalsCount;
-  final bool isPosted;
+  final String? postId;
   final int completedSubgoals;
 
   RoadmapMetadata({
@@ -14,7 +14,7 @@ class RoadmapMetadata {
     required this.goalsCount,
     required this.subgoalsCount,
     required this.completedSubgoals,
-    required this.isPosted,
+    required this.postId,
   });
 
   RoadmapMetadata copyWith({
@@ -24,7 +24,7 @@ class RoadmapMetadata {
     int? goalsCount,
     int? subgoalCount,
     int? completedSubgoals,
-    bool? isPosted,
+    String? isPosted,
   }) {
     return RoadmapMetadata(
       id: id ?? this.id,
@@ -33,7 +33,7 @@ class RoadmapMetadata {
       goalsCount: goalsCount ?? this.goalsCount,
       subgoalsCount: subgoalCount ?? subgoalsCount,
       completedSubgoals: completedSubgoals ?? this.completedSubgoals,
-      isPosted: isPosted ?? this.isPosted,
+      postId: isPosted ?? postId,
     );
   }
 }

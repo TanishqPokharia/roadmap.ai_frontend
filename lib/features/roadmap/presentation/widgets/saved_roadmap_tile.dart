@@ -94,7 +94,7 @@ class SavedRoadmapTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (!roadmap.isPosted)
+                if (roadmap.postId == null)
                   Consumer(
                     builder: (context, ref, child) {
                       return SizedBox(

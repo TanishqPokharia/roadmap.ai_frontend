@@ -9,6 +9,7 @@ import 'package:roadmap_ai/core/utils/datasource_error_handler.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
 import 'package:roadmap_ai/core/utils/http_error_handler.dart';
 import 'package:roadmap_ai/features/community/data/datasource/interface/post_datasource.dart';
+import 'package:roadmap_ai/features/community/data/models/post_details/post_details.dart';
 import 'package:roadmap_ai/features/community/data/models/post_metadata/post_metadata.dart';
 import 'package:roadmap_ai/features/community/data/models/user_post_stats/user_post_stats.dart';
 
@@ -103,6 +104,29 @@ class PostDatasourceImpl implements PostDatasource {
       (error, stackTrace) => dataSourceErrorHandler(
         error: error,
         message: 'Fetching user post stats failed',
+      ),
+    );
+  }
+
+  @override
+  TaskEither<Failure, PostDetailsModel> getPostDetails({
+    required String postId,
+  }) {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.get('/post/details/$postId');
+
+        if (response.statusCode != 200) {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+
+        final data = response.data;
+        final postDetails = PostDetailsModel.fromJson(data);
+        return postDetails;
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Fetching post details failed',
       ),
     );
   }

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PostModel {
 
- String get id; String get title; String get description; String get bannerImage; PostAuthorModel get author; DateTime get createdAt; int get likes; int get views;
+ String get id; RoadmapModel get roadmap; String get bannerImage; PostAuthorModel get author; DateTime get createdAt; int get likes; int get views;
 /// Create a copy of PostModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PostModelCopyWith<PostModel> get copyWith => _$PostModelCopyWithImpl<PostModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.author, author) || other.author == author)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.views, views) || other.views == views));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostModel&&(identical(other.id, id) || other.id == id)&&(identical(other.roadmap, roadmap) || other.roadmap == roadmap)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.author, author) || other.author == author)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.views, views) || other.views == views));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,bannerImage,author,createdAt,likes,views);
+int get hashCode => Object.hash(runtimeType,id,roadmap,bannerImage,author,createdAt,likes,views);
 
 @override
 String toString() {
-  return 'PostModel(id: $id, title: $title, description: $description, bannerImage: $bannerImage, author: $author, createdAt: $createdAt, likes: $likes, views: $views)';
+  return 'PostModel(id: $id, roadmap: $roadmap, bannerImage: $bannerImage, author: $author, createdAt: $createdAt, likes: $likes, views: $views)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $PostModelCopyWith<$Res>  {
   factory $PostModelCopyWith(PostModel value, $Res Function(PostModel) _then) = _$PostModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String description, String bannerImage, PostAuthorModel author, DateTime createdAt, int likes, int views
+ String id, RoadmapModel roadmap, String bannerImage, PostAuthorModel author, DateTime createdAt, int likes, int views
 });
 
 
-$PostAuthorModelCopyWith<$Res> get author;
+$RoadmapModelCopyWith<$Res> get roadmap;$PostAuthorModelCopyWith<$Res> get author;
 
 }
 /// @nodoc
@@ -65,12 +65,11 @@ class _$PostModelCopyWithImpl<$Res>
 
 /// Create a copy of PostModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? bannerImage = null,Object? author = null,Object? createdAt = null,Object? likes = null,Object? views = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? roadmap = null,Object? bannerImage = null,Object? author = null,Object? createdAt = null,Object? likes = null,Object? views = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String,bannerImage: null == bannerImage ? _self.bannerImage : bannerImage // ignore: cast_nullable_to_non_nullable
+as String,roadmap: null == roadmap ? _self.roadmap : roadmap // ignore: cast_nullable_to_non_nullable
+as RoadmapModel,bannerImage: null == bannerImage ? _self.bannerImage : bannerImage // ignore: cast_nullable_to_non_nullable
 as String,author: null == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
 as PostAuthorModel,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,likes: null == likes ? _self.likes : likes // ignore: cast_nullable_to_non_nullable
@@ -79,6 +78,15 @@ as int,
   ));
 }
 /// Create a copy of PostModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RoadmapModelCopyWith<$Res> get roadmap {
+  
+  return $RoadmapModelCopyWith<$Res>(_self.roadmap, (value) {
+    return _then(_self.copyWith(roadmap: value));
+  });
+}/// Create a copy of PostModel
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -169,10 +177,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  String bannerImage,  PostAuthorModel author,  DateTime createdAt,  int likes,  int views)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  RoadmapModel roadmap,  String bannerImage,  PostAuthorModel author,  DateTime createdAt,  int likes,  int views)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PostModel() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.bannerImage,_that.author,_that.createdAt,_that.likes,_that.views);case _:
+return $default(_that.id,_that.roadmap,_that.bannerImage,_that.author,_that.createdAt,_that.likes,_that.views);case _:
   return orElse();
 
 }
@@ -190,10 +198,10 @@ return $default(_that.id,_that.title,_that.description,_that.bannerImage,_that.a
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  String bannerImage,  PostAuthorModel author,  DateTime createdAt,  int likes,  int views)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  RoadmapModel roadmap,  String bannerImage,  PostAuthorModel author,  DateTime createdAt,  int likes,  int views)  $default,) {final _that = this;
 switch (_that) {
 case _PostModel():
-return $default(_that.id,_that.title,_that.description,_that.bannerImage,_that.author,_that.createdAt,_that.likes,_that.views);case _:
+return $default(_that.id,_that.roadmap,_that.bannerImage,_that.author,_that.createdAt,_that.likes,_that.views);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +218,10 @@ return $default(_that.id,_that.title,_that.description,_that.bannerImage,_that.a
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  String bannerImage,  PostAuthorModel author,  DateTime createdAt,  int likes,  int views)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  RoadmapModel roadmap,  String bannerImage,  PostAuthorModel author,  DateTime createdAt,  int likes,  int views)?  $default,) {final _that = this;
 switch (_that) {
 case _PostModel() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.bannerImage,_that.author,_that.createdAt,_that.likes,_that.views);case _:
+return $default(_that.id,_that.roadmap,_that.bannerImage,_that.author,_that.createdAt,_that.likes,_that.views);case _:
   return null;
 
 }
@@ -225,12 +233,11 @@ return $default(_that.id,_that.title,_that.description,_that.bannerImage,_that.a
 @JsonSerializable()
 
 class _PostModel implements PostModel {
-   _PostModel({required this.id, required this.title, required this.description, required this.bannerImage, required this.author, required this.createdAt, required this.likes, required this.views});
+   _PostModel({required this.id, required this.roadmap, required this.bannerImage, required this.author, required this.createdAt, required this.likes, required this.views});
   factory _PostModel.fromJson(Map<String, dynamic> json) => _$PostModelFromJson(json);
 
 @override final  String id;
-@override final  String title;
-@override final  String description;
+@override final  RoadmapModel roadmap;
 @override final  String bannerImage;
 @override final  PostAuthorModel author;
 @override final  DateTime createdAt;
@@ -250,16 +257,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.author, author) || other.author == author)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.views, views) || other.views == views));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostModel&&(identical(other.id, id) || other.id == id)&&(identical(other.roadmap, roadmap) || other.roadmap == roadmap)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.author, author) || other.author == author)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.views, views) || other.views == views));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,bannerImage,author,createdAt,likes,views);
+int get hashCode => Object.hash(runtimeType,id,roadmap,bannerImage,author,createdAt,likes,views);
 
 @override
 String toString() {
-  return 'PostModel(id: $id, title: $title, description: $description, bannerImage: $bannerImage, author: $author, createdAt: $createdAt, likes: $likes, views: $views)';
+  return 'PostModel(id: $id, roadmap: $roadmap, bannerImage: $bannerImage, author: $author, createdAt: $createdAt, likes: $likes, views: $views)';
 }
 
 
@@ -270,11 +277,11 @@ abstract mixin class _$PostModelCopyWith<$Res> implements $PostModelCopyWith<$Re
   factory _$PostModelCopyWith(_PostModel value, $Res Function(_PostModel) _then) = __$PostModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String description, String bannerImage, PostAuthorModel author, DateTime createdAt, int likes, int views
+ String id, RoadmapModel roadmap, String bannerImage, PostAuthorModel author, DateTime createdAt, int likes, int views
 });
 
 
-@override $PostAuthorModelCopyWith<$Res> get author;
+@override $RoadmapModelCopyWith<$Res> get roadmap;@override $PostAuthorModelCopyWith<$Res> get author;
 
 }
 /// @nodoc
@@ -287,12 +294,11 @@ class __$PostModelCopyWithImpl<$Res>
 
 /// Create a copy of PostModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? bannerImage = null,Object? author = null,Object? createdAt = null,Object? likes = null,Object? views = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? roadmap = null,Object? bannerImage = null,Object? author = null,Object? createdAt = null,Object? likes = null,Object? views = null,}) {
   return _then(_PostModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String,bannerImage: null == bannerImage ? _self.bannerImage : bannerImage // ignore: cast_nullable_to_non_nullable
+as String,roadmap: null == roadmap ? _self.roadmap : roadmap // ignore: cast_nullable_to_non_nullable
+as RoadmapModel,bannerImage: null == bannerImage ? _self.bannerImage : bannerImage // ignore: cast_nullable_to_non_nullable
 as String,author: null == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
 as PostAuthorModel,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,likes: null == likes ? _self.likes : likes // ignore: cast_nullable_to_non_nullable
@@ -302,6 +308,15 @@ as int,
 }
 
 /// Create a copy of PostModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RoadmapModelCopyWith<$Res> get roadmap {
+  
+  return $RoadmapModelCopyWith<$Res>(_self.roadmap, (value) {
+    return _then(_self.copyWith(roadmap: value));
+  });
+}/// Create a copy of PostModel
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

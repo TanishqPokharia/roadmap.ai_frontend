@@ -7,7 +7,7 @@ part of 'refresh_token_interceptor.dart';
 // **************************************************************************
 
 String _$refreshTokenInterceptorHash() =>
-    r'a5bfa212d16533ffbf9ebc7319a54114b37437e0';
+    r'b8759ffb70153f9d9bfe039950a0ac839432e586';
 
 /// See also [refreshTokenInterceptor].
 @ProviderFor(refreshTokenInterceptor)

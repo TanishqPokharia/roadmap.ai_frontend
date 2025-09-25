@@ -8,8 +8,7 @@ part of 'post.dart';
 
 _PostModel _$PostModelFromJson(Map<String, dynamic> json) => _PostModel(
   id: json['id'] as String,
-  title: json['title'] as String,
-  description: json['description'] as String,
+  roadmap: RoadmapModel.fromJson(json['roadmap'] as Map<String, dynamic>),
   bannerImage: json['bannerImage'] as String,
   author: PostAuthorModel.fromJson(json['author'] as Map<String, dynamic>),
   createdAt: DateTime.parse(json['createdAt'] as String),
@@ -20,8 +19,7 @@ _PostModel _$PostModelFromJson(Map<String, dynamic> json) => _PostModel(
 Map<String, dynamic> _$PostModelToJson(_PostModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'title': instance.title,
-      'description': instance.description,
+      'roadmap': instance.roadmap,
       'bannerImage': instance.bannerImage,
       'author': instance.author,
       'createdAt': instance.createdAt.toIso8601String(),

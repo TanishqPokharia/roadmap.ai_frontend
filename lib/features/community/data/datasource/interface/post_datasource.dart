@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:roadmap_ai/core/common/models/roadmap/roadmap.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
+import 'package:roadmap_ai/features/community/data/models/post_details/post_details.dart';
 import 'package:roadmap_ai/features/community/data/models/post_metadata/post_metadata.dart';
 import 'package:roadmap_ai/features/community/data/models/user_post_stats/user_post_stats.dart';
 
@@ -17,4 +18,7 @@ abstract class PostDatasource {
   });
 
   TaskEither<Failure, UserPostStatsModel> getUserPostStats();
+  TaskEither<Failure, PostDetailsModel> getPostDetails({
+    required String postId,
+  });
 }

@@ -96,29 +96,6 @@ class YourPostTile extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: screenHeight * 0.035,
-                      child: OutlinedButton(
-                        onPressed: () {
-                          // Edit functionality
-                        },
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                        ),
-                        child: Text(
-                          'Edit',
-                          style: textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
                     Spacer(),
                     PostViewsWidget(views: views),
                     SizedBox(width: screenHeight * 0.01),
@@ -134,7 +111,6 @@ class YourPostTile extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
-                width: screenHeight * 0.2,
                 fit: BoxFit.cover,
                 post.bannerImage,
                 loadingBuilder: (context, child, loadingProgress) {
