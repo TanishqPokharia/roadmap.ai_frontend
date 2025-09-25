@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'dio_provider.dart';
+part of 'get_popular_posts.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dioHash() => r'ea779e5a139983a315bb014b9cd94b0f9b8f3180';
+String _$getPopularPostsHash() => r'd267a5708619afa675cdc3a9c60a372cf53cae4e';
 
-/// See also [dio].
-@ProviderFor(dio)
-final dioProvider = AutoDisposeProvider<Dio>.internal(
-  dio,
-  name: r'dioProvider',
+/// See also [getPopularPosts].
+@ProviderFor(getPopularPosts)
+final getPopularPostsProvider = Provider<GetPopularPosts>.internal(
+  getPopularPosts,
+  name: r'getPopularPostsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$dioHash,
+      : _$getPopularPostsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef DioRef = AutoDisposeProviderRef<Dio>;
+typedef GetPopularPostsRef = ProviderRef<GetPopularPosts>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

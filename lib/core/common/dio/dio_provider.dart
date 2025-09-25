@@ -16,8 +16,7 @@ Dio dio(Ref ref) {
       baseUrl: dotenv.env['BASE_URL']!,
       connectTimeout: const Duration(seconds: 20),
       receiveTimeout: const Duration(seconds: 20),
-      // do not throw for any error the app will handle it
-      validateStatus: (status) => true,
+      validateStatus: (status) => true, // handle errors in app
       contentType: 'application/json',
     ),
   );
@@ -38,6 +37,20 @@ Dio dio(Ref ref) {
   // Add refresh token interceptor for both web and mobile
   final refreshTokenInterceptor = ref.read(refreshTokenInterceptorProvider);
   dio.interceptors.add(refreshTokenInterceptor);
+
+  // ✅ Add logger interceptor (only for debug mode)
+  if (kDebugMode) {
+    dio.interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestBody: true,
+        requestHeader: true,
+        responseHeader: false,
+        responseBody: true,
+        error: true,
+      ),
+    );
+  }
 
   return dio;
 }

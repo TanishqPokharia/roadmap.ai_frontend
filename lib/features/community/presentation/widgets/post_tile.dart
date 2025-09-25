@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
-import 'package:roadmap_ai/features/community/domain/entities/post.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/post_like_button.dart';
 import 'package:roadmap_ai/router/routes.dart';
 import 'package:roadmap_ai/core/themes/colors.dart';
+
+import '../../domain/entities/popularPost.dart' show Post;
+
 
 class PostTile extends StatelessWidget {
   const PostTile({super.key, required this.post});
@@ -23,7 +25,7 @@ class PostTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              post.roadmap.title,
+              post.title,
               style: context.textTheme.titleLarge!.copyWith(
                 fontWeight: FontWeight.w700,
               ),
@@ -32,7 +34,7 @@ class PostTile extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  'Created by ${post.author.username}',
+                  'Created at ${post.createdAt}',
                   style: textTheme.bodyMedium!.copyWith(color: Colors.blueGrey),
                 ),
               ],
@@ -59,7 +61,7 @@ class PostTile extends StatelessWidget {
                         AppRoutes.post,
                         queryParameters: {
                           'postId': post.id,
-                          'title': post.roadmap.title,
+                          'title': post.title,
                         },
                       );
                     },
@@ -96,7 +98,7 @@ class PostTile extends StatelessWidget {
             child: Image.network(
               width: screenHeight * 0.2,
               fit: BoxFit.cover,
-              post.bannerUrl,
+              post.bannerImage,
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
                 return Center(

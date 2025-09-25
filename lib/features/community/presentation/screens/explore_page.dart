@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
-import 'package:roadmap_ai/features/community/domain/entities/author.dart';
-import 'package:roadmap_ai/features/community/domain/entities/post.dart';
-import 'package:roadmap_ai/core/common/entities/roadmap.dart';
-import 'package:roadmap_ai/features/community/presentation/widgets/post_tile.dart';
+import 'package:roadmap_ai/features/community/presentation/widgets/post_tile.dart' show PostTile;
 
-class ExplorePage extends StatelessWidget {
+import '../providers/explore_page/explore_page_notifier.dart' show explorePageNotifierProvider;
+
+class ExplorePage extends ConsumerWidget {
   const ExplorePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = context.textTheme;
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
+
+    final postsAsync = ref.watch(
+      explorePageNotifierProvider(limit: 10, skip: 0),
+    );
     return Padding(
       padding: EdgeInsets.only(left: screenWidth * 0.1),
       child: Column(
@@ -26,48 +30,28 @@ class ExplorePage extends StatelessWidget {
             children: [
               Text(
                 'Roadmaps',
-                style: textTheme.headlineLarge!.copyWith(
+                style: textTheme.headlineLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
                 'Explore community created roadmaps',
-                style: textTheme.bodyLarge!.copyWith(color: Colors.blueGrey),
+                style: textTheme.bodyLarge?.copyWith(color: Colors.blueGrey),
               ),
             ],
           ),
           SizedBox(height: screenHeight * 0.05),
           Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) => Padding(
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
-                child: PostTile(
-                  post: Post(
-                    description:
-                        'Learn how to scrape data from websites using Python.',
-                    roadmap: Roadmap(
-                      title: 'Web Scraping in Python Roadmap',
-                      description:
-                          'A comprehensive roadmap to learn web scraping using Python, covering libraries, techniques, and best practices.',
-                      userId: '12345',
-                      goals: [],
-                      id: '1',
-                    ),
-                    likes: 124,
-                    createdAt: DateTime.now(),
-                    author: Author(
-                      username: 'John Doe',
-                      email: 'john@example.com',
-                      avatar: 'https://example.com/profile.jpg',
-                      id: '1',
-                    ),
-                    id: '1',
-                    bannerUrl:
-                        'https://external-preview.redd.it/H274VHAVhBDAMYXE0hynj5ylw7kTsRZPw-HLb1alalU.jpg?width=1080&crop=smart&auto=webp&s=08af2e4c724fd5fe0e558b58fd8bd3438468890b',
-                  ),
+            child: postsAsync.when(
+              data: (popularPosts) => ListView.builder(
+                itemCount: popularPosts.popularPostResponse.posts.length,
+                itemBuilder: (context, index) => Padding(
+                  padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                  child: PostTile(post: popularPosts.popularPostResponse.posts[index]),
                 ),
               ),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) => Center(child: Text('Error: $err')),
             ),
           ),
           SizedBox(height: screenHeight * 0.05),
