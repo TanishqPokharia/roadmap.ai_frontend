@@ -5,13 +5,11 @@ import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/common/entities/subgoal.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
-import 'package:roadmap_ai/core/utils/format_date.dart';
-import 'package:roadmap_ai/features/roadmap/presentation/providers/roadmap_view/roadmap_view_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/create_post/create_post_notifier.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/widgets/add_goal_dialog.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/widgets/add_subgoal_dialog.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/widgets/edit_goal_dialog.dart';
-import 'package:roadmap_ai/features/roadmap/presentation/widgets/edit_subgoal_dialog.dart';
+import 'package:roadmap_ai/features/roadmap/presentation/widgets/editable_subgoal_card.dart';
 
 class EditableRoadmapTree extends ConsumerStatefulWidget {
   final Roadmap roadmap;
@@ -33,6 +31,17 @@ class EditableRoadmapTree extends ConsumerStatefulWidget {
 }
 
 class _EditableRoadmapTreeState extends ConsumerState<EditableRoadmapTree> {
+  List<int> _expandedGoalsIndexes = [];
+
+  @override
+  void initState() {
+    _expandedGoalsIndexes = List.generate(
+      widget.roadmap.goals.length,
+      (index) => index,
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     // Get the CreatePostNotifier if we're in customizable mode
@@ -40,9 +49,6 @@ class _EditableRoadmapTreeState extends ConsumerState<EditableRoadmapTree> {
         ? ref.read(createPostNotifierProvider(widget.roadmap.id).notifier)
         : null;
 
-    print(
-      'EditableRoadmapTree - isCustomizable: ${widget.isCustomizable}, notifier: ${notifier != null ? 'available' : 'null'}',
-    );
     if (widget.shrinkWrap) {
       // For use in scrollable contexts like CustomScrollView
       return Column(
@@ -54,13 +60,26 @@ class _EditableRoadmapTreeState extends ConsumerState<EditableRoadmapTree> {
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             itemCount: widget.roadmap.goals.length,
             itemBuilder: (context, index) {
-              return EditableGoalNode(
-                index: index,
-                roadmapId: widget.roadmap.id,
-                haveDivider: index < widget.roadmap.goals.length - 1,
-                goal: widget.roadmap.goals[index],
-                isProgressEditable: widget.isProgressEditable,
-                isCustomizable: widget.isCustomizable,
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (_expandedGoalsIndexes.contains(index)) {
+                      _expandedGoalsIndexes.remove(index);
+                    } else {
+                      _expandedGoalsIndexes.add(index);
+                    }
+                  });
+                },
+                child: EditableGoalNode(
+                  isExpanded: _expandedGoalsIndexes.contains(index),
+                  key: ValueKey(widget.roadmap.goals[index].id),
+                  index: index,
+                  roadmapId: widget.roadmap.id,
+                  haveDivider: index < widget.roadmap.goals.length - 1,
+                  goal: widget.roadmap.goals[index],
+                  isProgressEditable: widget.isProgressEditable,
+                  isCustomizable: widget.isCustomizable,
+                ),
               );
             },
           ),
@@ -95,58 +114,70 @@ class _EditableRoadmapTreeState extends ConsumerState<EditableRoadmapTree> {
             ),
         ],
       );
-    } else {
-      // For use in regular contexts with Expanded
-      return Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              itemCount: widget.roadmap.goals.length,
-              itemBuilder: (context, index) {
-                return EditableGoalNode(
+    }
+    // For use in regular contexts with Expanded
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            itemCount: widget.roadmap.goals.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (_expandedGoalsIndexes.contains(index)) {
+                      _expandedGoalsIndexes.remove(index);
+                    } else {
+                      _expandedGoalsIndexes.add(index);
+                    }
+                  });
+                },
+                child: EditableGoalNode(
+                  isExpanded: _expandedGoalsIndexes.contains(index),
+                  key: ValueKey(widget.roadmap.goals[index].id),
                   index: index,
                   roadmapId: widget.roadmap.id,
                   haveDivider: index < widget.roadmap.goals.length - 1,
                   goal: widget.roadmap.goals[index],
                   isProgressEditable: widget.isProgressEditable,
                   isCustomizable: widget.isCustomizable,
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
-          if (widget.isCustomizable)
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    if (notifier != null) {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AddGoalDialog(
-                          onSave: (title) {
-                            notifier.addNewGoal(title);
-                          },
-                        ),
-                      );
-                    } else {
-                      // TODO: Add goal functionality for roadmap view
-                      print('Add new goal - roadmap view');
-                    }
-                  },
-                  icon: Icon(Icons.add),
-                  label: Text('Add Goal'),
-                  style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                  ),
+        ),
+        if (widget.isCustomizable)
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  if (notifier != null) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AddGoalDialog(
+                        onSave: (title) {
+                          notifier.addNewGoal(title);
+                        },
+                      ),
+                    );
+                  } else {
+                    // TODO: Add goal functionality for roadmap view
+                    print('Add new goal - roadmap view');
+                  }
+                },
+                icon: Icon(Icons.add),
+                label: Text('Add Goal'),
+                style: OutlinedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 12),
                 ),
               ),
             ),
-        ],
-      );
-    }
+          ),
+      ],
+    );
   }
 }
 
@@ -159,8 +190,10 @@ class EditableGoalNode extends ConsumerStatefulWidget {
     this.haveDivider = true,
     this.isProgressEditable = false,
     this.isCustomizable = false,
+    required this.isExpanded,
   });
 
+  final bool isExpanded;
   final Goal goal;
   final String roadmapId;
   final int index;
@@ -173,36 +206,20 @@ class EditableGoalNode extends ConsumerStatefulWidget {
 }
 
 class _EditableGoalNodeState extends ConsumerState<EditableGoalNode> {
-  bool _isExpanded = false;
-
   // List to track expanded state of subgoals
-  List<bool> _expandedSubgoals = [];
+  final List<int> _expandedSubgoalsIndexes = [];
 
   // Constants for divider and spacing calculations
   static const double kDefaultDividerHeight = 60.0; // Increased from 50.0
-  static const double kExpandedDividerExtraHeight = 20.0; // Increased from 10.0
+  static const double kExpandedDividerExtraHeight =
+      200.0; // Increased from 10.0
   static const double kCollapsedDividerHeight = 70.0; // Increased from 60.0
   static const double kDividerVerticalMargin = 0.0; // Reduced from 5.0
   static const double kSubgoalBottomSpacing = 25.0; // Increased from 20.0
 
-  @override
-  void initState() {
-    super.initState();
-    // Start with expanded state to show all subgoals
-    _isExpanded = true;
-    if (widget.goal.subgoals.isNotEmpty) {
-      _expandedSubgoals = List.generate(
-        widget.goal.subgoals.length,
-        (_) => false,
-      );
-    } else {
-      _expandedSubgoals = [];
-    }
-  }
-
   // Calculate the required divider height based on subgoals
   double _calculateDividerHeight() {
-    if (!_isExpanded || widget.goal.subgoals.isEmpty) {
+    if (!widget.isExpanded || widget.goal.subgoals.isEmpty) {
       return kDefaultDividerHeight;
     }
 
@@ -220,7 +237,7 @@ class _EditableGoalNodeState extends ConsumerState<EditableGoalNode> {
       double subgoalHeight = 90; // kCollapsedHeight from subgoal node
 
       // Add expanded height if this subgoal is expanded
-      if (i < _expandedSubgoals.length && _expandedSubgoals[i]) {
+      if (_expandedSubgoalsIndexes.contains(i)) {
         subgoalHeight += 90; // kExpandedExtraHeight
 
         // Add height for resources if present
@@ -273,13 +290,26 @@ class _EditableGoalNodeState extends ConsumerState<EditableGoalNode> {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircleAvatar(
-                  backgroundColor: colorScheme.primary.withAlpha(38),
-                  child: Text(
-                    '${widget.index + 1}',
-                    style: TextStyle(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.bold,
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colorScheme.primary,
+                        blurRadius: 10,
+                        spreadRadius: 3,
+                        offset: Offset(1, 1),
+                      ),
+                    ],
+                  ),
+                  child: CircleAvatar(
+                    backgroundColor: colorScheme.primary,
+                    child: Text(
+                      '${widget.index + 1}',
+                      style: textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
@@ -288,7 +318,7 @@ class _EditableGoalNodeState extends ConsumerState<EditableGoalNode> {
                     margin: EdgeInsets.symmetric(
                       vertical: kDividerVerticalMargin,
                     ),
-                    height: _isExpanded
+                    height: widget.isExpanded
                         ? _calculateDividerHeight() +
                               kExpandedDividerExtraHeight
                         : kCollapsedDividerHeight,
@@ -309,16 +339,16 @@ class _EditableGoalNodeState extends ConsumerState<EditableGoalNode> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
                               child: Text(
                                 widget.goal.title,
-                                style: textTheme.titleMedium!.copyWith(
-                                  color: colorScheme.primary.withAlpha(204),
+                                style: textTheme.titleLarge!.copyWith(
+                                  color: colorScheme.primaryContainer,
+                                  fontWeight: FontWeight.w900,
                                   decoration: TextDecoration.underline,
-                                  decorationColor: colorScheme.primary
-                                      .withAlpha(102),
-                                  fontWeight: FontWeight.w600,
+                                  decorationColor: colorScheme.primaryContainer,
                                 ),
                               ),
                             ),
@@ -367,35 +397,47 @@ class _EditableGoalNodeState extends ConsumerState<EditableGoalNode> {
                             ],
                           ],
                         ),
-                        if (_isExpanded && widget.goal.subgoals.isNotEmpty)
+                        if (widget.isExpanded &&
+                            widget.goal.subgoals.isNotEmpty)
                           Padding(
                             padding: EdgeInsets.only(left: 40, top: 20),
                             child: Column(
                               children: [
+                                SizedBox(height: 20),
                                 for (
                                   int i = 0;
                                   i < widget.goal.subgoals.length;
                                   i++
                                 )
-                                  EditableSubgoalNode(
-                                    subgoal: widget.goal.subgoals[i],
-                                    goalId: widget.goal.id,
-                                    goalIndex: widget.index,
-                                    roadmapId: widget.roadmapId,
-                                    index: i,
-                                    isLast:
-                                        i == widget.goal.subgoals.length - 1,
-                                    isProgressEditable:
-                                        widget.isProgressEditable,
-                                    isCustomizable: widget.isCustomizable,
-                                    onExpansionChanged: (expanded) {
-                                      // Update the expanded state of this subgoal
-                                      if (i < _expandedSubgoals.length) {
-                                        setState(() {
-                                          _expandedSubgoals[i] = expanded;
-                                        });
-                                      }
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        if (_expandedSubgoalsIndexes.contains(
+                                          i,
+                                        )) {
+                                          _expandedSubgoalsIndexes.remove(i);
+                                        } else {
+                                          _expandedSubgoalsIndexes.add(i);
+                                        }
+                                      });
                                     },
+                                    child: EditableSubgoalNode(
+                                      key: ValueKey(
+                                        '${widget.goal.id}-${widget.goal.subgoals[i].id}',
+                                      ),
+                                      subgoal: widget.goal.subgoals[i],
+                                      goalId: widget.goal.id,
+                                      goalIndex: widget.index,
+                                      roadmapId: widget.roadmapId,
+                                      index: i,
+                                      isLast:
+                                          i == widget.goal.subgoals.length - 1,
+                                      isProgressEditable:
+                                          widget.isProgressEditable,
+                                      isCustomizable: widget.isCustomizable,
+                                      isExpanded: _expandedSubgoalsIndexes
+                                          .contains(i),
+                                    ),
                                   ),
                                 // Add subgoal button when customizable
                                 if (widget.isCustomizable)
@@ -461,26 +503,19 @@ class _EditableGoalNodeState extends ConsumerState<EditableGoalNode> {
                       ],
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isExpanded = !_isExpanded;
-                      });
-                    },
-                    icon: AnimatedSwitcher(
-                      duration: Duration(milliseconds: 150),
-                      child: _isExpanded
-                          ? Icon(
-                              Icons.expand_less,
-                              key: ValueKey('less'),
-                              color: colorScheme.primary,
-                            )
-                          : Icon(
-                              Icons.expand_more,
-                              key: ValueKey('more'),
-                              color: colorScheme.primary,
-                            ),
-                    ),
+                  AnimatedSwitcher(
+                    duration: Duration(milliseconds: 150),
+                    child: widget.isExpanded
+                        ? Icon(
+                            Icons.expand_less,
+                            key: ValueKey('less'),
+                            color: colorScheme.primary,
+                          )
+                        : Icon(
+                            Icons.expand_more,
+                            key: ValueKey('more'),
+                            color: colorScheme.primary,
+                          ),
                   ),
                 ],
               ),
@@ -503,7 +538,7 @@ class EditableSubgoalNode extends ConsumerStatefulWidget {
     this.isLast = false,
     this.isProgressEditable = false,
     this.isCustomizable = false,
-    this.onExpansionChanged,
+    required this.isExpanded,
   });
   final String roadmapId;
   final Subgoal subgoal;
@@ -513,7 +548,7 @@ class EditableSubgoalNode extends ConsumerStatefulWidget {
   final bool isLast;
   final bool isProgressEditable;
   final bool isCustomizable;
-  final Function(bool)? onExpansionChanged;
+  final bool isExpanded;
 
   @override
   ConsumerState<EditableSubgoalNode> createState() =>
@@ -521,10 +556,8 @@ class EditableSubgoalNode extends ConsumerStatefulWidget {
 }
 
 class _EditableSubgoalNodeState extends ConsumerState<EditableSubgoalNode> {
-  bool _isExpanded = false;
-
   // Constants for divider and spacing calculations
-  static const double kCollapsedHeight = 90.0; // Increased from 80.0
+  static const double kCollapsedHeight = 120.0; // Increased from 80.0
   static const double kExpandedExtraHeight = 90.0; // Increased from 80.0
   static const double kCardPadding = 15.0;
   static const double kResourceBaseHeight = 20.0;
@@ -536,7 +569,7 @@ class _EditableSubgoalNodeState extends ConsumerState<EditableSubgoalNode> {
     // Base heights for expanded and collapsed states
     double totalHeight = kCollapsedHeight;
 
-    if (_isExpanded) {
+    if (widget.isExpanded) {
       // Add additional height for expanded content
       totalHeight += kExpandedExtraHeight;
 
@@ -562,13 +595,9 @@ class _EditableSubgoalNodeState extends ConsumerState<EditableSubgoalNode> {
   @override
   Widget build(BuildContext context) {
     // Get the CreatePostNotifier if we're in customizable mode
-    final notifier = widget.isCustomizable
-        ? ref.read(createPostNotifierProvider(widget.roadmapId).notifier)
-        : null;
 
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
-    final isCompleted = widget.subgoal.status?.completed ?? false;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -577,14 +606,27 @@ class _EditableSubgoalNodeState extends ConsumerState<EditableSubgoalNode> {
           width: 20,
           child: Column(
             children: [
-              CircleAvatar(
-                radius: 10,
-                backgroundColor: colorScheme.secondary.withAlpha(38),
-                child: Text(
-                  '${widget.index + 1}',
-                  style: textTheme.bodySmall?.copyWith(
-                    color: colorScheme.secondary,
-                    fontWeight: FontWeight.bold,
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.primary,
+                      blurRadius: 10,
+                      spreadRadius: 3,
+                      offset: Offset(1, 1),
+                    ),
+                  ],
+                ),
+                child: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: colorScheme.primary,
+                  child: Text(
+                    '${widget.index + 1}',
+                    style: textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -622,278 +664,15 @@ class _EditableSubgoalNodeState extends ConsumerState<EditableSubgoalNode> {
         ),
 
         Expanded(
-          child: InkWell(
-            onTap: () {
-              setState(() {
-                _isExpanded = !_isExpanded;
-                // Notify parent about expansion change
-                widget.onExpansionChanged?.call(_isExpanded);
-              });
-            },
-            borderRadius: BorderRadius.circular(8),
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 150),
-              margin: EdgeInsets.only(bottom: 10),
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: colorScheme.surface,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey.withAlpha(26)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(13),
-                    blurRadius: 2,
-                    offset: Offset(0, 1),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          widget.subgoal.title,
-                          style: textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                      if (widget.isCustomizable) ...[
-                        IconButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => EditSubgoalDialog(
-                                subgoal: widget.subgoal,
-                                onSave: (newTitle, newDescription, newResources) {
-                                  if (notifier != null) {
-                                    notifier.setSubgoalDetails(
-                                      widget.goalId,
-                                      widget.subgoal.id,
-                                      newTitle,
-                                      newDescription,
-                                      newResources,
-                                    );
-                                  } else {
-                                    // TODO: Implement subgoal edit functionality with roadmap notifier
-                                    print(
-                                      'Edit subgoal: ${widget.subgoal.title}',
-                                    );
-                                    print('New title: $newTitle');
-                                    print('New description: $newDescription');
-                                    print('New resources: $newResources');
-                                  }
-                                },
-                              ),
-                            );
-                          },
-                          icon: Icon(
-                            Icons.edit,
-                            size: 16,
-                            color: colorScheme.primary,
-                          ),
-                          tooltip: 'Edit Subgoal',
-                          constraints: BoxConstraints(
-                            minWidth: 32,
-                            minHeight: 32,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            // TODO: Delete subgoal functionality
-                            print('Delete subgoal: ${widget.subgoal.title}');
-                          },
-                          icon: Icon(
-                            Icons.delete,
-                            size: 16,
-                            color: colorScheme.error,
-                          ),
-                          tooltip: 'Delete Subgoal',
-                          constraints: BoxConstraints(
-                            minWidth: 32,
-                            minHeight: 32,
-                          ),
-                        ),
-                      ],
-                      if (widget.isProgressEditable)
-                        Transform.scale(
-                          scale: 0.8,
-                          child: Checkbox(
-                            value: isCompleted,
-                            activeColor: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            onChanged: (value) {
-                              if (!mounted) {
-                                return;
-                              }
-
-                              ref
-                                  .read(
-                                    roadmapViewNotifierProvider(
-                                      widget.roadmapId,
-                                    ).notifier,
-                                  )
-                                  .updateSubgoalStatus(
-                                    goalId: widget.goalId,
-                                    subgoalId: widget.subgoal.id,
-                                    goalIndex: widget.goalIndex,
-                                    subgoalIndex: widget.index,
-                                    isCompleted: value!,
-                                  );
-                            },
-                          ),
-                        ),
-                      Icon(
-                        _isExpanded
-                            ? Icons.keyboard_arrow_up
-                            : Icons.keyboard_arrow_down,
-                        size: 18,
-                        color: colorScheme.primary.withAlpha(153),
-                      ),
-                    ],
-                  ),
-
-                  // Initial preview (always visible)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 4),
-                      // Description (truncated when not expanded)
-                      Text(
-                        widget.subgoal.description,
-                        maxLines: _isExpanded ? null : 1,
-                        overflow: _isExpanded ? null : TextOverflow.ellipsis,
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurface.withAlpha(179),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // Extended content (visible only when expanded)
-                  if (_isExpanded) ...[
-                    const SizedBox(height: 12),
-
-                    // Resources section
-                    if (widget.subgoal.resources.isNotEmpty) ...[
-                      Text(
-                        'Resources:',
-                        style: textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.secondary,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      ...widget.subgoal.resources.map(
-                        (resource) => Padding(
-                          padding: const EdgeInsets.only(bottom: 4, left: 8),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Icon(
-                                Icons.link,
-                                size: 14,
-                                color: colorScheme.primary,
-                              ),
-                              const SizedBox(width: 4),
-                              Expanded(
-                                child: Text(
-                                  resource,
-                                  style: textTheme.bodySmall?.copyWith(
-                                    color: colorScheme.primary,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-
-                    // Status section if available
-                    if (widget.subgoal.status != null)
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 4),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: widget.subgoal.status!.completed
-                              ? Colors.green.withAlpha(26)
-                              : Colors.orange.withAlpha(26),
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: Colors.grey.withAlpha(100)),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              widget.subgoal.status!.completed
-                                  ? ' Completed on ${formatDate(widget.subgoal.status?.completedAt)}'
-                                  : 'In Progress',
-                              style: textTheme.bodyMedium?.copyWith(
-                                color: widget.subgoal.status!.completed
-                                    ? Colors.green.shade800
-                                    : Colors.orange.shade800,
-                              ),
-                            ),
-                            // if (wasCompletedBefore) ...[
-                            //   SizedBox(width: 4),
-                            //   Icon(
-                            //     Icons.lock,
-                            //     size: 12,
-                            //     color: Colors.grey.shade700,
-                            //   ),
-                          ],
-
-                          // Show pending indicator if modified but not saved
-                          // if (!wasCompletedBefore &&
-                          //     widget.subgoal.status!.completed &&
-                          //     widget.subgoal.status!.completedAt == null) ...[
-                          //   SizedBox(width: 4),
-                          //   Icon(
-                          //     Icons.pending,
-                          //     size: 12,
-                          //     color: Colors.blue.shade700,
-                          //   ),
-                          // ],
-                        ),
-                      ),
-                  ],
-
-                  SizedBox(height: 10),
-
-                  // Duration pill (always visible, at bottom)
-                  Container(
-                    margin: const EdgeInsets.only(top: 4),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: colorScheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      widget.subgoal.duration,
-                      style: textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onSecondaryContainer,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          child: EditableSubgoalCard(
+            isExpanded: widget.isExpanded,
+            isCustomizable: widget.isCustomizable,
+            isProgressEditable: widget.isProgressEditable,
+            roadmapId: widget.roadmapId,
+            goalId: widget.goalId,
+            subgoal: widget.subgoal,
+            index: widget.index,
+            goalIndex: widget.goalIndex,
           ),
         ),
       ],

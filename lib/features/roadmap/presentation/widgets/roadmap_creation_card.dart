@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
-import 'package:roadmap_ai/core/themes/colors.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/providers/roadmap/roadmap_notifier.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/widgets/hover_shadow.dart';
 
@@ -38,9 +37,11 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
     final screenWidth = context.screenWidth;
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
+    final theme = context.theme;
     final roadmapProvider = ref.watch(roadmapNotifierProvider);
     return Card(
       elevation: 10,
+      color: theme.cardColor,
       margin: EdgeInsets.only(right: screenWidth * 0.1),
       child: Padding(
         padding: EdgeInsets.all(screenWidth * 0.02),
@@ -62,13 +63,8 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
                   controller: _descriptionController,
                   maxLines: 5,
                   decoration: InputDecoration(
-                    filled: true,
-                    fillColor: buttonColor,
                     border: OutlineInputBorder(borderSide: BorderSide.none),
                     hintText: 'Describe your desired roadmap in detail',
-                    hintStyle: textTheme.bodyLarge!.copyWith(
-                      color: Colors.blueGrey,
-                    ),
                   ),
                 ),
               ],

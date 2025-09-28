@@ -21,4 +21,20 @@ abstract class PostDatasource {
   TaskEither<Failure, PostDetailsModel> getPostDetails({
     required String postId,
   });
+  TaskEither<Failure, List<PostMetadataModel>> getPopularPosts({
+    int limit = 10,
+    int skip = 0,
+  });
+  TaskEither<Failure, List<PostMetadataModel>> getPostsByTime({
+    int limit = 10,
+    int skip = 0,
+    required PostTime postTime,
+  });
+  TaskEither<Failure, List<PostMetadataModel>> getPostsByTitle({
+    int limit = 10,
+    int skip = 0,
+    required String title,
+  });
 }
+
+enum PostTime { day, week, month, year }

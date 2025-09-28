@@ -59,4 +59,36 @@ class PostRepositoryImpl implements PostRepository {
         .getPostDetails(postId: postId)
         .map((model) => model.toEntity());
   }
+
+  @override
+  TaskEither<Failure, List<PostMetadata>> getPopularPosts({
+    int limit = 10,
+    int skip = 0,
+  }) {
+    return _datasource
+        .getPopularPosts(limit: limit, skip: skip)
+        .map((models) => models.map((model) => model.toEntity()).toList());
+  }
+
+  @override
+  TaskEither<Failure, List<PostMetadata>> getPostsByTime({
+    int limit = 10,
+    int skip = 0,
+    required PostTime postTime,
+  }) {
+    return _datasource
+        .getPostsByTime(limit: limit, skip: skip, postTime: postTime)
+        .map((models) => models.map((model) => model.toEntity()).toList());
+  }
+
+  @override
+  TaskEither<Failure, List<PostMetadata>> getPostsByTitle({
+    int limit = 10,
+    int skip = 0,
+    required String title,
+  }) {
+    return _datasource
+        .getPostsByTitle(limit: limit, skip: skip, title: title)
+        .map((models) => models.map((model) => model.toEntity()).toList());
+  }
 }

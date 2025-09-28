@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap_metadata.dart';
-import 'package:roadmap_ai/core/common/navigation_page.dart';
+import 'package:roadmap_ai/core/common/pages/navigation_page.dart';
 import 'package:roadmap_ai/features/auth/presentation/screens/auth_page.dart';
 import 'package:roadmap_ai/features/auth/presentation/screens/profile_page.dart';
 import 'package:roadmap_ai/features/auth/presentation/screens/splash_page.dart';

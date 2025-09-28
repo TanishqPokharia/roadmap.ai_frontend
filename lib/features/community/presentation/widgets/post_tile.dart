@@ -2,28 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
-import 'package:roadmap_ai/features/community/domain/entities/post.dart';
+import 'package:roadmap_ai/core/utils/format_date.dart';
+import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/post_like_button.dart';
 import 'package:roadmap_ai/router/routes.dart';
-import 'package:roadmap_ai/core/themes/colors.dart';
 
 class PostTile extends StatelessWidget {
   const PostTile({super.key, required this.post});
-  final Post post;
+  final PostMetadata post;
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
+    final theme = context.theme;
     return Row(
-      spacing: screenWidth * 0.2,
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              post.roadmap.title,
+              post.title,
               style: context.textTheme.titleLarge!.copyWith(
                 fontWeight: FontWeight.w700,
               ),
@@ -32,19 +34,52 @@ class PostTile extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  'Created by ${post.author.username}',
+                  'Created by',
                   style: textTheme.bodyMedium!.copyWith(color: Colors.blueGrey),
+                ),
+                SizedBox(width: screenWidth * 0.005),
+                CircleAvatar(
+                  radius: screenHeight * 0.012,
+                  backgroundImage: NetworkImage(post.author.avatar),
+                ),
+                Text(
+                  '  ${post.author.username}',
+                  style: textTheme.bodyMedium!.copyWith(
+                    color: Colors.blueGrey,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
-            SizedBox(height: screenHeight * 0.01),
+            SizedBox(height: screenHeight * 0.005),
             Text(
-              post.description,
+              'On ${formatDate(post.createdAt)}',
               style: textTheme.bodyMedium!.copyWith(color: Colors.blueGrey),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: screenHeight * 0.01),
+            SizedBox(height: screenHeight * 0.02),
+            SizedBox(
+              width: screenWidth * 0.3,
+              child: Text(
+                post.description,
+                style: textTheme.bodyMedium!.copyWith(color: Colors.blueGrey),
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            // LayoutBuilder(
+            //   builder: (context,constraints) {
+            //     return SizedBox(
+            //       width: constraints.maxWidth * 0.5,
+            //       child: Text(
+            //         post.description,
+            //         style: textTheme.bodyMedium!.copyWith(color: Colors.blueGrey),
+            //         maxLines: 2,
+            //         overflow: TextOverflow.ellipsis,
+            //       ),
+            //     );
+            //   }
+            // ),
+            SizedBox(height: screenHeight * 0.02),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               spacing: screenHeight * 0.005,
@@ -59,25 +94,26 @@ class PostTile extends StatelessWidget {
                         AppRoutes.post,
                         queryParameters: {
                           'postId': post.id,
-                          'title': post.roadmap.title,
+                          'title': post.title,
                         },
                       );
                     },
-                    style: FilledButton.styleFrom(
-                      backgroundColor: buttonColor,
-                      textStyle: textTheme.bodyLarge,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                    style: theme.filledButtonTheme.style?.copyWith(
+                      textStyle: WidgetStatePropertyAll(textTheme.bodyLarge),
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
+                      padding: WidgetStatePropertyAll(
+                        EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       ),
                     ),
                     child: Text(
                       'View',
                       style: textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
                   ),

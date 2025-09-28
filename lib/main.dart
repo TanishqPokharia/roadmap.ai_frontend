@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:roadmap_ai/core/common/providers/theme_notifier.dart';
+import 'package:roadmap_ai/core/themes/themes.dart';
 import 'package:roadmap_ai/router/router_config.dart';
 import 'package:toastification/toastification.dart';
 
@@ -11,35 +12,26 @@ void main() async {
   runApp(ProviderScope(child: const MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ToastificationWrapper(
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         routerConfig: AppRouter.router,
         title: 'Flutter Demo',
-        theme: ThemeData(
-          splashFactory: NoSplash.splashFactory,
-          filledButtonTheme: FilledButtonThemeData(
-            style: FilledButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6),
-              ),
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        themeMode: ref
+            .watch(themeNotifierProvider)
+            .maybeWhen(
+              data: (themeMode) => themeMode,
+              orElse: () => ThemeMode.system,
             ),
-          ),
-          textTheme: GoogleFonts.interTextTheme(
-            Theme.of(context).textTheme.apply(
-              bodyColor: Colors.black,
-              displayColor: Colors.black,
-            ),
-          ),
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
-        ),
       ),
     );
   }

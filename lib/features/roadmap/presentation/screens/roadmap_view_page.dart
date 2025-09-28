@@ -13,15 +13,10 @@ class RoadmapViewPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colorScheme = context.colorScheme;
     final roadmapView = roadmapViewNotifierProvider(roadmapId);
 
     return Scaffold(
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        backgroundColor: colorScheme.surface,
-      ),
+      appBar: AppBar(),
       body: ref
           .watch(roadmapView)
           .when(

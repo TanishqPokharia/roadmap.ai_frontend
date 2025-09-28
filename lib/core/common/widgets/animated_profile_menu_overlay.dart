@@ -7,16 +7,16 @@ import 'package:roadmap_ai/features/auth/presentation/providers/logout/logout_no
 import 'package:roadmap_ai/features/auth/presentation/providers/profile/profile_notifier.dart';
 import 'package:roadmap_ai/router/routes.dart';
 
-class AnimatedMenuOverlay extends ConsumerStatefulWidget {
+class AnimatedProfileMenuOverlay extends ConsumerStatefulWidget {
   final VoidCallback onDismiss;
 
-  const AnimatedMenuOverlay({super.key, required this.onDismiss});
+  const AnimatedProfileMenuOverlay({super.key, required this.onDismiss});
 
   @override
   AnimatedMenuOverlayState createState() => AnimatedMenuOverlayState();
 }
 
-class AnimatedMenuOverlayState extends ConsumerState<AnimatedMenuOverlay>
+class AnimatedMenuOverlayState extends ConsumerState<AnimatedProfileMenuOverlay>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;

@@ -6,7 +6,6 @@ import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/router/routes.dart';
-import 'package:roadmap_ai/core/themes/colors.dart';
 
 class SavedRoadmapTile extends StatelessWidget {
   const SavedRoadmapTile({super.key, required this.roadmap});
@@ -18,6 +17,7 @@ class SavedRoadmapTile extends StatelessWidget {
     final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
     final colorScheme = context.colorScheme;
+    final theme = context.theme;
     return Row(
       mainAxisSize: MainAxisSize.min,
       spacing: screenWidth * 0.03,
@@ -75,21 +75,22 @@ class SavedRoadmapTile extends StatelessWidget {
                         pathParameters: {'roadmapId': roadmap.id},
                       );
                     },
-                    style: FilledButton.styleFrom(
-                      backgroundColor: buttonColor,
-                      textStyle: textTheme.bodyLarge,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                    style: theme.filledButtonTheme.style?.copyWith(
+                      textStyle: WidgetStatePropertyAll(textTheme.bodyLarge),
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
+                      padding: WidgetStatePropertyAll(
+                        EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       ),
                     ),
                     child: Text(
                       'View',
                       style: textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
                   ),

@@ -1,21 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
-import 'package:roadmap_ai/features/community/domain/entities/post_author.dart';
-import 'package:roadmap_ai/features/community/domain/entities/post.dart';
-import 'package:roadmap_ai/core/common/entities/roadmap.dart';
+import 'package:roadmap_ai/features/community/presentation/providers/posts/posts_notifier.dart';
+import 'package:roadmap_ai/features/community/presentation/widgets/post_filters_card.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/post_tile.dart';
+import 'package:toastification/toastification.dart';
 
-class ExplorePage extends StatelessWidget {
+class ExplorePage extends ConsumerWidget {
   const ExplorePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = context.textTheme;
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
+
+    final posts = ref.watch(postsNotifierProvider);
+    ref.listen(postsNotifierProvider, (_, next) {
+      if (next is AsyncData && next.value?.error != null) {
+        toastification.show(
+          title: Text('Error'),
+          description: Text("${next.value?.error}"),
+          type: ToastificationType.error,
+          style: ToastificationStyle.minimal,
+          autoCloseDuration: Duration(seconds: 3),
+          showProgressBar: true,
+        );
+      }
+    });
+
     return Padding(
-      padding: EdgeInsets.only(left: screenWidth * 0.1),
+      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -37,42 +53,72 @@ class ExplorePage extends StatelessWidget {
             ],
           ),
           SizedBox(height: screenHeight * 0.05),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) => Padding(
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
-                child: PostTile(
-                  post: Post(
-                    title: 'Web Scraping in Python Roadmap',
-                    views: 20,
-                    description:
-                        'Learn how to scrape data from websites using Python.',
-                    roadmap: Roadmap(
-                      title: 'Web Scraping in Python Roadmap',
-                      description:
-                          'A comprehensive roadmap to learn web scraping using Python, covering libraries, techniques, and best practices.',
-                      userId: '12345',
-                      goals: [],
-                      id: '1',
+          if (screenWidth < 1300)
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  PostFiltersCard(),
+                  Expanded(
+                    child: posts.when(
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (error, stack) =>
+                          Center(child: Text('Error: $error')),
+                      data: (data) {
+                        if (data.posts.isEmpty) {
+                          return Center(child: Text('No posts found'));
+                        }
+                        return ListView.builder(
+                          itemCount: data.posts.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: screenHeight * 0.02,
+                            ),
+                            child: PostTile(post: data.posts[index]),
+                          ),
+                        );
+                      },
                     ),
-                    likes: 124,
-                    createdAt: DateTime.now(),
-                    author: PostAuthor(
-                      username: 'John Doe',
-                      email: 'john@example.com',
-                      avatar: 'https://example.com/profile.jpg',
-                      id: '1',
-                    ),
-                    id: '1',
-                    bannerImage:
-                        'https://external-preview.redd.it/H274VHAVhBDAMYXE0hynj5ylw7kTsRZPw-HLb1alalU.jpg?width=1080&crop=smart&auto=webp&s=08af2e4c724fd5fe0e558b58fd8bd3438468890b',
                   ),
-                ),
+                ],
+              ),
+            )
+          else
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: posts.when(
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (error, stack) =>
+                          Center(child: Text('Error: $error')),
+                      data: (data) {
+                        if (data.posts.isEmpty) {
+                          return Center(child: Text('No posts found'));
+                        }
+                        return ListView.builder(
+                          itemCount: data.posts.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: screenHeight * 0.02,
+                            ),
+                            child: PostTile(post: data.posts[index]),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  Padding(
+                    padding: EdgeInsets.only(left: screenWidth * 0.05),
+                    child: PostFiltersCard(),
+                  ),
+                ],
               ),
             ),
-          ),
-          SizedBox(height: screenHeight * 0.05),
         ],
       ),
     );

@@ -130,4 +130,109 @@ class PostDatasourceImpl implements PostDatasource {
       ),
     );
   }
+
+  @override
+  TaskEither<Failure, List<PostMetadataModel>> getPopularPosts({
+    int limit = 10,
+    int skip = 0,
+  }) {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.get(
+          '/post',
+          queryParameters: {'limit': limit, 'skip': skip},
+        );
+
+        if (response.statusCode != 200) {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+
+        final data = response.data;
+        final List<dynamic> posts = data['posts'];
+        final result = posts
+            .map(
+              (postJson) =>
+                  PostMetadataModel.fromJson(postJson as Map<String, dynamic>),
+            )
+            .toList();
+        return result;
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Fetching popular posts failed',
+      ),
+    );
+  }
+
+  @override
+  TaskEither<Failure, List<PostMetadataModel>> getPostsByTime({
+    int limit = 10,
+    int skip = 0,
+    required PostTime postTime,
+  }) {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.get(
+          '/post/time',
+          queryParameters: {
+            'limit': limit,
+            'skip': skip,
+            'time': postTime.name,
+          },
+        );
+
+        if (response.statusCode != 200) {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+
+        final data = response.data;
+        final List<dynamic> posts = data['posts'];
+        final result = posts
+            .map(
+              (postJson) =>
+                  PostMetadataModel.fromJson(postJson as Map<String, dynamic>),
+            )
+            .toList();
+        return result;
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Fetching posts by time failed',
+      ),
+    );
+  }
+
+  @override
+  TaskEither<Failure, List<PostMetadataModel>> getPostsByTitle({
+    int limit = 10,
+    int skip = 0,
+    required String title,
+  }) {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.get(
+          '/post/title',
+          queryParameters: {'limit': limit, 'skip': skip, 'q': title},
+        );
+
+        if (response.statusCode != 200) {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+
+        final data = response.data;
+        final List<dynamic> posts = data['posts'];
+        final result = posts
+            .map(
+              (postJson) =>
+                  PostMetadataModel.fromJson(postJson as Map<String, dynamic>),
+            )
+            .toList();
+        return result;
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Fetching posts by title failed',
+      ),
+    );
+  }
 }
