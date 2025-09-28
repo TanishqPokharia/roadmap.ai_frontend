@@ -20,6 +20,7 @@ class SavedRoadmapTile extends StatelessWidget {
     final theme = context.theme;
     return Row(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
       spacing: screenWidth * 0.03,
       children: [
         Column(
@@ -35,29 +36,36 @@ class SavedRoadmapTile extends StatelessWidget {
                 ),
               ),
             ),
-            Row(
-              spacing: screenHeight * 0.01,
-              children: [
-                SizedBox(
-                  width: screenWidth * 0.3,
-                  child: LinearProgressIndicator(
-                    value: roadmap.goalsCount == 0
-                        ? 0
-                        : (roadmap.completedSubgoals / roadmap.subgoalsCount),
-                    backgroundColor: colorScheme.primary.withAlpha(50),
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      colorScheme.primary,
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    minHeight: 8,
-                  ),
-                ),
-                Text(
-                  '${(roadmap.completedSubgoals / roadmap.subgoalsCount * 100).toStringAsFixed(2)}%',
-                ),
-              ],
+            SizedBox(
+              width: screenWidth * 0.3,
+              child: Text(
+                roadmap.description,
+                style: textTheme.titleMedium!.copyWith(),
+              ),
             ),
 
+            // Row(
+            //   spacing: screenHeight * 0.01,
+            //   children: [
+            //     SizedBox(
+            //       width: screenWidth * 0.3,
+            //       child: LinearProgressIndicator(
+            //         value: roadmap.goalsCount == 0
+            //             ? 0
+            //             : (roadmap.completedSubgoals / roadmap.subgoalsCount),
+            //         backgroundColor: colorScheme.primary.withAlpha(50),
+            //         valueColor: AlwaysStoppedAnimation<Color>(
+            //           colorScheme.primary,
+            //         ),
+            //         borderRadius: BorderRadius.circular(20),
+            //         minHeight: 8,
+            //       ),
+            //     ),
+            //     Text(
+            //       '${(roadmap.completedSubgoals / roadmap.subgoalsCount * 100).toStringAsFixed(2)}%',
+            //     ),
+            //   ],
+            // ),
             Text(
               'Contains ${roadmap.goalsCount} goals',
               style: textTheme.bodyMedium!.copyWith(color: Colors.blueGrey),
@@ -139,15 +147,30 @@ class SavedRoadmapTile extends StatelessWidget {
             ),
           ],
         ),
+
         Container(
-          width: screenHeight * 0.15,
-          height: screenHeight * 0.12,
-          decoration: BoxDecoration(
-            color: colorScheme.primary.withAlpha(50),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Center(
-            child: Icon(Icons.route, size: 40, color: colorScheme.primary),
+          width: screenHeight * 0.1,
+          height: screenHeight * 0.1,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Positioned.fill(
+                child: CircularProgressIndicator(
+                  value: roadmap.goalsCount == 0
+                      ? 0
+                      : (roadmap.completedSubgoals / roadmap.subgoalsCount),
+                  backgroundColor: colorScheme.secondaryContainer,
+                  color: colorScheme.primary,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    colorScheme.primary,
+                  ),
+                ),
+              ),
+              Text(
+                '${(roadmap.completedSubgoals / roadmap.subgoalsCount * 100).toStringAsFixed(2)}%',
+              ),
+            ],
           ),
         ),
       ],

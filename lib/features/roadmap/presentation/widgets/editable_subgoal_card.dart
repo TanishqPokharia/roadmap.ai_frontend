@@ -84,7 +84,6 @@ class _EditableSubgoalCardState extends ConsumerState<EditableSubgoalCard> {
                     widget.subgoal.title,
                     style: textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: Colors.black,
                     ),
                   ),
                 ),

@@ -62,4 +62,12 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
     checkColor: WidgetStatePropertyAll(Colors.white),
     side: BorderSide(color: Colors.white),
   ),
+  popupMenuTheme: PopupMenuThemeData(
+    color: Colors.grey[900],
+    textStyle: GoogleFonts.inter(
+      color: Colors.white,
+      fontWeight: FontWeight.w500,
+    ),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+  ),
 );
