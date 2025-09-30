@@ -12,13 +12,15 @@ frontend:
         - echo "Installing dependencies"
         - flutter pub get
         # --- Dart Config File Generation (New Method) ---
-        - echo "Generating Dart config file (lib/.env)..."
-        - touch lib/.env
-        - echo "  static const String BASE_URL = '${BASE_URL}';" >> lib/.env
-        - echo "env file created successfully."
+        - echo "Generating Dart config file (lib/config.dart)..."
+        - touch lib/config.dart
+        - echo "class AppConfig {" >> lib/config.dart
+        - echo "  static const String BASE_URL = '${BASE_URL}';" >> lib/config.dart
+        - echo "}" >> lib/config.dart
+        - echo "Config file created successfully."
     build:
       commands:
-        - echo "Building Flutter web application"
+        - echo "Building Flutter web application with WASM support"
         - flutter build web
   artifacts:
     baseDirectory: build/web
