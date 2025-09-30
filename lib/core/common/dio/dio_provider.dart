@@ -14,9 +14,7 @@ part 'dio_provider.g.dart';
 Dio dio(Ref ref) {
   final dio = Dio(
     BaseOptions(
-      baseUrl: kReleaseMode
-          ? String.fromEnvironment('BASE_URL')
-          : AppConfig.BASE_URL,
+      baseUrl: AppConfig.BASE_URL,
       connectTimeout: const Duration(seconds: 20),
       receiveTimeout: const Duration(seconds: 20),
       // do not throw for any error the app will handle it
