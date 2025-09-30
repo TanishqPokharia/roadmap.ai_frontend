@@ -3,13 +3,14 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/browser.dart';
 import 'package:roadmap_ai/core/common/token_storage/flutter_secure_storage_token_storage_impl.dart';
 import 'package:roadmap_ai/core/common/token_storage/token_storage.dart';
 import 'package:roadmap_ai/features/auth/data/models/tokens/tokens.dart';
+
+import '../../../config.dart';
 
 part 'refresh_token_interceptor.g.dart';
 
@@ -21,7 +22,7 @@ RefreshTokenInterceptor refreshTokenInterceptor(Ref ref) {
     BaseOptions(
       baseUrl: kReleaseMode
           ? String.fromEnvironment('BASE_URL')
-          : dotenv.env['BASE_URL']!,
+          : AppConfig.BASE_URL,
       connectTimeout: const Duration(seconds: 20),
       receiveTimeout: const Duration(seconds: 20),
       validateStatus: (status) => true,

@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/browser.dart';
 import 'package:roadmap_ai/core/common/interceptors/token_attach_interceptor.dart';
 import 'package:roadmap_ai/core/common/interceptors/refresh_token_interceptor.dart';
+
+import '../../../config.dart';
 
 part 'dio_provider.g.dart';
 
@@ -15,7 +16,7 @@ Dio dio(Ref ref) {
     BaseOptions(
       baseUrl: kReleaseMode
           ? String.fromEnvironment('BASE_URL')
-          : dotenv.env['BASE_URL']!,
+          : AppConfig.BASE_URL,
       connectTimeout: const Duration(seconds: 20),
       receiveTimeout: const Duration(seconds: 20),
       // do not throw for any error the app will handle it
