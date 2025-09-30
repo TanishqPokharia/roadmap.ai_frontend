@@ -1,0 +1,29 @@
+version: 1.0
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # --- Standard Flutter Setup ---
+        - echo "Installing Flutter SDK version 3.32.5"
+        - git clone https://github.com/flutter/flutter.git -b 3.32.5 --depth 1
+        - export PATH="$PATH:$(pwd)/flutter/bin"
+        - flutter config --no-analytics
+        - flutter doctor
+        - echo "Installing dependencies"
+        - flutter pub get
+        # --- Dart Config File Generation (New Method) ---
+        - echo "Generating Dart config file (lib/.env)..."
+        - touch lib/.env
+        - echo "  static const String BASE_URL = '${BASE_URL}';" >> lib/.env
+        - echo "env file created successfully."
+    build:
+      commands:
+        - echo "Building Flutter web application"
+        - flutter build web
+  artifacts:
+    baseDirectory: build/web
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - flutter/.pub-cache
