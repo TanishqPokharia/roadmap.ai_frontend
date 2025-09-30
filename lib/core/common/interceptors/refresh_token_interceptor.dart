@@ -20,9 +20,7 @@ RefreshTokenInterceptor refreshTokenInterceptor(Ref ref) {
   // This breaks the circular dependency
   final interceptorDio = Dio(
     BaseOptions(
-      baseUrl: kReleaseMode
-          ? String.fromEnvironment('BASE_URL')
-          : AppConfig.BASE_URL,
+      baseUrl: AppConfig.BASE_URL,
       connectTimeout: const Duration(seconds: 20),
       receiveTimeout: const Duration(seconds: 20),
       validateStatus: (status) => true,
