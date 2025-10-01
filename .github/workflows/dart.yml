@@ -27,8 +27,8 @@ jobs:
         run: |
           mkdir -p lib/config
           echo "class AppConfig {" > lib/config.dart
-          echo "static final BASE_URL = \"${{ secrets.BASE_URL }}\";" > lib/config.dart
-          echo "}" > lib/config.dart
+          echo "static final BASE_URL = \"${{ secrets.BASE_URL }}\";" >> lib/config.dart
+          echo "}" >> lib/config.dart
 
       - name: Analyze project
         run: flutter analyze
