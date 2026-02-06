@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PostMetadataModel {
 
- int get likes; PostAuthorModel get author; DateTime get createdAt; String get id; String get bannerImage; String get title; String get description; int get views;
+ int get likes; PostAuthorModel get author; DateTime get createdAt; String get id; String get bannerImage; String get title; String get description; int get views; bool get isLiked;
 /// Create a copy of PostMetadataModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PostMetadataModelCopyWith<PostMetadataModel> get copyWith => _$PostMetadataMode
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostMetadataModel&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.author, author) || other.author == author)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.views, views) || other.views == views));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostMetadataModel&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.author, author) || other.author == author)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.views, views) || other.views == views)&&(identical(other.isLiked, isLiked) || other.isLiked == isLiked));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,likes,author,createdAt,id,bannerImage,title,description,views);
+int get hashCode => Object.hash(runtimeType,likes,author,createdAt,id,bannerImage,title,description,views,isLiked);
 
 @override
 String toString() {
-  return 'PostMetadataModel(likes: $likes, author: $author, createdAt: $createdAt, id: $id, bannerImage: $bannerImage, title: $title, description: $description, views: $views)';
+  return 'PostMetadataModel(likes: $likes, author: $author, createdAt: $createdAt, id: $id, bannerImage: $bannerImage, title: $title, description: $description, views: $views, isLiked: $isLiked)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $PostMetadataModelCopyWith<$Res>  {
   factory $PostMetadataModelCopyWith(PostMetadataModel value, $Res Function(PostMetadataModel) _then) = _$PostMetadataModelCopyWithImpl;
 @useResult
 $Res call({
- int likes, PostAuthorModel author, DateTime createdAt, String id, String bannerImage, String title, String description, int views
+ int likes, PostAuthorModel author, DateTime createdAt, String id, String bannerImage, String title, String description, int views, bool isLiked
 });
 
 
@@ -65,7 +65,7 @@ class _$PostMetadataModelCopyWithImpl<$Res>
 
 /// Create a copy of PostMetadataModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? likes = null,Object? author = null,Object? createdAt = null,Object? id = null,Object? bannerImage = null,Object? title = null,Object? description = null,Object? views = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? likes = null,Object? author = null,Object? createdAt = null,Object? id = null,Object? bannerImage = null,Object? title = null,Object? description = null,Object? views = null,Object? isLiked = null,}) {
   return _then(_self.copyWith(
 likes: null == likes ? _self.likes : likes // ignore: cast_nullable_to_non_nullable
 as int,author: null == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
@@ -75,7 +75,8 @@ as String,bannerImage: null == bannerImage ? _self.bannerImage : bannerImage // 
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,views: null == views ? _self.views : views // ignore: cast_nullable_to_non_nullable
-as int,
+as int,isLiked: null == isLiked ? _self.isLiked : isLiked // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 /// Create a copy of PostMetadataModel
@@ -169,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int likes,  PostAuthorModel author,  DateTime createdAt,  String id,  String bannerImage,  String title,  String description,  int views)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int likes,  PostAuthorModel author,  DateTime createdAt,  String id,  String bannerImage,  String title,  String description,  int views,  bool isLiked)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PostMetadataModel() when $default != null:
-return $default(_that.likes,_that.author,_that.createdAt,_that.id,_that.bannerImage,_that.title,_that.description,_that.views);case _:
+return $default(_that.likes,_that.author,_that.createdAt,_that.id,_that.bannerImage,_that.title,_that.description,_that.views,_that.isLiked);case _:
   return orElse();
 
 }
@@ -190,10 +191,10 @@ return $default(_that.likes,_that.author,_that.createdAt,_that.id,_that.bannerIm
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int likes,  PostAuthorModel author,  DateTime createdAt,  String id,  String bannerImage,  String title,  String description,  int views)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int likes,  PostAuthorModel author,  DateTime createdAt,  String id,  String bannerImage,  String title,  String description,  int views,  bool isLiked)  $default,) {final _that = this;
 switch (_that) {
 case _PostMetadataModel():
-return $default(_that.likes,_that.author,_that.createdAt,_that.id,_that.bannerImage,_that.title,_that.description,_that.views);case _:
+return $default(_that.likes,_that.author,_that.createdAt,_that.id,_that.bannerImage,_that.title,_that.description,_that.views,_that.isLiked);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +211,10 @@ return $default(_that.likes,_that.author,_that.createdAt,_that.id,_that.bannerIm
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int likes,  PostAuthorModel author,  DateTime createdAt,  String id,  String bannerImage,  String title,  String description,  int views)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int likes,  PostAuthorModel author,  DateTime createdAt,  String id,  String bannerImage,  String title,  String description,  int views,  bool isLiked)?  $default,) {final _that = this;
 switch (_that) {
 case _PostMetadataModel() when $default != null:
-return $default(_that.likes,_that.author,_that.createdAt,_that.id,_that.bannerImage,_that.title,_that.description,_that.views);case _:
+return $default(_that.likes,_that.author,_that.createdAt,_that.id,_that.bannerImage,_that.title,_that.description,_that.views,_that.isLiked);case _:
   return null;
 
 }
@@ -225,7 +226,7 @@ return $default(_that.likes,_that.author,_that.createdAt,_that.id,_that.bannerIm
 @JsonSerializable()
 
 class _PostMetadataModel implements PostMetadataModel {
-   _PostMetadataModel({required this.likes, required this.author, required this.createdAt, required this.id, required this.bannerImage, required this.title, required this.description, required this.views});
+   _PostMetadataModel({required this.likes, required this.author, required this.createdAt, required this.id, required this.bannerImage, required this.title, required this.description, required this.views, required this.isLiked});
   factory _PostMetadataModel.fromJson(Map<String, dynamic> json) => _$PostMetadataModelFromJson(json);
 
 @override final  int likes;
@@ -236,6 +237,7 @@ class _PostMetadataModel implements PostMetadataModel {
 @override final  String title;
 @override final  String description;
 @override final  int views;
+@override final  bool isLiked;
 
 /// Create a copy of PostMetadataModel
 /// with the given fields replaced by the non-null parameter values.
@@ -250,16 +252,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostMetadataModel&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.author, author) || other.author == author)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.views, views) || other.views == views));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostMetadataModel&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.author, author) || other.author == author)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.views, views) || other.views == views)&&(identical(other.isLiked, isLiked) || other.isLiked == isLiked));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,likes,author,createdAt,id,bannerImage,title,description,views);
+int get hashCode => Object.hash(runtimeType,likes,author,createdAt,id,bannerImage,title,description,views,isLiked);
 
 @override
 String toString() {
-  return 'PostMetadataModel(likes: $likes, author: $author, createdAt: $createdAt, id: $id, bannerImage: $bannerImage, title: $title, description: $description, views: $views)';
+  return 'PostMetadataModel(likes: $likes, author: $author, createdAt: $createdAt, id: $id, bannerImage: $bannerImage, title: $title, description: $description, views: $views, isLiked: $isLiked)';
 }
 
 
@@ -270,7 +272,7 @@ abstract mixin class _$PostMetadataModelCopyWith<$Res> implements $PostMetadataM
   factory _$PostMetadataModelCopyWith(_PostMetadataModel value, $Res Function(_PostMetadataModel) _then) = __$PostMetadataModelCopyWithImpl;
 @override @useResult
 $Res call({
- int likes, PostAuthorModel author, DateTime createdAt, String id, String bannerImage, String title, String description, int views
+ int likes, PostAuthorModel author, DateTime createdAt, String id, String bannerImage, String title, String description, int views, bool isLiked
 });
 
 
@@ -287,7 +289,7 @@ class __$PostMetadataModelCopyWithImpl<$Res>
 
 /// Create a copy of PostMetadataModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? likes = null,Object? author = null,Object? createdAt = null,Object? id = null,Object? bannerImage = null,Object? title = null,Object? description = null,Object? views = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? likes = null,Object? author = null,Object? createdAt = null,Object? id = null,Object? bannerImage = null,Object? title = null,Object? description = null,Object? views = null,Object? isLiked = null,}) {
   return _then(_PostMetadataModel(
 likes: null == likes ? _self.likes : likes // ignore: cast_nullable_to_non_nullable
 as int,author: null == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
@@ -297,7 +299,8 @@ as String,bannerImage: null == bannerImage ? _self.bannerImage : bannerImage // 
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,views: null == views ? _self.views : views // ignore: cast_nullable_to_non_nullable
-as int,
+as int,isLiked: null == isLiked ? _self.isLiked : isLiked // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

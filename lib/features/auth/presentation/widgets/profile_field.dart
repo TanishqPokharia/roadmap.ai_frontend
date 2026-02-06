@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
@@ -14,6 +17,42 @@ class ProfileField extends StatelessWidget {
     final colorScheme = context.colorScheme;
     final screenHeight = context.screenHeight;
     final textTheme = context.textTheme;
+
+    if (!kIsWeb && Platform.isAndroid) {
+      return Container(
+        width: double.infinity,
+        margin: EdgeInsets.symmetric(horizontal: 40),
+        decoration: BoxDecoration(
+          border: Border.all(color: context.colorScheme.primary, width: 1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Icon(icon, color: colorScheme.primary),
+            ),
+            Container(
+              width: 2,
+              height: screenHeight * 0.03,
+              color: colorScheme.primary,
+            ),
+            const SizedBox(width: 10),
+            Flexible(
+              child: Text(
+                text,
+                style: textTheme.titleMedium,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                softWrap: false,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       width: screenWidth * 0.2,
       decoration: BoxDecoration(

@@ -6,22 +6,46 @@ part of 'create_post.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$createPostHash() => r'37cc9aa3867cd050a8803d2190801000f1033cba';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [createPost].
 @ProviderFor(createPost)
-final createPostProvider = AutoDisposeProvider<CreatePost>.internal(
-  createPost,
-  name: r'createPostProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$createPostHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final createPostProvider = CreatePostProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef CreatePostRef = AutoDisposeProviderRef<CreatePost>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class CreatePostProvider
+    extends $FunctionalProvider<CreatePost, CreatePost, CreatePost>
+    with $Provider<CreatePost> {
+  CreatePostProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'createPostProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$createPostHash();
+
+  @$internal
+  @override
+  $ProviderElement<CreatePost> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  CreatePost create(Ref ref) {
+    return createPost(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CreatePost value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CreatePost>(value),
+    );
+  }
+}
+
+String _$createPostHash() => r'37cc9aa3867cd050a8803d2190801000f1033cba';

@@ -6,24 +6,54 @@ part of 'update_roadmap_subgoal_status.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$updateRoadmapSubgoalStatusHash() =>
-    r'48c7b969ff10f3fae11df911f12556c46d696192';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [updateRoadmapSubgoalStatus].
 @ProviderFor(updateRoadmapSubgoalStatus)
 final updateRoadmapSubgoalStatusProvider =
-    Provider<UpdateRoadmapSubgoalStatus>.internal(
-      updateRoadmapSubgoalStatus,
-      name: r'updateRoadmapSubgoalStatusProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$updateRoadmapSubgoalStatusHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+    UpdateRoadmapSubgoalStatusProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef UpdateRoadmapSubgoalStatusRef = ProviderRef<UpdateRoadmapSubgoalStatus>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class UpdateRoadmapSubgoalStatusProvider
+    extends
+        $FunctionalProvider<
+          UpdateRoadmapSubgoalStatus,
+          UpdateRoadmapSubgoalStatus,
+          UpdateRoadmapSubgoalStatus
+        >
+    with $Provider<UpdateRoadmapSubgoalStatus> {
+  UpdateRoadmapSubgoalStatusProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'updateRoadmapSubgoalStatusProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$updateRoadmapSubgoalStatusHash();
+
+  @$internal
+  @override
+  $ProviderElement<UpdateRoadmapSubgoalStatus> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  UpdateRoadmapSubgoalStatus create(Ref ref) {
+    return updateRoadmapSubgoalStatus(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(UpdateRoadmapSubgoalStatus value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<UpdateRoadmapSubgoalStatus>(value),
+    );
+  }
+}
+
+String _$updateRoadmapSubgoalStatusHash() =>
+    r'48c7b969ff10f3fae11df911f12556c46d696192';

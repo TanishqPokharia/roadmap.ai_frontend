@@ -16,7 +16,7 @@ class WebAppBar extends ConsumerWidget {
     final colorScheme = context.colorScheme;
     final screenHeight = context.screenHeight;
     final textTheme = context.textTheme;
-    final selectedPageIndex = ref.watch(navigationNotifierProvider);
+    final selectedPageIndex = ref.watch(navigationProvider);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -52,16 +52,14 @@ class WebAppBar extends ConsumerWidget {
               WebTopNavigationItem(title: 'Saved', icon: Icons.save_rounded),
             ],
             onItemSelected: (index) {
-              ref
-                  .read(navigationNotifierProvider.notifier)
-                  .setSelectedIndex(index);
+              ref.read(navigationProvider.notifier).setSelectedIndex(index);
             },
             selectedIndex: selectedPageIndex,
           ),
         ),
         SizedBox(width: screenHeight * 0.02),
         ref
-            .watch(themeNotifierProvider)
+            .watch(themeProvider)
             .when(
               data: (themeMode) => PopupMenuButton<ThemeMode>(
                 tooltip: 'Toggle Theme',
@@ -72,7 +70,7 @@ class WebAppBar extends ConsumerWidget {
                   size: 28,
                 ),
                 onSelected: (mode) {
-                  ref.read(themeNotifierProvider.notifier).setTheme(mode);
+                  ref.read(themeProvider.notifier).setTheme(mode);
                 },
                 itemBuilder: (context) => [
                   PopupMenuItem(
@@ -117,23 +115,32 @@ class WebAppBar extends ConsumerWidget {
                 ],
               ),
               loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
+              error: (_, _) => const SizedBox.shrink(),
             ),
         SizedBox(width: screenHeight * 0.02),
         ProfilePopupMenu(
           child: ref
-              .watch(profileNotifierProvider)
+              .watch(profileProvider)
               .when(
                 data: (user) => CircleAvatar(
-                  backgroundImage: NetworkImage(user.userDetails.avatarUrl),
-                  radius: 24,
+                  radius: 26,
                   backgroundColor: colorScheme.primary,
+                  child: CircleAvatar(
+                    backgroundImage: user.userDetails.avatarUrl != null
+                        ? NetworkImage(user.userDetails.avatarUrl!)
+                        : null,
+                    radius: 24,
+                    backgroundColor: colorScheme.primary,
+                    child: user.userDetails.avatarUrl == null
+                        ? Icon(Icons.person, color: Colors.white)
+                        : null,
+                  ),
                 ),
                 loading: () => const CircleAvatar(
                   radius: 24,
                   backgroundColor: Colors.grey,
                 ),
-                error: (_, __) => const CircleAvatar(
+                error: (_, _) => const CircleAvatar(
                   radius: 24,
                   backgroundColor: Colors.grey,
                   child: Icon(Icons.error, color: Colors.white),

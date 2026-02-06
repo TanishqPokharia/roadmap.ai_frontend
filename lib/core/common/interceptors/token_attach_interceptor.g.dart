@@ -6,25 +6,53 @@ part of 'token_attach_interceptor.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(tokenAttachInterceptor)
+final tokenAttachInterceptorProvider = TokenAttachInterceptorProvider._();
+
+final class TokenAttachInterceptorProvider
+    extends
+        $FunctionalProvider<
+          TokenAttachInterceptor,
+          TokenAttachInterceptor,
+          TokenAttachInterceptor
+        >
+    with $Provider<TokenAttachInterceptor> {
+  TokenAttachInterceptorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'tokenAttachInterceptorProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$tokenAttachInterceptorHash();
+
+  @$internal
+  @override
+  $ProviderElement<TokenAttachInterceptor> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  TokenAttachInterceptor create(Ref ref) {
+    return tokenAttachInterceptor(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(TokenAttachInterceptor value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<TokenAttachInterceptor>(value),
+    );
+  }
+}
+
 String _$tokenAttachInterceptorHash() =>
     r'443f87a34760d04572e4f48caf987670fbb785b6';
-
-/// See also [tokenAttachInterceptor].
-@ProviderFor(tokenAttachInterceptor)
-final tokenAttachInterceptorProvider =
-    AutoDisposeProvider<TokenAttachInterceptor>.internal(
-      tokenAttachInterceptor,
-      name: r'tokenAttachInterceptorProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$tokenAttachInterceptorHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef TokenAttachInterceptorRef =
-    AutoDisposeProviderRef<TokenAttachInterceptor>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -16,6 +16,7 @@ abstract class PostMetadataModel with _$PostMetadataModel {
     required String title,
     required String description,
     required int views,
+    required bool isLiked,
   }) = _PostMetadataModel;
 
   factory PostMetadataModel.fromJson(Map<String, dynamic> json) =>
@@ -31,6 +32,7 @@ abstract class PostMetadataModel with _$PostMetadataModel {
       bannerImage: postMetadata.bannerImage,
       views: postMetadata.views,
       author: PostAuthorModel.fromEntity(postMetadata.author),
+      isLiked: postMetadata.isLiked,
     );
   }
 }
@@ -46,6 +48,7 @@ extension PostMetadataModelEntity on PostMetadataModel {
       description: description,
       views: views,
       author: author.toEntity(),
+      isLiked: isLiked,
     );
   }
 }

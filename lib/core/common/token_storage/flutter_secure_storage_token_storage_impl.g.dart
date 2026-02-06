@@ -6,24 +6,53 @@ part of 'flutter_secure_storage_token_storage_impl.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$tokenStorageHash() => r'72d11befd4f7fd2aef1d1ad968e4a943472221a5';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [tokenStorage].
 @ProviderFor(tokenStorage)
-final tokenStorageProvider =
-    AutoDisposeProvider<FlutterSecureStorageTokenStorageImpl>.internal(
-      tokenStorage,
-      name: r'tokenStorageProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$tokenStorageHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final tokenStorageProvider = TokenStorageProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef TokenStorageRef =
-    AutoDisposeProviderRef<FlutterSecureStorageTokenStorageImpl>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class TokenStorageProvider
+    extends
+        $FunctionalProvider<
+          FlutterSecureStorageTokenStorageImpl,
+          FlutterSecureStorageTokenStorageImpl,
+          FlutterSecureStorageTokenStorageImpl
+        >
+    with $Provider<FlutterSecureStorageTokenStorageImpl> {
+  TokenStorageProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'tokenStorageProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$tokenStorageHash();
+
+  @$internal
+  @override
+  $ProviderElement<FlutterSecureStorageTokenStorageImpl> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  FlutterSecureStorageTokenStorageImpl create(Ref ref) {
+    return tokenStorage(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(FlutterSecureStorageTokenStorageImpl value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride:
+          $SyncValueProvider<FlutterSecureStorageTokenStorageImpl>(value),
+    );
+  }
+}
+
+String _$tokenStorageHash() => r'72d11befd4f7fd2aef1d1ad968e4a943472221a5';

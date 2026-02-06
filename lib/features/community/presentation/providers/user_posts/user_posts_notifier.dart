@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/features/auth/presentation/providers/login/login_notifier.dart';
+import 'package:roadmap_ai/features/auth/presentation/providers/signup/signup_notifier.dart';
 import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
 import 'package:roadmap_ai/features/community/domain/usecases/get_user_posts_metadata/get_user_posts_metadata.dart';
 
@@ -14,7 +15,8 @@ class UserPostsNotifier extends _$UserPostsNotifier {
 
   @override
   FutureOr<List<PostMetadata>> build() async {
-    ref.watch(loginNotifierProvider);
+    ref.watch(loginProvider);
+    ref.watch(signupProvider);
     _skip = 0;
     _posts.clear();
     _canGetMore = true;

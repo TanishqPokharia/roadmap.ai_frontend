@@ -1,9 +1,11 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/entities/goal.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/common/entities/subgoal.dart';
-import 'package:roadmap_ai/features/community/domain/usecases/create_post/create_post.dart';
+import 'package:roadmap_ai/features/community/domain/usecases/create_post/create_post.dart'
+    as create_post_usecase;
 import 'package:roadmap_ai/features/roadmap/presentation/providers/roadmap_view/roadmap_view_notifier.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/providers/saved_roadmaps/saved_roadmaps_notifier.dart';
 
@@ -37,7 +39,7 @@ class CreatePostState {
 class CreatePostNotifier extends _$CreatePostNotifier {
   @override
   FutureOr<CreatePostState> build(String roadmapId) {
-    final roadmapViewData = ref.watch(roadmapViewNotifierProvider(roadmapId));
+    final roadmapViewData = ref.watch(roadmapViewProvider(roadmapId));
     return roadmapViewData.maybeWhen(
       data: (data) => CreatePostState(roadmap: data.roadmap),
       orElse: () => CreatePostState(roadmap: null),
@@ -59,9 +61,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     );
     state = AsyncLoading();
     final post = await ref
-        .read(createPostProvider)
+        .read(create_post_usecase.createPostProvider)
         .call(
-          CreatePostParams(
+          create_post_usecase.CreatePostParams(
             roadmap: state.value!.roadmap!,
             bannerImage: state.value!.bannerImage!,
           ),
@@ -70,7 +72,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     post.fold((failure) => state = AsyncError(failure, StackTrace.current), (
       r,
     ) {
-      ref.read(savedRoadmapsNotifierProvider.notifier).reset();
+      ref.read(savedRoadmapsProvider.notifier).reset();
       return state = AsyncData(state.value!.copyWith(isUploaded: true));
     });
   }
@@ -218,6 +220,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   void setBannerImage(FilePickerResult bannerImage) {
+    debugPrint("GOT THE IMAGE");
+    debugPrint(bannerImage.files.first.toString());
     state = AsyncData(state.value!.copyWith(bannerImage: bannerImage));
   }
 }

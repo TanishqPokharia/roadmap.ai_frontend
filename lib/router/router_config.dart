@@ -41,7 +41,26 @@ final class AppRouter {
             name: AppRoutes.roadmapView,
             pageBuilder: (context, state) {
               final roadmapId = state.pathParameters['roadmapId'] as String;
-              return MaterialPage(child: RoadmapViewPage(roadmapId: roadmapId));
+              return CustomTransitionPage(
+                transitionDuration: Durations.medium1,
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: SlideTransition(
+                          position:
+                              Tween<Offset>(
+                                    begin: Offset(1, 0),
+                                    end: Offset(0, 0),
+                                  )
+                                  .chain(CurveTween(curve: Curves.ease))
+                                  .animate(animation),
+                          child: child,
+                        ),
+                      );
+                    },
+                child: RoadmapViewPage(roadmapId: roadmapId),
+              );
             },
           ),
           GoRoute(
@@ -52,12 +71,29 @@ final class AppRouter {
             },
           ),
           GoRoute(
-            path: '/post',
+            path: '/post/:postId/:title',
             name: AppRoutes.post,
             pageBuilder: (context, state) {
-              final postId = state.uri.queryParameters['postId'];
-              final title = state.uri.queryParameters['title'];
-              return MaterialPage(
+              final postId = state.pathParameters['postId'];
+              final title = state.pathParameters['title'];
+              return CustomTransitionPage(
+                transitionDuration: Durations.medium1,
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: SlideTransition(
+                          position:
+                              Tween<Offset>(
+                                    begin: Offset(1, 0),
+                                    end: Offset(0, 0),
+                                  )
+                                  .chain(CurveTween(curve: Curves.ease))
+                                  .animate(animation),
+                          child: child,
+                        ),
+                      );
+                    },
                 child: PostPage(postId: postId!, title: title!),
               );
             },

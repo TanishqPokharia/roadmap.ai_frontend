@@ -6,22 +6,51 @@ part of 'get_filtered_posts.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getFilteredPostsHash() => r'dda0576c33456076e16283f28ac15072654196d8';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [getFilteredPosts].
 @ProviderFor(getFilteredPosts)
-final getFilteredPostsProvider = AutoDisposeProvider<GetFilteredPosts>.internal(
-  getFilteredPosts,
-  name: r'getFilteredPostsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$getFilteredPostsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final getFilteredPostsProvider = GetFilteredPostsProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef GetFilteredPostsRef = AutoDisposeProviderRef<GetFilteredPosts>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class GetFilteredPostsProvider
+    extends
+        $FunctionalProvider<
+          GetFilteredPosts,
+          GetFilteredPosts,
+          GetFilteredPosts
+        >
+    with $Provider<GetFilteredPosts> {
+  GetFilteredPostsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'getFilteredPostsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$getFilteredPostsHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetFilteredPosts> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  GetFilteredPosts create(Ref ref) {
+    return getFilteredPosts(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetFilteredPosts value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetFilteredPosts>(value),
+    );
+  }
+}
+
+String _$getFilteredPostsHash() => r'dda0576c33456076e16283f28ac15072654196d8';

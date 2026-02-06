@@ -6,21 +6,49 @@ part of 'signup_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(SignupNotifier)
+final signupProvider = SignupNotifierProvider._();
+
+final class SignupNotifierProvider
+    extends $AsyncNotifierProvider<SignupNotifier, SignUpState> {
+  SignupNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'signupProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$signupNotifierHash();
+
+  @$internal
+  @override
+  SignupNotifier create() => SignupNotifier();
+}
+
 String _$signupNotifierHash() => r'f421e00105d37c60c1e93528d547f0411adafd83';
 
-/// See also [SignupNotifier].
-@ProviderFor(SignupNotifier)
-final signupNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<SignupNotifier, SignUpState>.internal(
-      SignupNotifier.new,
-      name: r'signupNotifierProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$signupNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$SignupNotifier = AutoDisposeAsyncNotifier<SignUpState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$SignupNotifier extends $AsyncNotifier<SignUpState> {
+  FutureOr<SignUpState> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<SignUpState>, SignUpState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<SignUpState>, SignUpState>,
+              AsyncValue<SignUpState>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

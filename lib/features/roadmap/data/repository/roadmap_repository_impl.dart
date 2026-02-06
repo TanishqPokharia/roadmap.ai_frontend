@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
@@ -64,6 +63,14 @@ class RoadmapRepositoryImpl implements RoadmapRepository {
       goalId: goalId,
       subgoalId: subgoalId,
       isCompleted: isCompleted,
+    );
+  }
+
+  @override
+  TaskEither<Failure, void> savePostRoadmap(Roadmap roadmap, String postId) {
+    return _datasource.savePostRoadmap(
+      RoadmapModel.fromEntity(roadmap),
+      postId,
     );
   }
 }

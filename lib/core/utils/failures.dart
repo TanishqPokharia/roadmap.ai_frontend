@@ -72,3 +72,10 @@ class UnknownFailure extends Failure {
   @override
   String toString() => 'Unknown: $message';
 }
+
+class ConnectionFailure extends Failure {
+  ConnectionFailure(super.message);
+
+  @override
+  String toString() => 'Connection Failure : $message';
+}

@@ -6,23 +6,52 @@ part of 'roadmap_repository_impl.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$roadmapRepositoryHash() => r'd80f6bbe83e80b7b109fa8c846a728c14fbe469c';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [roadmapRepository].
 @ProviderFor(roadmapRepository)
-final roadmapRepositoryProvider =
-    AutoDisposeProvider<RoadmapRepository>.internal(
-      roadmapRepository,
-      name: r'roadmapRepositoryProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$roadmapRepositoryHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final roadmapRepositoryProvider = RoadmapRepositoryProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef RoadmapRepositoryRef = AutoDisposeProviderRef<RoadmapRepository>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class RoadmapRepositoryProvider
+    extends
+        $FunctionalProvider<
+          RoadmapRepository,
+          RoadmapRepository,
+          RoadmapRepository
+        >
+    with $Provider<RoadmapRepository> {
+  RoadmapRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'roadmapRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$roadmapRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<RoadmapRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  RoadmapRepository create(Ref ref) {
+    return roadmapRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(RoadmapRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<RoadmapRepository>(value),
+    );
+  }
+}
+
+String _$roadmapRepositoryHash() => r'd80f6bbe83e80b7b109fa8c846a728c14fbe469c';

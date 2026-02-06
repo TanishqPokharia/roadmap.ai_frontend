@@ -6,170 +6,96 @@ part of 'roadmap_view_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$roadmapViewNotifierHash() =>
-    r'bc019a2c7d2b59d6f796b177c2c755c8bd855aed';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$RoadmapViewNotifier
-    extends BuildlessAutoDisposeAsyncNotifier<RoadmapViewState> {
-  late final String roadmapId;
-
-  FutureOr<RoadmapViewState> build(String roadmapId);
-}
-
-/// See also [RoadmapViewNotifier].
 @ProviderFor(RoadmapViewNotifier)
-const roadmapViewNotifierProvider = RoadmapViewNotifierFamily();
+final roadmapViewProvider = RoadmapViewNotifierFamily._();
 
-/// See also [RoadmapViewNotifier].
-class RoadmapViewNotifierFamily extends Family<AsyncValue<RoadmapViewState>> {
-  /// See also [RoadmapViewNotifier].
-  const RoadmapViewNotifierFamily();
+final class RoadmapViewNotifierProvider
+    extends $AsyncNotifierProvider<RoadmapViewNotifier, RoadmapViewState> {
+  RoadmapViewNotifierProvider._({
+    required RoadmapViewNotifierFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'roadmapViewProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [RoadmapViewNotifier].
-  RoadmapViewNotifierProvider call(String roadmapId) {
-    return RoadmapViewNotifierProvider(roadmapId);
+  @override
+  String debugGetCreateSourceHash() => _$roadmapViewNotifierHash();
+
+  @override
+  String toString() {
+    return r'roadmapViewProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  RoadmapViewNotifierProvider getProviderOverride(
-    covariant RoadmapViewNotifierProvider provider,
-  ) {
-    return call(provider.roadmapId);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'roadmapViewNotifierProvider';
-}
-
-/// See also [RoadmapViewNotifier].
-class RoadmapViewNotifierProvider
-    extends
-        AutoDisposeAsyncNotifierProviderImpl<
-          RoadmapViewNotifier,
-          RoadmapViewState
-        > {
-  /// See also [RoadmapViewNotifier].
-  RoadmapViewNotifierProvider(String roadmapId)
-    : this._internal(
-        () => RoadmapViewNotifier()..roadmapId = roadmapId,
-        from: roadmapViewNotifierProvider,
-        name: r'roadmapViewNotifierProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$roadmapViewNotifierHash,
-        dependencies: RoadmapViewNotifierFamily._dependencies,
-        allTransitiveDependencies:
-            RoadmapViewNotifierFamily._allTransitiveDependencies,
-        roadmapId: roadmapId,
-      );
-
-  RoadmapViewNotifierProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.roadmapId,
-  }) : super.internal();
-
-  final String roadmapId;
-
-  @override
-  FutureOr<RoadmapViewState> runNotifierBuild(
-    covariant RoadmapViewNotifier notifier,
-  ) {
-    return notifier.build(roadmapId);
-  }
-
-  @override
-  Override overrideWith(RoadmapViewNotifier Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: RoadmapViewNotifierProvider._internal(
-        () => create()..roadmapId = roadmapId,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        roadmapId: roadmapId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeAsyncNotifierProviderElement<RoadmapViewNotifier, RoadmapViewState>
-  createElement() {
-    return _RoadmapViewNotifierProviderElement(this);
-  }
+  RoadmapViewNotifier create() => RoadmapViewNotifier();
 
   @override
   bool operator ==(Object other) {
-    return other is RoadmapViewNotifierProvider && other.roadmapId == roadmapId;
+    return other is RoadmapViewNotifierProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, roadmapId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin RoadmapViewNotifierRef
-    on AutoDisposeAsyncNotifierProviderRef<RoadmapViewState> {
-  /// The parameter `roadmapId` of this provider.
-  String get roadmapId;
-}
+String _$roadmapViewNotifierHash() =>
+    r'4668daccf788c5eaf0457c627c1d8a29daed7a60';
 
-class _RoadmapViewNotifierProviderElement
-    extends
-        AutoDisposeAsyncNotifierProviderElement<
+final class RoadmapViewNotifierFamily extends $Family
+    with
+        $ClassFamilyOverride<
           RoadmapViewNotifier,
-          RoadmapViewState
-        >
-    with RoadmapViewNotifierRef {
-  _RoadmapViewNotifierProviderElement(super.provider);
+          AsyncValue<RoadmapViewState>,
+          RoadmapViewState,
+          FutureOr<RoadmapViewState>,
+          String
+        > {
+  RoadmapViewNotifierFamily._()
+    : super(
+        retry: null,
+        name: r'roadmapViewProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  RoadmapViewNotifierProvider call(String roadmapId) =>
+      RoadmapViewNotifierProvider._(argument: roadmapId, from: this);
 
   @override
-  String get roadmapId => (origin as RoadmapViewNotifierProvider).roadmapId;
+  String toString() => r'roadmapViewProvider';
 }
 
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$RoadmapViewNotifier extends $AsyncNotifier<RoadmapViewState> {
+  late final _$args = ref.$arg as String;
+  String get roadmapId => _$args;
+
+  FutureOr<RoadmapViewState> build(String roadmapId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref as $Ref<AsyncValue<RoadmapViewState>, RoadmapViewState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<RoadmapViewState>, RoadmapViewState>,
+              AsyncValue<RoadmapViewState>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
+  }
+}

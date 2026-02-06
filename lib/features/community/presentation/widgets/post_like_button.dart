@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
+import 'package:vector_math/vector_math_64.dart' as v;
 
 class PostLikeButton extends StatefulWidget {
-  const PostLikeButton({super.key, required this.likes});
+  const PostLikeButton({
+    super.key,
+    required this.likes,
+    required this.onLike,
+    required this.isLiked,
+  });
   final int likes;
+  final bool isLiked;
+  final VoidCallback onLike;
 
   @override
   State<PostLikeButton> createState() => _PostLikeButtonState();
@@ -12,14 +20,6 @@ class PostLikeButton extends StatefulWidget {
 
 class _PostLikeButtonState extends State<PostLikeButton> {
   bool _isHovered = false;
-  bool _isLiked = false;
-  late int _likes;
-
-  @override
-  void initState() {
-    super.initState();
-    _likes = widget.likes;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,28 +30,24 @@ class _PostLikeButtonState extends State<PostLikeButton> {
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
         duration: Duration(milliseconds: 200),
-        transform: Matrix4.identity()..scale(_isHovered ? 1.3 : 1.0),
+        transform: Matrix4.identity()
+          ..scaleByVector3(v.Vector3.all(_isHovered ? 1.3 : 1.0)),
         child: Row(
           spacing: screenHeight * 0.005,
           children: [
             IconButton(
               icon: Icon(
-                _isLiked ? Icons.favorite : Icons.favorite_border,
-                color: _isLiked ? Colors.pink : Colors.grey,
+                widget.isLiked ? Icons.favorite : Icons.favorite_border,
+                color: widget.isLiked ? Colors.pink : Colors.grey,
               ),
-              onPressed: () {
-                setState(() {
-                  _isLiked = !_isLiked;
-                  _likes += _isLiked ? 1 : -1;
-                });
-              },
+              onPressed: widget.onLike,
               iconSize: 18,
               padding: EdgeInsets.zero,
               constraints: BoxConstraints(),
             ),
             Text(
-              '$_likes likes',
-              style: textTheme.bodySmall!.copyWith(color: Colors.blueGrey),
+              '${widget.likes} ${widget.likes == 1 ? "like" : "likes"}',
+              style: textTheme.bodyLarge!.copyWith(color: Colors.blueGrey),
             ),
           ],
         ),

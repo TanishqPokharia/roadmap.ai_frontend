@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:dio/browser.dart';
+import 'package:roadmap_ai/core/common/dio/dio_adapter_stub.dart'
+    if (dart.library.html) 'package:roadmap_ai/core/common/dio/dio_adapter_web.dart';
 import 'package:roadmap_ai/core/common/token_storage/flutter_secure_storage_token_storage_impl.dart';
 import 'package:roadmap_ai/core/common/token_storage/token_storage.dart';
+import 'package:roadmap_ai/core/constants/api_config.dart';
 import 'package:roadmap_ai/features/auth/data/models/tokens/tokens.dart';
 
 part 'refresh_token_interceptor.g.dart';
@@ -19,9 +18,7 @@ RefreshTokenInterceptor refreshTokenInterceptor(Ref ref) {
   // This breaks the circular dependency
   final interceptorDio = Dio(
     BaseOptions(
-      baseUrl: kReleaseMode
-          ? String.fromEnvironment('BASE_URL')
-          : dotenv.env['BASE_URL']!,
+      baseUrl: '${ApiConfig.baseUrl}/api/v1',
       connectTimeout: const Duration(seconds: 20),
       receiveTimeout: const Duration(seconds: 20),
       validateStatus: (status) => true,
@@ -29,12 +26,8 @@ RefreshTokenInterceptor refreshTokenInterceptor(Ref ref) {
     ),
   );
 
-  // Configure for web if needed
-  if (kIsWeb) {
-    final browserAdapter = BrowserHttpClientAdapter()..withCredentials = true;
-    interceptorDio.httpClientAdapter = browserAdapter;
-    interceptorDio.options.headers['withCredentials'] = true;
-  }
+  // Configure platform-specific adapter
+  configureDioAdapter(interceptorDio);
 
   return RefreshTokenInterceptor(
     ref.read(tokenStorageProvider),
@@ -168,7 +161,10 @@ class RefreshTokenInterceptor extends Interceptor {
       final response = await _dio.post(
         '/auth/refresh',
         options: Options(
-          headers: {'Authorization': 'Bearer $refreshToken'},
+          headers: {
+            'Authorization': 'Bearer $refreshToken',
+            'X-Client-OS': 'android',
+          },
           sendTimeout: const Duration(seconds: 10),
           receiveTimeout: const Duration(seconds: 10),
         ),
@@ -205,6 +201,7 @@ class RefreshTokenInterceptor extends Interceptor {
   /// Web refresh tokens implementation
   Future<bool> _refreshTokensWeb() async {
     try {
+      log("INITIALIZING COOKIE REFRESH");
       final response = await _dio.post('/auth/refresh');
       return response.statusCode == 200;
     } catch (e, stackTrace) {
@@ -254,7 +251,7 @@ class RefreshTokenInterceptor extends Interceptor {
         return false;
       }
 
-      // Refresh for token-related errors or empty errors (default 401 behavior)
+      // Refresh for token-related errors or empty error
       return errorMessage.isEmpty ||
           errorMessage.contains('expire') ||
           errorMessage.contains('token');

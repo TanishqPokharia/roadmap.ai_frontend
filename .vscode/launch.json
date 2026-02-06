@@ -40,7 +40,8 @@
             "request": "launch",
             "type": "dart",
             "args": [
-                "--web-port=8080"
+                "--web-port=8080",
+                "--web-experimental-hot-reload"
             ]
         },
         {
@@ -52,7 +53,7 @@
             "args": [
                 "-d",
                 "web-server",
-                "--web-port=8080",
+                "--web-port=8081",
                 "--web-experimental-hot-reload"
             ]
         }

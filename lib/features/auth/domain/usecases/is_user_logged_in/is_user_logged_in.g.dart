@@ -6,22 +6,46 @@ part of 'is_user_logged_in.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$isUserLoggedInHash() => r'c4c0fef70963694b5e0c9b2ed32882c9dfe9dec7';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [isUserLoggedIn].
 @ProviderFor(isUserLoggedIn)
-final isUserLoggedInProvider = Provider<IsUserLoggedIn>.internal(
-  isUserLoggedIn,
-  name: r'isUserLoggedInProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$isUserLoggedInHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final isUserLoggedInProvider = IsUserLoggedInProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef IsUserLoggedInRef = ProviderRef<IsUserLoggedIn>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class IsUserLoggedInProvider
+    extends $FunctionalProvider<IsUserLoggedIn, IsUserLoggedIn, IsUserLoggedIn>
+    with $Provider<IsUserLoggedIn> {
+  IsUserLoggedInProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'isUserLoggedInProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$isUserLoggedInHash();
+
+  @$internal
+  @override
+  $ProviderElement<IsUserLoggedIn> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  IsUserLoggedIn create(Ref ref) {
+    return isUserLoggedIn(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IsUserLoggedIn value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IsUserLoggedIn>(value),
+    );
+  }
+}
+
+String _$isUserLoggedInHash() => r'c4c0fef70963694b5e0c9b2ed32882c9dfe9dec7';

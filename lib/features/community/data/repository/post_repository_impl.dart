@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
@@ -90,5 +89,10 @@ class PostRepositoryImpl implements PostRepository {
     return _datasource
         .getPostsByTitle(limit: limit, skip: skip, title: title)
         .map((models) => models.map((model) => model.toEntity()).toList());
+  }
+
+  @override
+  TaskEither<Failure, void> togglePostLike({required String postId}) {
+    return _datasource.togglePostLike(postId: postId);
   }
 }

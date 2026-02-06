@@ -12,7 +12,7 @@ final darkColorScheme = ColorScheme.fromSeed(seedColor: Colors.purpleAccent)
       onPrimary: Colors.white,
       secondary: Colors.purpleAccent,
       onSecondary: Colors.white,
-      surface: Colors.grey[850],
+      surface: Color(0xFF28282B),
       onSurface: Colors.white,
     );
 
@@ -46,7 +46,7 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
     prefixIconColor: Colors.white70,
     hintStyle: GoogleFonts.inter(color: Colors.white70),
   ),
-  cardColor: Colors.grey[900],
+  cardColor: Color(0xFF28282B),
   splashFactory: NoSplash.splashFactory,
   filledButtonTheme: FilledButtonThemeData(
     style: FilledButton.styleFrom(

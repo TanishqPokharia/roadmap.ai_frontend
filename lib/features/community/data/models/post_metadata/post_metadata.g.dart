@@ -16,6 +16,7 @@ _PostMetadataModel _$PostMetadataModelFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String,
       description: json['description'] as String,
       views: (json['views'] as num).toInt(),
+      isLiked: json['isLiked'] as bool,
     );
 
 Map<String, dynamic> _$PostMetadataModelToJson(_PostMetadataModel instance) =>
@@ -28,4 +29,5 @@ Map<String, dynamic> _$PostMetadataModelToJson(_PostMetadataModel instance) =>
       'title': instance.title,
       'description': instance.description,
       'views': instance.views,
+      'isLiked': instance.isLiked,
     };

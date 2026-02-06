@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
+import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 
 class FeatureItem extends StatelessWidget {
   final IconData icon;
@@ -18,13 +19,15 @@ class FeatureItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = context.screenHeight;
+    final theme = context.theme;
+    final textTheme = context.textTheme;
     return Expanded(
       child: SizedBox(
         height: screenHeight * 0.18, // Specify a height for the feature item
         child: Container(
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -50,14 +53,16 @@ class FeatureItem extends StatelessWidget {
                 title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style: textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(height: 4),
               Text(
                 description,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: Colors.blueGrey, fontSize: 12),
+                style: textTheme.titleMedium,
               ),
             ],
           ),

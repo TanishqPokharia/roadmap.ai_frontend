@@ -6,22 +6,50 @@ part of 'save_roadmap_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveRoadmapNotifierHash() =>
-    r'7136b7e2b5ae68d23c42b77e79670ce9e65d80fa';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [SaveRoadmapNotifier].
 @ProviderFor(SaveRoadmapNotifier)
-final saveRoadmapNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<SaveRoadmapNotifier, bool>.internal(
-      SaveRoadmapNotifier.new,
-      name: r'saveRoadmapNotifierProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$saveRoadmapNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final saveRoadmapProvider = SaveRoadmapNotifierProvider._();
 
-typedef _$SaveRoadmapNotifier = AutoDisposeAsyncNotifier<bool>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class SaveRoadmapNotifierProvider
+    extends $AsyncNotifierProvider<SaveRoadmapNotifier, bool> {
+  SaveRoadmapNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'saveRoadmapProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$saveRoadmapNotifierHash();
+
+  @$internal
+  @override
+  SaveRoadmapNotifier create() => SaveRoadmapNotifier();
+}
+
+String _$saveRoadmapNotifierHash() =>
+    r'8440ade99153ff56b45347d0419f33abd1bf7213';
+
+abstract class _$SaveRoadmapNotifier extends $AsyncNotifier<bool> {
+  FutureOr<bool> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<bool>, bool>,
+              AsyncValue<bool>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

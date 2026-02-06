@@ -13,6 +13,10 @@ Failure dataSourceErrorHandler({required Object error, String? message}) {
     if (error.type == DioExceptionType.connectionTimeout) {
       return TimeoutFailure('Connection Timeout, please try again later');
     }
+
+    if (error.type == DioExceptionType.connectionError) {
+      return ConnectionFailure("Failed to connect to server");
+    }
     if (error.response != null) {
       return httpErrorHandler(error.response!.statusCode ?? 0);
     }

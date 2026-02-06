@@ -6,24 +6,53 @@ part of 'get_saved_roadmaps_metadata.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(getSavedRoadmapsMetadata)
+final getSavedRoadmapsMetadataProvider = GetSavedRoadmapsMetadataProvider._();
+
+final class GetSavedRoadmapsMetadataProvider
+    extends
+        $FunctionalProvider<
+          GetSavedRoadmapsMetadata,
+          GetSavedRoadmapsMetadata,
+          GetSavedRoadmapsMetadata
+        >
+    with $Provider<GetSavedRoadmapsMetadata> {
+  GetSavedRoadmapsMetadataProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'getSavedRoadmapsMetadataProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$getSavedRoadmapsMetadataHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetSavedRoadmapsMetadata> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  GetSavedRoadmapsMetadata create(Ref ref) {
+    return getSavedRoadmapsMetadata(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetSavedRoadmapsMetadata value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetSavedRoadmapsMetadata>(value),
+    );
+  }
+}
+
 String _$getSavedRoadmapsMetadataHash() =>
     r'c604c2f2b565064faf054a4ab797e99beb73e6d2';
-
-/// See also [getSavedRoadmapsMetadata].
-@ProviderFor(getSavedRoadmapsMetadata)
-final getSavedRoadmapsMetadataProvider =
-    Provider<GetSavedRoadmapsMetadata>.internal(
-      getSavedRoadmapsMetadata,
-      name: r'getSavedRoadmapsMetadataProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$getSavedRoadmapsMetadataHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef GetSavedRoadmapsMetadataRef = ProviderRef<GetSavedRoadmapsMetadata>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

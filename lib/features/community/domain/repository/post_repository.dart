@@ -32,4 +32,5 @@ abstract class PostRepository {
     int skip = 0,
     required String title,
   });
+  TaskEither<Failure, void> togglePostLike({required String postId});
 }

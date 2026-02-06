@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:roadmap_ai/core/common/widgets/animated_shadow.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
@@ -17,7 +21,6 @@ class YourPostTile extends StatefulWidget {
 }
 
 class _YourPostTileState extends State<YourPostTile> {
-  bool _isHovered = false;
   @override
   Widget build(BuildContext context) {
     final screenHeight = context.screenHeight;
@@ -26,32 +29,122 @@ class _YourPostTileState extends State<YourPostTile> {
     final theme = context.theme;
     final colorScheme = context.colorScheme;
 
-    return MouseRegion(
-      onEnter: (_) {
-        setState(() {
-          _isHovered = true;
-        });
-      },
-      onExit: (_) {
-        setState(() {
-          _isHovered = false;
-        });
-      },
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 150),
-        padding: EdgeInsets.all(16),
-        margin: EdgeInsets.only(bottom: screenHeight * 0.02),
+    if (!kIsWeb && Platform.isAndroid) {
+      return Container(
+        padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: theme.cardColor,
-          boxShadow: [
-            if (_isHovered)
-              BoxShadow(
-                color: colorScheme.primary,
-                blurRadius: 10,
-                spreadRadius: 2,
+        ),
+        child: Row(
+          spacing: screenWidth * 0.03,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.post.title,
+                    style: context.textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.01),
+                  Text(
+                    'Posted on ${_formatDate(widget.post.createdAt)}',
+                    style: textTheme.bodyMedium!.copyWith(
+                      color: Colors.blueGrey.shade300,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+
+                  SizedBox(
+                    width: 300,
+                    height: 150,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        widget.post.bannerImage,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                  : null,
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Icon(
+                              Icons.broken_image,
+                              color: Colors.grey,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    widget.post.description,
+                    style: textTheme.bodySmall!,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    spacing: screenHeight * 0.01,
+                    children: [
+                      PostViewsWidget(views: widget.views),
+                      SizedBox(width: screenHeight * 0.01),
+                      PostLikesWidget(likes: widget.post.likes),
+                      Spacer(),
+                      SizedBox(
+                        height: screenHeight * 0.035,
+                        child: FilledButton(
+                          onPressed: () {
+                            context.goNamed(
+                              AppRoutes.post,
+                              pathParameters: {
+                                'postId': widget.post.id,
+                                'title': widget.post.title,
+                              },
+                            );
+                          },
+                          child: Text(
+                            'View',
+                            style: textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
+            ),
           ],
+        ),
+      );
+    }
+
+    return AnimatedShadow(
+      shadowColor: colorScheme.primary,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: theme.cardColor,
         ),
         child: Row(
           spacing: screenWidth * 0.03,
@@ -70,14 +163,14 @@ class _YourPostTileState extends State<YourPostTile> {
                   SizedBox(height: screenHeight * 0.01),
                   Text(
                     'Posted on ${_formatDate(widget.post.createdAt)}',
-                    style: textTheme.bodyMedium!.copyWith(
+                    style: textTheme.bodyLarge!.copyWith(
                       color: Colors.blueGrey,
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   Text(
                     widget.post.description,
-                    style: textTheme.bodyMedium!,
+                    style: textTheme.bodyLarge!,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -92,7 +185,7 @@ class _YourPostTileState extends State<YourPostTile> {
                           onPressed: () {
                             context.goNamed(
                               AppRoutes.post,
-                              queryParameters: {
+                              pathParameters: {
                                 'postId': widget.post.id,
                                 'title': widget.post.title,
                               },
@@ -108,13 +201,14 @@ class _YourPostTileState extends State<YourPostTile> {
                               ),
                             ),
                             padding: WidgetStatePropertyAll(
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                             ),
                           ),
                           child: Text(
                             'View',
                             style: textTheme.bodyMedium!.copyWith(
                               fontWeight: FontWeight.w600,
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -134,8 +228,8 @@ class _YourPostTileState extends State<YourPostTile> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
-                  fit: BoxFit.cover,
                   widget.post.bannerImage,
+                  fit: BoxFit.cover,
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
                     return Center(

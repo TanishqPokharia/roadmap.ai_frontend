@@ -6,22 +6,46 @@ part of 'auth_datasource_impl.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authDatasourceHash() => r'e7f1ec2eadaa83331215ccf5d4974bc43f3a3156';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [authDatasource].
 @ProviderFor(authDatasource)
-final authDatasourceProvider = AutoDisposeProvider<AuthDatasource>.internal(
-  authDatasource,
-  name: r'authDatasourceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$authDatasourceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final authDatasourceProvider = AuthDatasourceProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AuthDatasourceRef = AutoDisposeProviderRef<AuthDatasource>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class AuthDatasourceProvider
+    extends $FunctionalProvider<AuthDatasource, AuthDatasource, AuthDatasource>
+    with $Provider<AuthDatasource> {
+  AuthDatasourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'authDatasourceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$authDatasourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<AuthDatasource> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AuthDatasource create(Ref ref) {
+    return authDatasource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AuthDatasource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AuthDatasource>(value),
+    );
+  }
+}
+
+String _$authDatasourceHash() => r'e7f1ec2eadaa83331215ccf5d4974bc43f3a3156';

@@ -6,22 +6,46 @@ part of 'save_roadmap.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveRoadmapHash() => r'aa23a4fc9edc5587ca2e9d3041bcd89fba1441d6';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [saveRoadmap].
 @ProviderFor(saveRoadmap)
-final saveRoadmapProvider = Provider<SaveRoadmap>.internal(
-  saveRoadmap,
-  name: r'saveRoadmapProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$saveRoadmapHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final saveRoadmapProvider = SaveRoadmapProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SaveRoadmapRef = ProviderRef<SaveRoadmap>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class SaveRoadmapProvider
+    extends $FunctionalProvider<SaveRoadmap, SaveRoadmap, SaveRoadmap>
+    with $Provider<SaveRoadmap> {
+  SaveRoadmapProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'saveRoadmapProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$saveRoadmapHash();
+
+  @$internal
+  @override
+  $ProviderElement<SaveRoadmap> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SaveRoadmap create(Ref ref) {
+    return saveRoadmap(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SaveRoadmap value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SaveRoadmap>(value),
+    );
+  }
+}
+
+String _$saveRoadmapHash() => r'aa23a4fc9edc5587ca2e9d3041bcd89fba1441d6';

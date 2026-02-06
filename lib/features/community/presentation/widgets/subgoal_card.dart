@@ -42,14 +42,15 @@ class _SubgoalCardState extends ConsumerState<SubgoalCard> {
           color: colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.grey.withAlpha(26)),
-          boxShadow: [
-            if (_isHovered)
-              BoxShadow(
-                color: colorScheme.primary,
-                blurRadius: 10,
-                spreadRadius: 5,
-              ),
-          ],
+          boxShadow: _isHovered
+              ? [
+                  BoxShadow(
+                    color: colorScheme.primary.withAlpha(51),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ]
+              : [],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +63,6 @@ class _SubgoalCardState extends ConsumerState<SubgoalCard> {
                     widget.subgoal.title,
                     style: textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: colorScheme.onPrimary,
                     ),
                   ),
                 ),
@@ -113,6 +113,15 @@ class _SubgoalCardState extends ConsumerState<SubgoalCard> {
                       child: Text("- $resource", style: textTheme.bodyMedium),
                     );
                   }
+
+                  // Extract URL using improved logic
+                  String url = resource;
+                  if (resource.contains("https")) {
+                    url = resource.substring(resource.indexOf("https"));
+                  } else if (resource.contains("http")) {
+                    url = resource.substring(resource.indexOf("http"));
+                  }
+
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 4, left: 8),
                     child: Row(
@@ -121,35 +130,23 @@ class _SubgoalCardState extends ConsumerState<SubgoalCard> {
                         Icon(
                           Icons.link,
                           size: textTheme.bodyMedium?.fontSize,
-                          color: colorScheme.onPrimary,
+                          color: colorScheme.primary,
                         ),
                         const SizedBox(width: 4),
                         Expanded(
-                          child: Builder(
-                            builder: (context) {
-                              final urlStart = resource.indexOf('http');
-                              final url = urlStart != -1
-                                  ? resource
-                                        .substring(urlStart)
-                                        .split(' ')
-                                        .first
-                                  : resource;
-                              return Link(
-                                uri: Uri.parse(url),
-                                target: LinkTarget.blank,
-                                builder: (context, followLink) =>
-                                    GestureDetector(
-                                      onTap: followLink,
-                                      child: Text(
-                                        url,
-                                        style: textTheme.bodyMedium?.copyWith(
-                                          color: colorScheme.primaryContainer,
-                                          decoration: TextDecoration.underline,
-                                        ),
-                                      ),
-                                    ),
-                              );
-                            },
+                          child: Link(
+                            uri: Uri.parse(url),
+                            target: LinkTarget.blank,
+                            builder: (context, followLink) => GestureDetector(
+                              onTap: followLink,
+                              child: Text(
+                                url,
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: colorScheme.primary,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -163,21 +160,33 @@ class _SubgoalCardState extends ConsumerState<SubgoalCard> {
             SizedBox(height: 10),
 
             // Duration pill (always visible, at bottom)
-            Container(
-              margin: const EdgeInsets.only(top: 4),
+            Chip(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: colorScheme.secondaryContainer,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Text(
+              labelPadding: EdgeInsets.only(right: 8),
+              backgroundColor: colorScheme.primary,
+              label: Text(
                 widget.subgoal.duration,
                 style: textTheme.labelLarge?.copyWith(
-                  color: colorScheme.onSecondaryContainer,
+                  color: colorScheme.onPrimary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
             ),
+            // Container(
+            //   margin: const EdgeInsets.only(top: 4),
+            //   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            //   decoration: BoxDecoration(
+            //     color: colorScheme.primaryFixed,
+            //     borderRadius: BorderRadius.circular(4),
+            //   ),
+            //   child: Text(
+            //     widget.subgoal.duration,
+            //     style: textTheme.labelLarge?.copyWith(
+            //       color: colorScheme.onSecondaryContainer,
+            //       fontWeight: FontWeight.w500,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

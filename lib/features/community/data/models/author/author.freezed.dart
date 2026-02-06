@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PostAuthorModel {
 
- String get username; String get email; String get avatar; String get id;
+ String get username; String get email; String? get avatar; String get id;
 /// Create a copy of PostAuthorModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $PostAuthorModelCopyWith<$Res>  {
   factory $PostAuthorModelCopyWith(PostAuthorModel value, $Res Function(PostAuthorModel) _then) = _$PostAuthorModelCopyWithImpl;
 @useResult
 $Res call({
- String username, String email, String avatar, String id
+ String username, String email, String? avatar, String id
 });
 
 
@@ -65,12 +65,12 @@ class _$PostAuthorModelCopyWithImpl<$Res>
 
 /// Create a copy of PostAuthorModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? username = null,Object? email = null,Object? avatar = null,Object? id = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? username = null,Object? email = null,Object? avatar = freezed,Object? id = null,}) {
   return _then(_self.copyWith(
 username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,avatar: null == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
-as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,avatar: freezed == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
+as String?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String username,  String email,  String avatar,  String id)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String username,  String email,  String? avatar,  String id)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PostAuthorModel() when $default != null:
 return $default(_that.username,_that.email,_that.avatar,_that.id);case _:
@@ -177,7 +177,7 @@ return $default(_that.username,_that.email,_that.avatar,_that.id);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String username,  String email,  String avatar,  String id)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String username,  String email,  String? avatar,  String id)  $default,) {final _that = this;
 switch (_that) {
 case _PostAuthorModel():
 return $default(_that.username,_that.email,_that.avatar,_that.id);case _:
@@ -197,7 +197,7 @@ return $default(_that.username,_that.email,_that.avatar,_that.id);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String username,  String email,  String avatar,  String id)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String username,  String email,  String? avatar,  String id)?  $default,) {final _that = this;
 switch (_that) {
 case _PostAuthorModel() when $default != null:
 return $default(_that.username,_that.email,_that.avatar,_that.id);case _:
@@ -217,7 +217,7 @@ class _PostAuthorModel implements PostAuthorModel {
 
 @override final  String username;
 @override final  String email;
-@override final  String avatar;
+@override final  String? avatar;
 @override final  String id;
 
 /// Create a copy of PostAuthorModel
@@ -253,7 +253,7 @@ abstract mixin class _$PostAuthorModelCopyWith<$Res> implements $PostAuthorModel
   factory _$PostAuthorModelCopyWith(_PostAuthorModel value, $Res Function(_PostAuthorModel) _then) = __$PostAuthorModelCopyWithImpl;
 @override @useResult
 $Res call({
- String username, String email, String avatar, String id
+ String username, String email, String? avatar, String id
 });
 
 
@@ -270,12 +270,12 @@ class __$PostAuthorModelCopyWithImpl<$Res>
 
 /// Create a copy of PostAuthorModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? username = null,Object? email = null,Object? avatar = null,Object? id = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? username = null,Object? email = null,Object? avatar = freezed,Object? id = null,}) {
   return _then(_PostAuthorModel(
 username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,avatar: null == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
-as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,avatar: freezed == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
+as String?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:roadmap_ai/core/common/toast/error.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
@@ -8,7 +12,6 @@ import 'package:roadmap_ai/features/community/presentation/providers/user_posts/
 import 'package:roadmap_ai/features/community/presentation/widgets/no_posts_widget.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/post_stat_card.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/your_post_tile.dart';
-import 'package:toastification/toastification.dart';
 
 class YourPostsPage extends ConsumerWidget {
   const YourPostsPage({super.key});
@@ -19,33 +22,173 @@ class YourPostsPage extends ConsumerWidget {
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
 
-    final userPosts = ref.watch(userPostsNotifierProvider);
+    final userPosts = ref.watch(userPostsProvider);
     final userPostsStats = ref.watch(userPostStatsProvider);
-    ref.listen(userPostsNotifierProvider, (_, next) {
+    ref.listen(userPostsProvider, (_, next) {
       if (next is AsyncError) {
         final error = next.error;
-        toastification.show(
-          title: Text('Error'),
-          description: Text('Error loading posts: $error'),
-          backgroundColor: Colors.red,
-          icon: Icon(Icons.error, color: Colors.white),
-          autoCloseDuration: Duration(seconds: 3),
-        );
+        showErrorToast(context: context, error: 'Error loading posts: $error');
       }
     });
 
     ref.listen(userPostStatsProvider, (_, next) {
       if (next is AsyncError) {
         final error = next.error;
-        toastification.show(
-          title: Text('Error'),
-          description: Text('Error loading post stats: $error'),
-          backgroundColor: Colors.red,
-          icon: Icon(Icons.error, color: Colors.white),
-          autoCloseDuration: Duration(seconds: 3),
+        showErrorToast(
+          context: context,
+          error: 'Error loading post stats: $error',
         );
       }
     });
+
+    if (!kIsWeb && Platform.isAndroid) {
+      return Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  spacing: 10,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Your Posts',
+                      style: textTheme.headlineMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Manage and track your published roadmaps',
+                      style: textTheme.bodyLarge!.copyWith(
+                        color: Colors.blueGrey.shade300,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: screenHeight * 0.03),
+
+                userPostsStats.maybeWhen(
+                  data: (posts) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      spacing: 20,
+                      children: [
+                        Expanded(
+                          child: PostStatCard(
+                            icon: Icons.article,
+                            value: posts.totalPosts,
+                            label: 'Posts',
+                            textStyle: textTheme.bodyLarge,
+                          ),
+                        ),
+                        Expanded(
+                          child: PostStatCard(
+                            icon: Icons.visibility,
+                            value: posts.totalViews,
+                            label: 'Total Views',
+                            textStyle: textTheme.bodyLarge,
+                          ),
+                        ),
+                        Expanded(
+                          child: PostStatCard(
+                            icon: Icons.favorite,
+                            value: posts.totalLikes,
+                            label: 'Total Likes',
+                            textStyle: textTheme.bodyLarge,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                  orElse: () {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      spacing: 20,
+                      children: [
+                        Expanded(
+                          child: PostStatCard(
+                            icon: Icons.article,
+                            value: null,
+                            label: 'Posts',
+                          ),
+                        ),
+                        Expanded(
+                          child: PostStatCard(
+                            icon: Icons.visibility,
+                            value: null,
+                            label: 'Total Views',
+                          ),
+                        ),
+                        Expanded(
+                          child: PostStatCard(
+                            icon: Icons.favorite,
+                            value: null,
+                            label: 'Total Likes',
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                SizedBox(height: 20),
+                Expanded(
+                  child: userPosts.when(
+                    data: (data) => data.isEmpty
+                        ? const NoPostsWidget()
+                        : Builder(
+                            builder: (context) {
+                              final List<PostMetadata> sortedPosts = List.from(
+                                data,
+                              );
+                              sortedPosts.sort(
+                                (a, b) => b.createdAt.compareTo(a.createdAt),
+                              );
+                              return ListView.separated(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.only(bottom: 100),
+                                separatorBuilder: (context, index) =>
+                                    SizedBox(height: screenHeight * 0.03),
+                                itemCount: sortedPosts.length,
+                                itemBuilder: (context, index) {
+                                  final post = sortedPosts[index];
+                                  return YourPostTile(
+                                    post: post,
+                                    views: post.views,
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, stack) => Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            size: 64,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'Failed to load posts',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -79,6 +222,7 @@ class YourPostsPage extends ConsumerWidget {
                   data: (posts) {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      spacing: 20,
                       children: [
                         Expanded(
                           child: PostStatCard(
@@ -107,6 +251,7 @@ class YourPostsPage extends ConsumerWidget {
                   orElse: () {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      spacing: 20,
                       children: [
                         Expanded(
                           child: PostStatCard(
@@ -145,9 +290,12 @@ class YourPostsPage extends ConsumerWidget {
                             sortedPosts.sort(
                               (a, b) => b.createdAt.compareTo(a.createdAt),
                             );
-                            return ListView.builder(
+                            return ListView.separated(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.only(bottom: 100),
+                              separatorBuilder: (context, index) =>
+                                  SizedBox(height: screenHeight * 0.03),
                               itemCount: sortedPosts.length,
                               itemBuilder: (context, index) {
                                 final post = sortedPosts[index];

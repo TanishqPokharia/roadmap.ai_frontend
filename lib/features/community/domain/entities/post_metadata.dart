@@ -9,6 +9,7 @@ class PostMetadata {
   final String title;
   final String description;
   final int views;
+  final bool isLiked;
 
   PostMetadata({
     required this.likes,
@@ -19,5 +20,6 @@ class PostMetadata {
     required this.id,
     required this.bannerImage,
     required this.views,
+    required this.isLiked,
   });
 }

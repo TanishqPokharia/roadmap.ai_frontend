@@ -6,170 +6,95 @@ part of 'create_post_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$createPostNotifierHash() =>
-    r'252166af125f8a42b28d9fa7a73f40d379981d7f';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$CreatePostNotifier
-    extends BuildlessAutoDisposeAsyncNotifier<CreatePostState> {
-  late final String roadmapId;
-
-  FutureOr<CreatePostState> build(String roadmapId);
-}
-
-/// See also [CreatePostNotifier].
 @ProviderFor(CreatePostNotifier)
-const createPostNotifierProvider = CreatePostNotifierFamily();
+final createPostProvider = CreatePostNotifierFamily._();
 
-/// See also [CreatePostNotifier].
-class CreatePostNotifierFamily extends Family<AsyncValue<CreatePostState>> {
-  /// See also [CreatePostNotifier].
-  const CreatePostNotifierFamily();
+final class CreatePostNotifierProvider
+    extends $AsyncNotifierProvider<CreatePostNotifier, CreatePostState> {
+  CreatePostNotifierProvider._({
+    required CreatePostNotifierFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'createPostProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [CreatePostNotifier].
-  CreatePostNotifierProvider call(String roadmapId) {
-    return CreatePostNotifierProvider(roadmapId);
+  @override
+  String debugGetCreateSourceHash() => _$createPostNotifierHash();
+
+  @override
+  String toString() {
+    return r'createPostProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  CreatePostNotifierProvider getProviderOverride(
-    covariant CreatePostNotifierProvider provider,
-  ) {
-    return call(provider.roadmapId);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'createPostNotifierProvider';
-}
-
-/// See also [CreatePostNotifier].
-class CreatePostNotifierProvider
-    extends
-        AutoDisposeAsyncNotifierProviderImpl<
-          CreatePostNotifier,
-          CreatePostState
-        > {
-  /// See also [CreatePostNotifier].
-  CreatePostNotifierProvider(String roadmapId)
-    : this._internal(
-        () => CreatePostNotifier()..roadmapId = roadmapId,
-        from: createPostNotifierProvider,
-        name: r'createPostNotifierProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$createPostNotifierHash,
-        dependencies: CreatePostNotifierFamily._dependencies,
-        allTransitiveDependencies:
-            CreatePostNotifierFamily._allTransitiveDependencies,
-        roadmapId: roadmapId,
-      );
-
-  CreatePostNotifierProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.roadmapId,
-  }) : super.internal();
-
-  final String roadmapId;
-
-  @override
-  FutureOr<CreatePostState> runNotifierBuild(
-    covariant CreatePostNotifier notifier,
-  ) {
-    return notifier.build(roadmapId);
-  }
-
-  @override
-  Override overrideWith(CreatePostNotifier Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: CreatePostNotifierProvider._internal(
-        () => create()..roadmapId = roadmapId,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        roadmapId: roadmapId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeAsyncNotifierProviderElement<CreatePostNotifier, CreatePostState>
-  createElement() {
-    return _CreatePostNotifierProviderElement(this);
-  }
+  CreatePostNotifier create() => CreatePostNotifier();
 
   @override
   bool operator ==(Object other) {
-    return other is CreatePostNotifierProvider && other.roadmapId == roadmapId;
+    return other is CreatePostNotifierProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, roadmapId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin CreatePostNotifierRef
-    on AutoDisposeAsyncNotifierProviderRef<CreatePostState> {
-  /// The parameter `roadmapId` of this provider.
-  String get roadmapId;
-}
+String _$createPostNotifierHash() =>
+    r'b972a57b01df840e747b6cbeaecfbca124fd78b0';
 
-class _CreatePostNotifierProviderElement
-    extends
-        AutoDisposeAsyncNotifierProviderElement<
+final class CreatePostNotifierFamily extends $Family
+    with
+        $ClassFamilyOverride<
           CreatePostNotifier,
-          CreatePostState
-        >
-    with CreatePostNotifierRef {
-  _CreatePostNotifierProviderElement(super.provider);
+          AsyncValue<CreatePostState>,
+          CreatePostState,
+          FutureOr<CreatePostState>,
+          String
+        > {
+  CreatePostNotifierFamily._()
+    : super(
+        retry: null,
+        name: r'createPostProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  CreatePostNotifierProvider call(String roadmapId) =>
+      CreatePostNotifierProvider._(argument: roadmapId, from: this);
 
   @override
-  String get roadmapId => (origin as CreatePostNotifierProvider).roadmapId;
+  String toString() => r'createPostProvider';
 }
 
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$CreatePostNotifier extends $AsyncNotifier<CreatePostState> {
+  late final _$args = ref.$arg as String;
+  String get roadmapId => _$args;
+
+  FutureOr<CreatePostState> build(String roadmapId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<CreatePostState>, CreatePostState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<CreatePostState>, CreatePostState>,
+              AsyncValue<CreatePostState>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
+  }
+}

@@ -1,7 +1,7 @@
 class PostAuthor {
   final String username;
   final String email;
-  final String avatar;
+  final String? avatar;
   final String id;
 
   const PostAuthor({

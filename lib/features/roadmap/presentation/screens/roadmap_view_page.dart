@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
@@ -13,7 +16,7 @@ class RoadmapViewPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final roadmapView = roadmapViewNotifierProvider(roadmapId);
+    final roadmapView = roadmapViewProvider(roadmapId);
 
     return Scaffold(
       appBar: AppBar(),
@@ -109,6 +112,36 @@ class _RoadmapContent extends ConsumerWidget {
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
+
+    if (!kIsWeb && Platform.isAndroid) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: screenHeight * 0.02),
+            Text(
+              roadmap.title,
+              style: textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'View roadmap details',
+              style: textTheme.bodySmall!.copyWith(color: Colors.blueGrey),
+            ),
+            SizedBox(height: screenHeight * 0.03),
+            Expanded(
+              child: EditableRoadmapTree(
+                roadmap: roadmap,
+                isProgressEditable: true,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),

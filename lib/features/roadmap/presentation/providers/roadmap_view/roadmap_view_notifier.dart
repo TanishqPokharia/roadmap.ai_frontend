@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
@@ -43,6 +44,12 @@ class RoadmapViewNotifier extends _$RoadmapViewNotifier {
     required int subgoalIndex,
     required bool isCompleted,
   }) async {
+    debugPrint(goalId);
+    debugPrint(subgoalId);
+    debugPrint(goalIndex.toString());
+    debugPrint(subgoalIndex.toString());
+    debugPrint(isCompleted.toString());
+
     // Store only the original subgoal for efficient rollback
     final originalSubgoal = _roadmap.goals[goalIndex].subgoals[subgoalIndex];
 
@@ -121,7 +128,7 @@ class RoadmapViewNotifier extends _$RoadmapViewNotifier {
           (previousValue, goal) => previousValue + goal.subgoals.length,
         );
         ref
-            .read(savedRoadmapsNotifierProvider.notifier)
+            .read(savedRoadmapsProvider.notifier)
             .updateRoadmapProgress(
               _roadmap.id,
               completedSubgoals,

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 
 class StatCounter extends StatefulWidget {
-  const StatCounter({super.key, required this.value});
+  const StatCounter({super.key, required this.value, this.textStyle});
   final int value;
+  final TextStyle? textStyle;
 
   @override
   State<StatCounter> createState() => _StatCounterState();
@@ -38,18 +39,23 @@ class _StatCounterState extends State<StatCounter>
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = context.textTheme;
     final colorScheme = context.colorScheme;
+    final textTheme = context.textTheme;
 
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
         return Text(
           _animation.value.toString(),
-          style: textTheme.headlineSmall!.copyWith(
-            fontWeight: FontWeight.bold,
-            color: colorScheme.primary,
-          ),
+          style: widget.textStyle != null
+              ? widget.textStyle!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.primary,
+                )
+              : textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.primary,
+                ),
         );
       },
     );

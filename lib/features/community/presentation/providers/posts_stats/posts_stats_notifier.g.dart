@@ -6,22 +6,44 @@ part of 'posts_stats_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$userPostStatsHash() => r'155dabe5e2fe2f0db090d1ac595851bd50656860';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [userPostStats].
 @ProviderFor(userPostStats)
-final userPostStatsProvider = FutureProvider<UserPostStats>.internal(
-  userPostStats,
-  name: r'userPostStatsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$userPostStatsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final userPostStatsProvider = UserPostStatsProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef UserPostStatsRef = FutureProviderRef<UserPostStats>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class UserPostStatsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<UserPostStats>,
+          UserPostStats,
+          FutureOr<UserPostStats>
+        >
+    with $FutureModifier<UserPostStats>, $FutureProvider<UserPostStats> {
+  UserPostStatsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userPostStatsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userPostStatsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<UserPostStats> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<UserPostStats> create(Ref ref) {
+    return userPostStats(ref);
+  }
+}
+
+String _$userPostStatsHash() => r'deb67c0b90e802d8eec330ad0351df028b2785e8';

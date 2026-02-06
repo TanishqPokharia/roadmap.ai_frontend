@@ -6,21 +6,49 @@ part of 'theme_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$themeNotifierHash() => r'a577c62f1b58b9131ec544866db12a2586632f53';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [ThemeNotifier].
 @ProviderFor(ThemeNotifier)
-final themeNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<ThemeNotifier, ThemeMode>.internal(
-      ThemeNotifier.new,
-      name: r'themeNotifierProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$themeNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final themeProvider = ThemeNotifierProvider._();
 
-typedef _$ThemeNotifier = AutoDisposeAsyncNotifier<ThemeMode>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class ThemeNotifierProvider
+    extends $AsyncNotifierProvider<ThemeNotifier, ThemeMode> {
+  ThemeNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'themeProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$themeNotifierHash();
+
+  @$internal
+  @override
+  ThemeNotifier create() => ThemeNotifier();
+}
+
+String _$themeNotifierHash() => r'157fd64e5828442d9915886f4dc190e9ae4c1b33';
+
+abstract class _$ThemeNotifier extends $AsyncNotifier<ThemeMode> {
+  FutureOr<ThemeMode> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<ThemeMode>, ThemeMode>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<ThemeMode>, ThemeMode>,
+              AsyncValue<ThemeMode>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

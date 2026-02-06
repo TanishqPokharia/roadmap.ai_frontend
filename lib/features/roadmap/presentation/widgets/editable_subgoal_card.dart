@@ -41,7 +41,7 @@ class _EditableSubgoalCardState extends ConsumerState<EditableSubgoalCard> {
   @override
   Widget build(BuildContext context) {
     final notifier = widget.isCustomizable
-        ? ref.read(createPostNotifierProvider(widget.roadmapId).notifier)
+        ? ref.read(createPostProvider(widget.roadmapId).notifier)
         : null;
     final theme = context.theme;
     final colorScheme = context.colorScheme;
@@ -82,7 +82,7 @@ class _EditableSubgoalCardState extends ConsumerState<EditableSubgoalCard> {
                 Expanded(
                   child: Text(
                     widget.subgoal.title,
-                    style: textTheme.bodyLarge!.copyWith(
+                    style: textTheme.titleMedium!.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -105,10 +105,12 @@ class _EditableSubgoalCardState extends ConsumerState<EditableSubgoalCard> {
                               );
                             } else {
                               // TODO: Implement subgoal edit functionality with roadmap notifier
-                              print('Edit subgoal: ${widget.subgoal.title}');
-                              print('New title: $newTitle');
-                              print('New description: $newDescription');
-                              print('New resources: $newResources');
+                              debugPrint(
+                                'Edit subgoal: ${widget.subgoal.title}',
+                              );
+                              debugPrint('New title: $newTitle');
+                              debugPrint('New description: $newDescription');
+                              debugPrint('New resources: $newResources');
                             }
                           },
                         ),
@@ -125,7 +127,7 @@ class _EditableSubgoalCardState extends ConsumerState<EditableSubgoalCard> {
                   IconButton(
                     onPressed: () {
                       // TODO: Delete subgoal functionality
-                      print('Delete subgoal: ${widget.subgoal.title}');
+                      debugPrint('Delete subgoal: ${widget.subgoal.title}');
                     },
                     icon: Icon(
                       Icons.delete,
@@ -137,33 +139,26 @@ class _EditableSubgoalCardState extends ConsumerState<EditableSubgoalCard> {
                   ),
                 ],
                 if (widget.isProgressEditable)
-                  Transform.scale(
-                    scale: 0.8,
-                    child: Checkbox(
-                      value: widget.subgoal.status?.completed ?? false,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      onChanged: (value) {
-                        if (!context.mounted) {
-                          return;
-                        }
-
-                        ref
-                            .read(
-                              roadmapViewNotifierProvider(
-                                widget.roadmapId,
-                              ).notifier,
-                            )
-                            .updateSubgoalStatus(
-                              goalId: widget.goalId,
-                              subgoalId: widget.subgoal.id,
-                              goalIndex: widget.goalIndex,
-                              subgoalIndex: widget.index,
-                              isCompleted: value!,
-                            );
-                      },
+                  Checkbox(
+                    value: widget.subgoal.status?.completed ?? false,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
                     ),
+                    onChanged: (value) {
+                      if (!context.mounted) {
+                        return;
+                      }
+
+                      ref
+                          .read(roadmapViewProvider(widget.roadmapId).notifier)
+                          .updateSubgoalStatus(
+                            goalId: widget.goalId,
+                            subgoalId: widget.subgoal.id,
+                            goalIndex: widget.goalIndex,
+                            subgoalIndex: widget.index,
+                            isCompleted: value!,
+                          );
+                    },
                   ),
                 Icon(
                   widget.isExpanded
@@ -185,7 +180,7 @@ class _EditableSubgoalCardState extends ConsumerState<EditableSubgoalCard> {
                   widget.subgoal.description,
                   maxLines: widget.isExpanded ? null : 1,
                   overflow: widget.isExpanded ? null : TextOverflow.ellipsis,
-                  style: textTheme.bodyMedium?.copyWith(),
+                  style: textTheme.bodyLarge?.copyWith(),
                 ),
               ],
             ),
@@ -198,7 +193,7 @@ class _EditableSubgoalCardState extends ConsumerState<EditableSubgoalCard> {
               if (widget.subgoal.resources.isNotEmpty) ...[
                 Text(
                   'Resources:',
-                  style: textTheme.bodyMedium?.copyWith(
+                  style: textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -207,7 +202,7 @@ class _EditableSubgoalCardState extends ConsumerState<EditableSubgoalCard> {
                   if (!resource.contains('http')) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 4, left: 8),
-                      child: Text(resource, style: textTheme.bodyMedium),
+                      child: Text(resource, style: textTheme.bodyLarge),
                     );
                   }
                   return Padding(
@@ -217,13 +212,13 @@ class _EditableSubgoalCardState extends ConsumerState<EditableSubgoalCard> {
                       children: [
                         Icon(
                           Icons.link,
-                          size: textTheme.bodyMedium?.fontSize,
-                          color: colorScheme.onPrimary,
+                          size: textTheme.titleSmall?.fontSize,
+                          color: colorScheme.primary,
                         ),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Link(
-                            uri: Uri.parse(resource),
+                            uri: Uri.parse(parseResource(resource)),
                             target: LinkTarget.blank,
                             builder: (context, followLink) => GestureDetector(
                               onTap: followLink,
@@ -300,5 +295,10 @@ class _EditableSubgoalCardState extends ConsumerState<EditableSubgoalCard> {
         ),
       ),
     );
+  }
+
+  String parseResource(String resource) {
+    final httpsIndex = resource.indexOf('https');
+    return resource.substring(httpsIndex, resource.length - 1);
   }
 }

@@ -1,10 +1,14 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
+import 'package:roadmap_ai/features/auth/domain/usecases/signup_user/signup_user.dart';
+import 'package:roadmap_ai/features/auth/presentation/providers/login/login_notifier.dart';
 import 'package:roadmap_ai/features/community/data/datasource/interface/post_datasource.dart';
+import 'package:roadmap_ai/features/community/data/models/post_metadata/post_metadata.dart';
 import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
 import 'package:roadmap_ai/features/community/domain/usecases/get_filtered_posts/get_filtered_posts.dart';
 import 'package:roadmap_ai/features/community/domain/usecases/get_posts_by_title/get_posts_by_title.dart';
+import 'package:roadmap_ai/features/community/domain/usecases/toggle_post_like/toggle_post_like.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/post_title/post_title_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/posts_filter/posts_filter_notifier.dart';
 
@@ -40,6 +44,8 @@ class PostsNotifier extends _$PostsNotifier {
   // rebuilds whenever the filter changes
   @override
   FutureOr<PostsState> build() async {
+    ref.watch(loginProvider);
+    ref.watch(signUpUserProvider);
     _limit = 10;
     _skip = 0;
     _hasMore = true;
@@ -48,10 +54,10 @@ class PostsNotifier extends _$PostsNotifier {
     Either<Failure, List<PostMetadata>> posts;
 
     // rebuilt when post title searched by user
-    final postTitle = ref.watch(postTitleNotifierProvider);
+    final postTitle = ref.watch(postTitleProvider);
 
     // rebuilt when filter added by user
-    final filter = ref.watch(postsFilterNotifierProvider);
+    final filter = ref.watch(postsFilterProvider);
 
     if (isTimeFilter(filter)) {
       posts = await ref
@@ -95,7 +101,7 @@ class PostsNotifier extends _$PostsNotifier {
   Future<void> getNextPage(String? title) async {
     if (!_hasMore) return;
     _skip += _limit;
-    final filter = ref.read(postsFilterNotifierProvider);
+    final filter = ref.read(postsFilterProvider);
     Either<Failure, List<PostMetadata>> posts;
     if (isTimeFilter(filter)) {
       posts = await ref
@@ -156,6 +162,44 @@ class PostsNotifier extends _$PostsNotifier {
         return PostTime.year;
       default:
         throw ArgumentError('Invalid filter: $filter');
+    }
+  }
+
+  void toggleLike(int index) async {
+    final postToToggleLike = _posts[index];
+    final postId = postToToggleLike.id;
+    // toggle like first, handle failure afterwards to reset
+    final originalLikeState = postToToggleLike.isLiked;
+
+    // change the state of the post to liked or unliked and increment or decrement like count
+    final modifiedPost =
+        $PostMetadataModelCopyWith<PostMetadata>(
+          PostMetadataModel.fromEntity(postToToggleLike),
+          (val) => val.toEntity(),
+        ).call(
+          isLiked: !originalLikeState,
+          likes: originalLikeState
+              ? postToToggleLike.likes - 1
+              : postToToggleLike.likes + 1,
+        );
+    _posts[index] = modifiedPost;
+
+    state = AsyncData(PostsState(hasMore: _hasMore, posts: _posts));
+
+    // send request to backend
+    final result = await ref
+        .read(togglePostLikeProvider)
+        .call(TogglePostParams(postId: postId))
+        .run();
+
+    // handle failure and reset the liked state of the post
+    if (result.isLeft()) {
+      _posts[index] = postToToggleLike;
+      result.mapLeft((failure) {
+        state = AsyncData(
+          PostsState(posts: _posts, hasMore: _hasMore, error: failure.message),
+        );
+      });
     }
   }
 

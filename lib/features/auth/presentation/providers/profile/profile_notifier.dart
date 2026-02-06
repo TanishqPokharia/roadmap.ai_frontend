@@ -5,7 +5,7 @@ import 'package:roadmap_ai/features/auth/domain/entities/user_details.dart';
 import 'package:roadmap_ai/features/auth/domain/usecases/get_user_details/get_user_details.dart';
 import 'package:roadmap_ai/features/auth/domain/usecases/update_user_avatar/update_user_avatar.dart';
 import 'package:roadmap_ai/features/auth/presentation/providers/login/login_notifier.dart';
-
+import 'package:roadmap_ai/features/auth/presentation/providers/signup/signup_notifier.dart';
 part 'profile_notifier.g.dart';
 
 class ProfileState {
@@ -19,7 +19,8 @@ class ProfileState {
 class ProfileNotifier extends _$ProfileNotifier {
   @override
   FutureOr<ProfileState> build() async {
-    ref.watch(loginNotifierProvider);
+    ref.watch(loginProvider);
+    ref.watch(signupProvider);
     final userDetails = await ref
         .read(getUserDetailsProvider)
         .call(NoParams())

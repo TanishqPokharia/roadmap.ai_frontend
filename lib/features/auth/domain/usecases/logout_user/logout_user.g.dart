@@ -6,22 +6,46 @@ part of 'logout_user.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$logoutUserHash() => r'f7de1befbf4392f667240f5aa9694106cefcd90a';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [logoutUser].
 @ProviderFor(logoutUser)
-final logoutUserProvider = Provider<LogoutUser>.internal(
-  logoutUser,
-  name: r'logoutUserProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$logoutUserHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final logoutUserProvider = LogoutUserProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LogoutUserRef = ProviderRef<LogoutUser>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class LogoutUserProvider
+    extends $FunctionalProvider<LogoutUser, LogoutUser, LogoutUser>
+    with $Provider<LogoutUser> {
+  LogoutUserProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'logoutUserProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$logoutUserHash();
+
+  @$internal
+  @override
+  $ProviderElement<LogoutUser> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  LogoutUser create(Ref ref) {
+    return logoutUser(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LogoutUser value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LogoutUser>(value),
+    );
+  }
+}
+
+String _$logoutUserHash() => r'f7de1befbf4392f667240f5aa9694106cefcd90a';

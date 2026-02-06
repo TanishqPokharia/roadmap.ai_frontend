@@ -6,22 +6,52 @@ part of 'saved_roadmaps_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$savedRoadmapsNotifierHash() =>
-    r'01b126a02b60d60e5f02742fc47c883e017f71d7';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [SavedRoadmapsNotifier].
 @ProviderFor(SavedRoadmapsNotifier)
-final savedRoadmapsNotifierProvider =
-    AsyncNotifierProvider<SavedRoadmapsNotifier, SavedRoadmapsState>.internal(
-      SavedRoadmapsNotifier.new,
-      name: r'savedRoadmapsNotifierProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$savedRoadmapsNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final savedRoadmapsProvider = SavedRoadmapsNotifierProvider._();
 
-typedef _$SavedRoadmapsNotifier = AsyncNotifier<SavedRoadmapsState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class SavedRoadmapsNotifierProvider
+    extends $AsyncNotifierProvider<SavedRoadmapsNotifier, SavedRoadmapsState> {
+  SavedRoadmapsNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'savedRoadmapsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$savedRoadmapsNotifierHash();
+
+  @$internal
+  @override
+  SavedRoadmapsNotifier create() => SavedRoadmapsNotifier();
+}
+
+String _$savedRoadmapsNotifierHash() =>
+    r'6bb2f7ef52be783d40c3ecd2a4ff11585ccb4bda';
+
+abstract class _$SavedRoadmapsNotifier
+    extends $AsyncNotifier<SavedRoadmapsState> {
+  FutureOr<SavedRoadmapsState> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref as $Ref<AsyncValue<SavedRoadmapsState>, SavedRoadmapsState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<SavedRoadmapsState>, SavedRoadmapsState>,
+              AsyncValue<SavedRoadmapsState>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

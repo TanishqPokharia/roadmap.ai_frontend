@@ -69,6 +69,12 @@ class _ProfilePopupMenuState extends State<ProfilePopupMenu> {
           onTap: _removeOverlay,
           child: Stack(
             children: [
+              // Dimmed background
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.black.withAlpha(150),
+              ),
               Positioned(
                 width: 280, // Increased width for better layout
                 right:

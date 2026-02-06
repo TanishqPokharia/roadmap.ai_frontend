@@ -6,6 +6,10 @@ import 'package:roadmap_ai/core/utils/failures.dart';
 abstract class RoadmapDatasource {
   TaskEither<Failure, RoadmapModel> getGeneratedRoadmap(String description);
   TaskEither<Failure, void> saveRoadmap(RoadmapModel roadmap);
+  TaskEither<Failure, void> savePostRoadmap(
+    RoadmapModel roadmap,
+    String postId,
+  );
   TaskEither<Failure, List<RoadmapMetadataModel>> getSavedRoadmaps(
     int limit,
     int skip,

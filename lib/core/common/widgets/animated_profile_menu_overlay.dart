@@ -80,7 +80,7 @@ class AnimatedMenuOverlayState extends ConsumerState<AnimatedProfileMenuOverlay>
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final profile = ref.watch(profileNotifierProvider);
+    final profile = ref.watch(profileProvider);
 
     return AnimatedBuilder(
       animation: _animationController,
@@ -95,15 +95,15 @@ class AnimatedMenuOverlayState extends ConsumerState<AnimatedProfileMenuOverlay>
         );
       },
       child: Material(
-        elevation: 8.0, // Increased elevation for a more prominent appearance
+        elevation: 12,
         shadowColor: Colors.black.withAlpha(50),
-        borderRadius: BorderRadius.circular(10), // Slightly rounded corners
+        borderRadius: BorderRadius.circular(10),
         color: theme.cardColor,
         child: profile.when(
           loading: () => _LoadingContent(),
           error: (error, stack) => _ErrorContent(
             error: error.toString(),
-            onRetry: () => ref.invalidate(profileNotifierProvider),
+            onRetry: () => ref.invalidate(profileProvider),
           ),
           data: (data) => _MenuContent(
             userDetails: data.userDetails,
@@ -122,7 +122,9 @@ class _LogoutAlertDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = context.colorScheme;
+    final theme = context.theme;
     return AlertDialog(
+      backgroundColor: theme.cardColor,
       icon: Icon(Icons.warning_outlined),
       iconColor: Colors.red,
       title: Text('Confirm Logout'),
@@ -137,7 +139,7 @@ class _LogoutAlertDialog extends ConsumerWidget {
         TextButton(
           onPressed: () {
             // Use mounted instead of context.mounted since we're in a StatefulWidget
-            ref.read(logoutNotifierProvider.notifier).logout();
+            ref.read(logoutProvider.notifier).logout();
             context.pop();
           },
           child: Text('Logout', style: TextStyle(color: colorScheme.error)),
@@ -270,7 +272,13 @@ class _MenuContent extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 24,
-                backgroundImage: NetworkImage(userDetails.avatarUrl),
+                backgroundImage: userDetails.avatarUrl != null
+                    ? NetworkImage(userDetails.avatarUrl!)
+                    : null,
+                backgroundColor: colorScheme.primary,
+                child: userDetails.avatarUrl == null
+                    ? Icon(Icons.person, color: Colors.white)
+                    : null,
               ),
               const SizedBox(width: 12),
               Expanded(

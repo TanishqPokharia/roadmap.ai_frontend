@@ -6,22 +6,46 @@ part of 'login_user.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loginUserHash() => r'6d186e90d0e691755ce38de2a257b96a4545d921';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [loginUser].
 @ProviderFor(loginUser)
-final loginUserProvider = Provider<LoginUser>.internal(
-  loginUser,
-  name: r'loginUserProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$loginUserHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final loginUserProvider = LoginUserProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LoginUserRef = ProviderRef<LoginUser>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class LoginUserProvider
+    extends $FunctionalProvider<LoginUser, LoginUser, LoginUser>
+    with $Provider<LoginUser> {
+  LoginUserProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'loginUserProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$loginUserHash();
+
+  @$internal
+  @override
+  $ProviderElement<LoginUser> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  LoginUser create(Ref ref) {
+    return loginUser(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LoginUser value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LoginUser>(value),
+    );
+  }
+}
+
+String _$loginUserHash() => r'6d186e90d0e691755ce38de2a257b96a4545d921';

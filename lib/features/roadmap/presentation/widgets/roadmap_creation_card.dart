@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -7,7 +10,9 @@ import 'package:roadmap_ai/features/roadmap/presentation/providers/roadmap/roadm
 import 'package:roadmap_ai/features/roadmap/presentation/widgets/hover_shadow.dart';
 
 class RoadmapCreationCard extends ConsumerStatefulWidget {
-  const RoadmapCreationCard({super.key});
+  const RoadmapCreationCard({super.key, required this.controller});
+
+  final TextEditingController controller;
 
   @override
   ConsumerState<RoadmapCreationCard> createState() =>
@@ -15,30 +20,92 @@ class RoadmapCreationCard extends ConsumerStatefulWidget {
 }
 
 class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
-  late TextEditingController _titleController;
-  late TextEditingController _descriptionController;
-
-  @override
-  void initState() {
-    super.initState();
-    _titleController = TextEditingController();
-    _descriptionController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = context.screenWidth;
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
     final theme = context.theme;
-    final roadmapProvider = ref.watch(roadmapNotifierProvider);
+    final roadmap = ref.watch(roadmapProvider);
+    if (!kIsWeb && Platform.isAndroid) {
+      return Card(
+        elevation: 10,
+        color: colorScheme.surface,
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            spacing: screenWidth * 0.03,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: screenWidth * 0.01,
+                children: [
+                  Text(
+                    'Description',
+                    style: textTheme.titleLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    textAlign: TextAlign.start,
+                    controller: widget.controller,
+                    maxLines: 17,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsetsDirectional.zero,
+                      border: OutlineInputBorder(borderSide: BorderSide.none),
+                      hintText: 'Describe your desired roadmap in detail',
+                      hintStyle: textTheme.bodyMedium?.copyWith(
+                        color: Colors.blueGrey.shade300,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Center(
+                child: switch (roadmap) {
+                  AsyncLoading() => SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      style: FilledButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      onPressed: () {},
+                      child: LoadingAnimationWidget.fourRotatingDots(
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                  _ => SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      onPressed: () {
+                        if (widget.controller.text.isNotEmpty) {
+                          ref
+                              .read(roadmapProvider.notifier)
+                              .getRoadmap(widget.controller.text);
+                        }
+                      },
+                      iconAlignment: IconAlignment.end,
+                      icon: Icon(Icons.auto_awesome_rounded),
+                      label: Text(
+                        'Generate Roadmap',
+                        style: textTheme.bodyLarge,
+                      ),
+                    ),
+                  ),
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     return Card(
       elevation: 10,
       color: theme.cardColor,
@@ -60,7 +127,7 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
                   ),
                 ),
                 TextField(
-                  controller: _descriptionController,
+                  controller: widget.controller,
                   maxLines: 5,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide.none),
@@ -74,7 +141,7 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
                 builder: (context, constraints) => SizedBox(
                   width: constraints.maxWidth * 0.2,
                   height: 50,
-                  child: switch (roadmapProvider) {
+                  child: switch (roadmap) {
                     AsyncLoading() => FilledButton(
                       onPressed: () {},
                       child: LoadingAnimationWidget.fourRotatingDots(
@@ -86,10 +153,10 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
                       shadowColor: colorScheme.primary.withAlpha(100),
                       child: FilledButton.icon(
                         onPressed: () {
-                          if (_descriptionController.text.isNotEmpty) {
+                          if (widget.controller.text.isNotEmpty) {
                             ref
-                                .read(roadmapNotifierProvider.notifier)
-                                .getRoadmap(_descriptionController.text);
+                                .read(roadmapProvider.notifier)
+                                .getRoadmap(widget.controller.text);
                           }
                         },
                         iconAlignment: IconAlignment.end,

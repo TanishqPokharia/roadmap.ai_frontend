@@ -10,7 +10,7 @@ _PostAuthorModel _$PostAuthorModelFromJson(Map<String, dynamic> json) =>
     _PostAuthorModel(
       username: json['username'] as String,
       email: json['email'] as String,
-      avatar: json['avatar'] as String,
+      avatar: json['avatar'] as String?,
       id: json['id'] as String,
     );
 

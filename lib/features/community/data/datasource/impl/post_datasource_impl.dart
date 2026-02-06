@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/dio/dio_provider.dart';
@@ -232,6 +231,22 @@ class PostDatasourceImpl implements PostDatasource {
       (error, stackTrace) => dataSourceErrorHandler(
         error: error,
         message: 'Fetching posts by title failed',
+      ),
+    );
+  }
+
+  @override
+  TaskEither<Failure, void> togglePostLike({required String postId}) {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.patch("/post/like/$postId");
+        if (response.statusCode != 200) {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Failed to toggle like',
       ),
     );
   }

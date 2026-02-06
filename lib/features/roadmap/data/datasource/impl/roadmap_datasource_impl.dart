@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/models/roadmap/roadmap.dart';
@@ -121,6 +120,28 @@ class RoadmapDatasourceImpl implements RoadmapDatasource {
       (error, stackTrace) => dataSourceErrorHandler(
         error: error,
         message: 'Could not update subgoal status',
+      ),
+    );
+  }
+
+  @override
+  TaskEither<Failure, void> savePostRoadmap(
+    RoadmapModel roadmap,
+    String postId,
+  ) {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.post(
+          "/roadmap/save/post",
+          data: {"roadmap": roadmap.toJson(), "postId": postId},
+        );
+        if (response.statusCode != 200) {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Failed to save post roadmap',
       ),
     );
   }

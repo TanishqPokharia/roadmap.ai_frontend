@@ -9,7 +9,7 @@ abstract class PostAuthorModel with _$PostAuthorModel {
   factory PostAuthorModel({
     required String username,
     required String email,
-    required String avatar,
+    required String? avatar,
     required String id,
   }) = _PostAuthorModel;
 

@@ -9,7 +9,7 @@ abstract class UserDetailsModel with _$UserDetailsModel {
   factory UserDetailsModel({
     required String username,
     required String email,
-    required String avatarUrl,
+    required String? avatarUrl,
   }) = _UserDetailsModel;
 
   factory UserDetailsModel.fromJson(Map<String, dynamic> json) =>

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 
@@ -64,36 +65,32 @@ class _WebTopNavigationWidgetState extends State<WebTopNavigationWidget> {
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
         onTap: () => widget.onItemSelected(),
-        child: Row(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          spacing: _isHovered && !widget.isSelected ? 5 : 10,
           children: [
-            AnimatedDefaultTextStyle(
-              curve: Curves.ease,
-              duration: Durations.short4,
+            Text(
+              widget.title,
               style: widget.isSelected
                   ? textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold)
-                  : _isHovered
-                  ? textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w600)
                   : textTheme.titleSmall!,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                spacing: _isHovered && !widget.isSelected ? 5 : 10,
-                children: [
-                  Text(widget.title),
-                  if (widget.isSelected)
-                    Container(
-                      width: widget.title.length * 8.0,
-                      height: 2,
-                      color: context.colorScheme.primary,
-                    ),
-                  if (_isHovered && !widget.isSelected)
-                    Container(
-                      width: widget.title.length * 8.0,
-                      height: 2,
-                      color: context.colorScheme.primary.withAlpha(128),
-                    ),
-                ],
-              ),
             ),
+            AnimatedContainer(
+              duration: Durations.medium1,
+              width: widget.title.length * 8.0,
+              height: widget.isSelected ? 2 : 0,
+              color: context.colorScheme.primary,
+            ),
+
+            if (_isHovered && !widget.isSelected)
+              Animate(
+                effects: [ScaleEffect(duration: Durations.medium1)],
+                child: Container(
+                  width: widget.title.length * 8.0,
+                  height: 2,
+                  color: context.colorScheme.primary,
+                ),
+              ),
           ],
         ),
       ),
