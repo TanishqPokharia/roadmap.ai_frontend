@@ -30,21 +30,22 @@ class PostTile extends ConsumerWidget {
     final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
     final theme = context.theme;
+    final colorScheme = context.colorScheme;
 
     if (!kIsWeb && Platform.isAndroid) {
       return Animate(
         effects: animate
             ? [
-                FadeEffect(
-                  delay: Duration(milliseconds: 200 * index),
-                  duration: Duration(seconds: 1, milliseconds: 500),
-                ),
+                // FadeEffect(
+                //   delay: Duration(milliseconds: 200 * index),
+                //   duration: Duration(milliseconds: 500),
+                // ),
                 SlideEffect(
                   delay: Duration(milliseconds: 100 * index),
                   duration: Durations.extralong2,
                   begin: index % 2 == 0 ? Offset(-1, 0) : Offset(1, 0),
                   end: Offset(0, 0),
-                  curve: Curves.fastEaseInToSlowEaseOut,
+                  curve: Curves.ease,
                 ),
               ]
             : [],
@@ -66,9 +67,7 @@ class PostTile extends ConsumerWidget {
                   children: [
                     Text(
                       'Created by  ',
-                      style: textTheme.bodyMedium!.copyWith(
-                        color: Colors.blueGrey.shade300,
-                      ),
+                      style: textTheme.bodyMedium!.copyWith(),
                     ),
                     SizedBox(width: screenWidth * 0.005),
                     CircleAvatar(
@@ -83,8 +82,7 @@ class PostTile extends ConsumerWidget {
                     Text(
                       '  ${post.author.username}',
                       style: textTheme.bodyMedium!.copyWith(
-                        color: Colors.blueGrey,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
@@ -93,7 +91,8 @@ class PostTile extends ConsumerWidget {
                 Text(
                   'On ${formatDate(post.createdAt)}',
                   style: textTheme.bodyMedium!.copyWith(
-                    color: Colors.blueGrey.shade300,
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: 20),
@@ -137,9 +136,7 @@ class PostTile extends ConsumerWidget {
                   width: screenWidth - 50,
                   child: Text(
                     post.description,
-                    style: textTheme.bodyMedium?.copyWith(
-                      color: Colors.blueGrey.shade300,
-                    ),
+                    style: textTheme.bodyMedium?.copyWith(),
                     maxLines: 5,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -174,13 +171,6 @@ class PostTile extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    // PostLikeButton(
-                    //   likes: post.likes,
-                    //   onLike: () {
-                    //     ref.read(postsProvider.notifier).toggleLike(index);
-                    //   },
-                    //   isLiked: post.isLiked,
-                    // ),
                     SizedBox(width: screenHeight * 0.01),
                     FilledButton(
                       onPressed: () {
@@ -192,14 +182,7 @@ class PostTile extends ConsumerWidget {
                           },
                         );
                       },
-
-                      child: Text(
-                        'View',
-                        style: textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: Text('View'),
                     ),
                   ],
                 ),
@@ -241,12 +224,7 @@ class PostTile extends ConsumerWidget {
               SizedBox(height: screenHeight * 0.005),
               Row(
                 children: [
-                  Text(
-                    'Created by',
-                    style: textTheme.bodyLarge!.copyWith(
-                      color: Colors.blueGrey.shade300,
-                    ),
-                  ),
+                  Text('Created by', style: textTheme.bodyLarge!.copyWith()),
                   SizedBox(width: screenWidth * 0.005),
                   CircleAvatar(
                     radius: screenHeight * 0.02,

@@ -34,16 +34,16 @@ class SavedRoadmapTile extends StatelessWidget {
       return Animate(
         effects: animate
             ? [
-                FadeEffect(
-                  delay: Duration(milliseconds: 200 * index),
-                  duration: Duration(seconds: 1, milliseconds: 500),
-                ),
+                // FadeEffect(
+                //   delay: Duration(milliseconds: 200 * index),
+                //   duration: Duration(milliseconds: 500),
+                // ),
                 SlideEffect(
                   delay: Duration(milliseconds: 100 * index),
                   duration: Durations.extralong2,
                   begin: index % 2 == 0 ? Offset(-1, 0) : Offset(1, 0),
                   end: Offset(0, 0),
-                  curve: Curves.fastEaseInToSlowEaseOut,
+                  curve: Curves.ease,
                 ),
               ]
             : [],
@@ -111,7 +111,10 @@ class SavedRoadmapTile extends StatelessWidget {
                 ),
                 Text(
                   'Contains ${roadmap.goalsCount} goals',
-                  style: textTheme.bodySmall!.copyWith(color: Colors.blueGrey),
+                  style: textTheme.bodySmall!.copyWith(
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Row(
                   spacing: 10,
@@ -126,13 +129,7 @@ class SavedRoadmapTile extends StatelessWidget {
                           pathParameters: {'roadmapId': roadmap.id},
                         );
                       },
-                      child: Text(
-                        'View',
-                        style: textTheme.bodySmall!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: Text('View'),
                     ),
                     if (roadmap.postId == null)
                       Consumer(
@@ -150,32 +147,20 @@ class SavedRoadmapTile extends StatelessWidget {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 10,
+                              ),
+                              child: Text(
+                                'Post',
+                                style: textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              child: Text('Post', style: textTheme.bodySmall),
                             ),
                           );
                         },
                       )
                     // show a posted chip
                     else
-                      Chip(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        label: Text(
-                          'Posted',
-                          style: textTheme.bodySmall!.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        backgroundColor: colorScheme.primary,
-                      ),
+                      FilledButton(onPressed: null, child: Text('Posted')),
                   ],
                 ),
               ],

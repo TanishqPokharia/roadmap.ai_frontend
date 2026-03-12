@@ -18,16 +18,10 @@ class PostViewsWidget extends StatelessWidget {
       return Row(
         spacing: 4,
         children: [
-          Icon(
-            Icons.visibility_outlined,
-            color: Colors.blueGrey.shade300,
-            size: 12,
-          ),
+          Icon(Icons.visibility_outlined, size: 16),
           Text(
             '$views views',
-            style: textTheme.bodySmall?.copyWith(
-              color: Colors.blueGrey.shade300,
-            ),
+            style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
       );

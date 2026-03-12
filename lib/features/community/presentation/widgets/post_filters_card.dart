@@ -5,6 +5,7 @@ import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/core/utils/debouncer.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/post_title/post_title_notifier.dart';
+import 'package:roadmap_ai/features/community/presentation/providers/posts/posts_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/posts_filter/posts_filter_notifier.dart';
 
 final postFilterChipMap = {
@@ -53,9 +54,9 @@ class _PostFiltersCardState extends ConsumerState<PostFiltersCard> {
         width: widget.width,
         child: Card(
           color: colorScheme.surface,
-          elevation: 10,
+          elevation: 0,
           child: Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -92,7 +93,7 @@ class _PostFiltersCardState extends ConsumerState<PostFiltersCard> {
                     ),
                   ),
                 ),
-                SizedBox(height: screenWidth * 0.01),
+                SizedBox(height: screenWidth * 0.05),
                 Text(
                   'Sort by',
                   style: textTheme.bodyMedium!.copyWith(
@@ -102,7 +103,7 @@ class _PostFiltersCardState extends ConsumerState<PostFiltersCard> {
                 SizedBox(height: screenHeight * 0.01),
                 Wrap(
                   spacing: 10,
-                  runSpacing: 20,
+                  runSpacing: 10,
                   children: postFilterChipMap.entries
                       .map(
                         (e) => SizedBox(
@@ -112,7 +113,11 @@ class _PostFiltersCardState extends ConsumerState<PostFiltersCard> {
                             label: Text(e.value),
                             selected: ref.watch(postsFilterProvider) == e.key,
                             onSelected: (selected) {
+                              if (ref.read(postsProvider).isLoading) {
+                                return;
+                              }
                               widget.onFilterChange();
+
                               ref
                                   .read(postsFilterProvider.notifier)
                                   .setFilter(e.key);

@@ -48,151 +48,223 @@ class ProfilePage extends ConsumerWidget {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      ClipOval(
-                        child: SizedBox(
-                          width: screenHeight * 0.25,
-                          height: screenHeight * 0.25,
-                          child: Stack(
-                            children: [
-                              // Main avatar image
-                              Container(
+                      Row(
+                        spacing: 10,
+                        children: [
+                          Expanded(
+                            child: Divider(
+                              color: colorScheme.primary,
+                              thickness: 10,
+                              radius: BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                bottomRight: Radius.circular(10),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: colorScheme.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: ClipOval(
+                              child: SizedBox(
                                 width: screenHeight * 0.25,
                                 height: screenHeight * 0.25,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: colorScheme.primary.withAlpha(50),
-                                    width: 5,
-                                  ),
-                                  color: colorScheme.primary,
-                                  image: details.avatarUrl != null
-                                      ? DecorationImage(
-                                          image: NetworkImage(
-                                            details.avatarUrl!,
-                                          ),
-                                          fit: BoxFit.cover,
-                                        )
-                                      : null,
-                                ),
-                                child: details.avatarUrl == null
-                                    ? Icon(
-                                        Icons.person,
-                                        color: Colors.white,
-                                        size: screenHeight * 0.1,
-                                      )
-                                    : null,
-                              ),
-                              // Bottom overlay container
-                              Positioned(
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
-                                child: Container(
-                                  height: screenHeight * 0.25 * 0.2,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withAlpha(150),
-                                    borderRadius: const BorderRadius.only(
-                                      bottomLeft: Radius.circular(100),
-                                      bottomRight: Radius.circular(100),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.camera_alt,
-                                        color: Colors.white,
-                                        size: 20,
+                                child: Stack(
+                                  children: [
+                                    // Main avatar image
+                                    Container(
+                                      width: screenHeight * 0.25,
+                                      height: screenHeight * 0.25,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: colorScheme.primary,
+                                        image: details.avatarUrl != null
+                                            ? DecorationImage(
+                                                image: NetworkImage(
+                                                  details.avatarUrl!,
+                                                ),
+                                                fit: BoxFit.cover,
+                                              )
+                                            : null,
                                       ),
-                                      onPressed: () async {
-                                        final result = await FilePicker.platform
-                                            .pickFiles(type: FileType.image);
-                                        if (result != null) {
-                                          profileNotifier.changeAvatar(result);
-                                        }
-                                      },
+                                      child: details.avatarUrl == null
+                                          ? Icon(
+                                              Icons.person,
+                                              color: Colors.white,
+                                              size: screenHeight * 0.1,
+                                            )
+                                          : null,
                                     ),
-                                  ),
+                                    // Bottom overlay container
+                                    Positioned(
+                                      bottom: 0,
+                                      left: 0,
+                                      right: 0,
+                                      child: Container(
+                                        height: screenHeight * 0.25 * 0.2,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withAlpha(150),
+                                          borderRadius: const BorderRadius.only(
+                                            bottomLeft: Radius.circular(100),
+                                            bottomRight: Radius.circular(100),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.camera_alt,
+                                              color: Colors.white,
+                                              size: 20,
+                                            ),
+                                            onPressed: () async {
+                                              final result = await FilePicker
+                                                  .platform
+                                                  .pickFiles(
+                                                    type: FileType.image,
+                                                  );
+                                              if (result != null) {
+                                                profileNotifier.changeAvatar(
+                                                  result,
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
+                            ),
                           ),
+                          Expanded(
+                            child: Divider(
+                              color: colorScheme.primary,
+                              thickness: 10,
+                              radius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        details.username,
+                        style: textTheme.headlineMedium?.copyWith(
+                          color: colorScheme.primary,
                         ),
                       ),
+                      SizedBox(height: 10),
+                      Text(
+                        details.email,
+                        style: textTheme.headlineSmall?.copyWith(),
+                      ),
                       SizedBox(height: 40),
-                      ProfileField(icon: Icons.person, text: details.username),
-                      SizedBox(height: 20),
-                      ProfileField(icon: Icons.email, text: details.email),
-                      SizedBox(height: 40),
-                      Text('Account Stats', style: textTheme.titleLarge),
-                      SizedBox(height: 40),
-                      Padding(
-                        padding: EdgeInsetsGeometry.only(
-                          left: 20,
-                          right: 20,
-                          bottom: 10,
+                      Container(
+                        decoration: BoxDecoration(
+                          color: colorScheme.primary,
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        child: userPostsStats.maybeWhen(
-                          data: (posts) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              spacing: 20,
+                        padding: EdgeInsets.all(4),
+                        margin: EdgeInsets.all(20),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 10),
+                            Row(
+                              spacing: 10,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Expanded(
-                                  child: PostStatCard(
-                                    icon: Icons.article,
-                                    value: posts.totalPosts,
-                                    label: 'Posts',
-                                    textStyle: textTheme.bodyLarge,
+                                Icon(
+                                  Icons.pie_chart,
+                                  color: colorScheme.onPrimary,
+                                ),
+                                Text(
+                                  'Account Stats',
+                                  style: textTheme.titleLarge?.copyWith(
+                                    color: colorScheme.onPrimary,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                Expanded(
-                                  child: PostStatCard(
-                                    icon: Icons.visibility,
-                                    value: posts.totalViews,
-                                    label: 'Total Views',
-                                    textStyle: textTheme.bodyLarge,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: PostStatCard(
-                                    icon: Icons.favorite,
-                                    value: posts.totalLikes,
-                                    label: 'Total Likes',
-                                    textStyle: textTheme.bodyLarge,
-                                  ),
+                                Icon(
+                                  Icons.stacked_line_chart,
+                                  color: colorScheme.onPrimary,
                                 ),
                               ],
-                            );
-                          },
-                          orElse: () {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              spacing: 20,
-                              children: [
-                                Expanded(
-                                  child: PostStatCard(
-                                    icon: Icons.article,
-                                    value: null,
-                                    label: 'Posts',
-                                  ),
-                                ),
-                                Expanded(
-                                  child: PostStatCard(
-                                    icon: Icons.visibility,
-                                    value: null,
-                                    label: 'Total Views',
-                                  ),
-                                ),
-                                Expanded(
-                                  child: PostStatCard(
-                                    icon: Icons.favorite,
-                                    value: null,
-                                    label: 'Total Likes',
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
+                            ),
+                            SizedBox(height: 20),
+                            Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: userPostsStats.maybeWhen(
+                                data: (posts) {
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    spacing: 20,
+                                    children: [
+                                      Expanded(
+                                        child: PostStatCard(
+                                          icon: Icons.article,
+                                          value: posts.totalPosts,
+                                          label: 'Posts',
+                                          textStyle: textTheme.bodyLarge,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: PostStatCard(
+                                          icon: Icons.visibility,
+                                          value: posts.totalViews,
+                                          label: 'Total Views',
+                                          textStyle: textTheme.bodyLarge,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: PostStatCard(
+                                          icon: Icons.favorite,
+                                          value: posts.totalLikes,
+                                          label: 'Total Likes',
+                                          textStyle: textTheme.bodyLarge,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                                orElse: () {
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    spacing: 20,
+                                    children: [
+                                      Expanded(
+                                        child: PostStatCard(
+                                          icon: Icons.article,
+                                          value: null,
+                                          label: 'Posts',
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: PostStatCard(
+                                          icon: Icons.visibility,
+                                          value: null,
+                                          label: 'Total Views',
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: PostStatCard(
+                                          icon: Icons.favorite,
+                                          value: null,
+                                          label: 'Total Likes',
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -224,6 +296,7 @@ class ProfilePage extends ConsumerWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6),
                   color: colorScheme.surface,
+                  border: Border.all(color: colorScheme.primary, width: 2),
                 ),
                 padding: EdgeInsets.all(8),
                 child: Row(
@@ -331,7 +404,13 @@ class ProfilePage extends ConsumerWidget {
                   onPressed: () {
                     ref.read(logoutProvider.notifier).logout();
                   },
-                  child: Text('Logout', style: textTheme.bodyLarge),
+                  child: Text(
+                    'Logout',
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ],

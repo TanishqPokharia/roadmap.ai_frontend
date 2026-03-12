@@ -1,8 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
@@ -19,7 +22,6 @@ class RoadmapViewPage extends ConsumerWidget {
     final roadmapView = roadmapViewProvider(roadmapId);
 
     return Scaffold(
-      appBar: AppBar(),
       body: ref
           .watch(roadmapView)
           .when(
@@ -101,44 +103,70 @@ class _ErrorContent extends StatelessWidget {
   }
 }
 
-class _RoadmapContent extends ConsumerWidget {
+class _RoadmapContent extends ConsumerStatefulWidget {
   final String roadmapId;
   final Roadmap roadmap;
 
   const _RoadmapContent({required this.roadmapId, required this.roadmap});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_RoadmapContent> createState() => _RoadmapContentState();
+}
+
+class _RoadmapContentState extends ConsumerState<_RoadmapContent> {
+  late bool _showTree;
+
+  @override
+  void initState() {
+    super.initState();
+    _showTree = false;
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() {
+          _showTree = true;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
 
     if (!kIsWeb && Platform.isAndroid) {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: screenHeight * 0.02),
-            Text(
-              roadmap.title,
-              style: textTheme.titleLarge!.copyWith(
-                fontWeight: FontWeight.bold,
+      return SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 50),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () => context.pop(),
+                    icon: Icon(Icons.arrow_back_ios),
+                  ),
+                  Expanded(
+                    child: Text(
+                      widget.roadmap.title,
+                      style: textTheme.titleLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'View roadmap details',
-              style: textTheme.bodySmall!.copyWith(color: Colors.blueGrey),
-            ),
-            SizedBox(height: screenHeight * 0.03),
-            Expanded(
-              child: EditableRoadmapTree(
-                roadmap: roadmap,
-                isProgressEditable: true,
-              ),
-            ),
-          ],
+              if (_showTree)
+                EditableRoadmapTree(
+                  roadmap: widget.roadmap,
+                  isProgressEditable: true,
+                  shrinkWrap: true,
+                ),
+            ],
+          ),
         ),
       );
     }
@@ -150,7 +178,7 @@ class _RoadmapContent extends ConsumerWidget {
         children: [
           SizedBox(height: screenHeight * 0.02),
           Text(
-            roadmap.title,
+            widget.roadmap.title,
             style: textTheme.headlineMedium!.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -160,12 +188,13 @@ class _RoadmapContent extends ConsumerWidget {
             style: textTheme.bodyLarge!.copyWith(color: Colors.blueGrey),
           ),
           SizedBox(height: screenHeight * 0.03),
-          Expanded(
-            child: EditableRoadmapTree(
-              roadmap: roadmap,
-              isProgressEditable: true,
+          if (_showTree)
+            Expanded(
+              child: EditableRoadmapTree(
+                roadmap: widget.roadmap,
+                isProgressEditable: true,
+              ),
             ),
-          ),
         ],
       ),
     );

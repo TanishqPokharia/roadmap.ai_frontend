@@ -115,12 +115,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                         },
                         iconAlignment: IconAlignment.end,
                         icon: Icon(Icons.publish),
-                        label: Text(
-                          'Publish',
-                          style: textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        label: Text('Publish'),
                       ),
                     ),
                   ),

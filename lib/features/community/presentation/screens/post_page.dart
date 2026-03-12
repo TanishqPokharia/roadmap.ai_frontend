@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:roadmap_ai/core/common/toast/error.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
@@ -50,11 +51,22 @@ class PostPage extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 20),
-                      Text(
-                        title,
-                        style: textTheme.headlineMedium!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.arrow_back_ios),
+                            onPressed: () => context.pop(),
+                          ),
+                          Expanded(
+                            child: Text(
+                              title,
+                              style: textTheme.headlineSmall!.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 20),
                       Column(
@@ -65,7 +77,6 @@ class PostPage extends ConsumerWidget {
                               Text(
                                 'Posted by ',
                                 style: textTheme.bodyLarge!.copyWith(
-                                  color: Colors.blueGrey.shade300,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -96,8 +107,8 @@ class PostPage extends ConsumerWidget {
                           Text(
                             'on ${formatDate(data.postDetails.post.createdAt)}',
                             style: textTheme.bodyLarge!.copyWith(
-                              color: Colors.blueGrey.shade300,
                               fontWeight: FontWeight.bold,
+                              color: colorScheme.primary,
                             ),
                           ),
                           SizedBox(height: 20),
@@ -133,7 +144,6 @@ class PostPage extends ConsumerWidget {
                               Text(
                                 data.postDetails.post.likes.toString(),
                                 style: textTheme.bodyMedium!.copyWith(
-                                  color: Colors.blueGrey.shade300,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -158,7 +168,6 @@ class PostPage extends ConsumerWidget {
                                 Text(
                                   'Saved',
                                   style: textTheme.bodyMedium!.copyWith(
-                                    color: Colors.blueGrey,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -193,7 +202,6 @@ class PostPage extends ConsumerWidget {
                                 Text(
                                   'Save',
                                   style: textTheme.bodyMedium!.copyWith(
-                                    color: Colors.blueGrey.shade300,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -206,9 +214,7 @@ class PostPage extends ConsumerWidget {
                         child: SizedBox(
                           child: Text(
                             data.postDetails.post.description,
-                            style: textTheme.titleMedium?.copyWith(
-                              color: Colors.blueGrey.shade300,
-                            ),
+                            style: textTheme.titleMedium?.copyWith(),
                             textAlign: TextAlign.justify,
                           ),
                         ),

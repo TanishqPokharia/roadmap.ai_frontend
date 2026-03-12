@@ -32,7 +32,7 @@ class _GoalNodeMobileState extends State<GoalNodeMobile> {
     final colorScheme = context.colorScheme;
 
     return Card(
-      color: colorScheme.surface,
+      color: colorScheme.primaryContainer,
       margin: EdgeInsets.only(bottom: 16),
       child: Column(
         children: [
@@ -50,7 +50,7 @@ class _GoalNodeMobileState extends State<GoalNodeMobile> {
                     child: Text(
                       '${widget.index + 1}',
                       style: textTheme.labelLarge?.copyWith(
-                        color: Colors.white,
+                        color: colorScheme.primaryContainer,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -62,7 +62,7 @@ class _GoalNodeMobileState extends State<GoalNodeMobile> {
                       widget.goal.title,
                       style: textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: colorScheme.primaryContainer,
+                        color: colorScheme.primary,
                       ),
                     ),
                   ),

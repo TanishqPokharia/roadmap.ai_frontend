@@ -77,9 +77,7 @@ class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage> {
                 ),
                 Text(
                   'Generate AI-powered roadmaps for any skill or goal within seconds',
-                  style: textTheme.bodyLarge!.copyWith(
-                    color: Colors.blueGrey.shade300,
-                  ),
+                  style: textTheme.bodyLarge!.copyWith(),
                 ),
               ],
             ),
@@ -106,9 +104,7 @@ class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage> {
                         ),
                         Text(
                           "${roadmap.value?.description}",
-                          style: textTheme.titleSmall!.copyWith(
-                            color: Colors.blueGrey.shade300,
-                          ),
+                          style: textTheme.titleMedium!.copyWith(),
                         ),
                         Animate(
                           effects: [
@@ -153,21 +149,19 @@ class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage> {
                                   FilledButton.icon(
                                     onPressed: null,
                                     style: FilledButton.styleFrom(
-                                      backgroundColor: colorScheme.primary,
                                       disabledBackgroundColor:
                                           colorScheme.primary,
                                     ),
                                     label: Text(
                                       'Saved',
                                       style: textTheme.bodyMedium!.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                                        color: colorScheme.onPrimary,
                                       ),
                                     ),
 
                                     icon: Icon(
                                       Icons.check_circle_rounded,
-                                      color: Colors.white,
+                                      color: colorScheme.onPrimary,
                                     ),
                                     iconAlignment: IconAlignment.end,
                                   ),

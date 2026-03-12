@@ -61,9 +61,7 @@ class YourPostsPage extends ConsumerWidget {
                     ),
                     Text(
                       'Manage and track your published roadmaps',
-                      style: textTheme.bodyLarge!.copyWith(
-                        color: Colors.blueGrey.shade300,
-                      ),
+                      style: textTheme.bodyLarge!.copyWith(),
                     ),
                   ],
                 ),
@@ -148,7 +146,7 @@ class YourPostsPage extends ConsumerWidget {
                               return ListView.separated(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                padding: EdgeInsets.only(bottom: 100),
+                                padding: EdgeInsets.only(bottom: 100, top: 10),
                                 separatorBuilder: (context, index) =>
                                     SizedBox(height: screenHeight * 0.03),
                                 itemCount: sortedPosts.length,

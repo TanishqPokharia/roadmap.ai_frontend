@@ -64,7 +64,7 @@ class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage> {
                 ),
                 Text(
                   'Roadmaps you\'ve created or saved',
-                  style: textTheme.bodyLarge!.copyWith(color: Colors.blueGrey),
+                  style: textTheme.bodyLarge!.copyWith(),
                 ),
               ],
             ),

@@ -30,7 +30,7 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
     if (!kIsWeb && Platform.isAndroid) {
       return Card(
         elevation: 10,
-        color: colorScheme.surface,
+        color: colorScheme.surfaceContainer,
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Column(
@@ -56,9 +56,7 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
                       contentPadding: EdgeInsetsDirectional.zero,
                       border: OutlineInputBorder(borderSide: BorderSide.none),
                       hintText: 'Describe your desired roadmap in detail',
-                      hintStyle: textTheme.bodyMedium?.copyWith(
-                        color: Colors.blueGrey.shade300,
-                      ),
+                      hintStyle: textTheme.bodyMedium?.copyWith(),
                     ),
                   ),
                 ],
@@ -95,7 +93,10 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
                       icon: Icon(Icons.auto_awesome_rounded),
                       label: Text(
                         'Generate Roadmap',
-                        style: textTheme.bodyLarge,
+                        style: textTheme.bodyLarge?.copyWith(
+                          color: colorScheme.onPrimary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

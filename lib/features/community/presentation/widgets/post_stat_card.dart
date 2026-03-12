@@ -36,7 +36,7 @@ class _PostStatCardState extends State<PostStatCard> {
       return Container(
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: theme.cardColor,
+          color: colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -50,7 +50,11 @@ class _PostStatCardState extends State<PostStatCard> {
                 : Text('-'),
             Text(
               widget.label,
-              style: textTheme.bodySmall?.copyWith(color: colorScheme.primary),
+              textAlign: TextAlign.center,
+              style: textTheme.labelMedium?.copyWith(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),

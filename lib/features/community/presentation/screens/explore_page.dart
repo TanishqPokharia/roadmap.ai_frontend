@@ -39,7 +39,8 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
         floatingActionButton: Padding(
           padding: EdgeInsetsGeometry.only(bottom: 20),
           child: FloatingActionButton(
-            backgroundColor: colorScheme.secondary,
+            backgroundColor: colorScheme.primaryContainer,
+            foregroundColor: colorScheme.primary,
             onPressed: () {
               showModalBottomSheet(
                 context: context,
@@ -79,9 +80,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                   ),
                   Text(
                     'Explore community created roadmaps',
-                    style: textTheme.bodyLarge!.copyWith(
-                      color: Colors.blueGrey.shade300,
-                    ),
+                    style: textTheme.bodyLarge!.copyWith(),
                   ),
                 ],
               ),
@@ -98,6 +97,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                       onRefresh: () => ref.refresh(postsProvider.future),
                       child: ListView.builder(
                         itemCount: data.posts.length,
+                        padding: EdgeInsets.only(bottom: 100, top: 50),
                         itemBuilder: (context, index) => Padding(
                           padding: EdgeInsets.only(bottom: 40),
                           child: PostTile(

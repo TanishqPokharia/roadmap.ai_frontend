@@ -23,7 +23,7 @@ class ProfileField extends StatelessWidget {
         width: double.infinity,
         margin: EdgeInsets.symmetric(horizontal: 40),
         decoration: BoxDecoration(
-          border: Border.all(color: context.colorScheme.primary, width: 1),
+          border: Border.all(color: context.colorScheme.primary, width: 2),
           borderRadius: BorderRadius.circular(8),
         ),
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),

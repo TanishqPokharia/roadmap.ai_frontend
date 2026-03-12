@@ -31,11 +31,7 @@ class _YourPostTileState extends State<YourPostTile> {
 
     if (!kIsWeb && Platform.isAndroid) {
       return Container(
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: theme.cardColor,
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
         child: Row(
           spacing: screenWidth * 0.03,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,9 +49,7 @@ class _YourPostTileState extends State<YourPostTile> {
                   SizedBox(height: screenHeight * 0.01),
                   Text(
                     'Posted on ${_formatDate(widget.post.createdAt)}',
-                    style: textTheme.bodyMedium!.copyWith(
-                      color: Colors.blueGrey.shade300,
-                    ),
+                    style: textTheme.bodyMedium!.copyWith(),
                   ),
                   SizedBox(height: 10),
 
@@ -106,26 +100,17 @@ class _YourPostTileState extends State<YourPostTile> {
                       SizedBox(width: screenHeight * 0.01),
                       PostLikesWidget(likes: widget.post.likes),
                       Spacer(),
-                      SizedBox(
-                        height: screenHeight * 0.035,
-                        child: FilledButton(
-                          onPressed: () {
-                            context.goNamed(
-                              AppRoutes.post,
-                              pathParameters: {
-                                'postId': widget.post.id,
-                                'title': widget.post.title,
-                              },
-                            );
-                          },
-                          child: Text(
-                            'View',
-                            style: textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                      FilledButton(
+                        onPressed: () {
+                          context.goNamed(
+                            AppRoutes.post,
+                            pathParameters: {
+                              'postId': widget.post.id,
+                              'title': widget.post.title,
+                            },
+                          );
+                        },
+                        child: Text('View'),
                       ),
                     ],
                   ),

@@ -78,158 +78,156 @@ class _AuthPageState extends ConsumerState<AuthPage> {
 
     if (!kIsWeb && Platform.isAndroid) {
       return Scaffold(
-        body: SafeArea(
-          child: Stack(
-            children: [
-              Animate(
-                effects: [FadeEffect(delay: Durations.medium2)],
-                child: Positioned(
-                  top: -100,
-                  left: -100,
-                  child: Container(
-                    width: 250,
-                    height: 250,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colorScheme.secondary.withAlpha(50),
-                    ),
-                  ),
-                ),
-              ),
-              // Animate(
-              //   effects: [FadeEffect(delay: Durations.long2)],
-              //   child: Positioned(
-              //     bottom: 50,
-              //     left: -350,
-              //     child: Container(
-              //       width: 400,
-              //       height: 400,
-              //       decoration: BoxDecoration(
-              //         shape: BoxShape.circle,
-              //         color: colorScheme.secondary.withAlpha(50),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              Animate(
-                effects: [FadeEffect(delay: Durations.medium4)],
-                child: Positioned(
-                  top: 200,
-                  right: -350,
-                  child: Container(
-                    width: 400,
-                    height: 400,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colorScheme.secondary.withAlpha(50),
-                    ),
-                  ),
-                ),
-              ),
-
-              Positioned(
-                top: screenHeight / 4,
-                right: screenWidth / 2.8,
-                child: Stack(
+        body: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: AlignmentGeometry.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [colorScheme.primaryContainer, colorScheme.primary],
+            ),
+          ),
+          child: SizedBox(
+            height: screenHeight,
+            child: SingleChildScrollView(
+              physics: ClampingScrollPhysics(),
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadiusGeometry.circular(60),
-                      child: Image.asset('assets/icon/icon.png', height: 100),
+                    SizedBox(height: 60),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Animate(
+                          onComplete: (controller) {
+                            setState(() {
+                              _showTaglines = true;
+                            });
+                          },
+                          effects: [
+                            FadeEffect(
+                              duration: Durations.extralong4,
+                              curve: Curves.ease,
+                            ),
+                            MoveEffect(
+                              duration: Durations.extralong4,
+                              begin: Offset(-20, 0),
+                              end: Offset(0, 0),
+                              curve: Curves.ease,
+                            ),
+                          ],
+                          child: Row(
+                            spacing: 10,
+                            children: [
+                              Stack(
+                                alignment: AlignmentGeometry.bottomRight,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 20),
+                                    child: Image.asset(
+                                      "assets/roadmap.png",
+                                      height: 60,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Image.asset(
+                                      "assets/generate.png",
+                                      height: 30,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  text: 'Roadmap',
+                                  style: textTheme.displayMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: '.ai',
+                                      style: textTheme.displayMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: colorScheme.primary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    ClipRRect(
-                      borderRadius: BorderRadiusGeometry.circular(60),
-                      child: Container(
-                        height: 100,
-                        width: 100,
-                        color: Colors.black.withAlpha(160),
+                    SizedBox(height: 10),
+                    Visibility(
+                      visible: _showTaglines,
+                      replacement: SizedBox(height: screenHeight * 0.1),
+                      child: SizedBox(
+                        height: screenHeight * 0.1,
+                        child: AnimatedTextKit(
+                          pause: Duration(seconds: 2),
+                          repeatForever: true,
+                          animatedTexts: tagLines
+                              .map(
+                                (text) => TypewriterAnimatedText(
+                                  text,
+                                  textAlign: TextAlign.center,
+                                  speed: Duration(milliseconds: 40),
+                                  textStyle: textTheme.titleLarge!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  cursor: '|',
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 40),
+                    Animate(
+                      effects: [
+                        SlideEffect(
+                          delay: Duration(milliseconds: 500),
+                          begin: Offset(0, 1.5),
+                          end: Offset.zero,
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.ease,
+                        ),
+                      ],
+                      child: AnimatedSwitcher(
+                        duration: Duration(milliseconds: 500),
+                        reverseDuration: Duration(milliseconds: 500),
+                        transitionBuilder: (child, animation) {
+                          return SlideTransition(
+                            position:
+                                Tween<Offset>(
+                                      begin: Offset(1, 0),
+                                      end: Offset.zero,
+                                    )
+                                    .chain(CurveTween(curve: Curves.ease))
+                                    .animate(animation),
+                            child: child,
+                          );
+                        },
+                        layoutBuilder: (currentChild, previousChildren) {
+                          return Stack(
+                            alignment: Alignment.topCenter,
+                            children: [...previousChildren, ?currentChild],
+                          );
+                        },
+                        child: _showSignUp
+                            ? SignUpCard(onLoginTap: _toggleAuthMode)
+                            : LogInCard(onSignUpTap: _toggleAuthMode),
                       ),
                     ),
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: SingleChildScrollView(
-                  physics: ClampingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Animate(
-                            onComplete: (controller) {
-                              setState(() {
-                                _showTaglines = true;
-                              });
-                            },
-                            effects: [
-                              FadeEffect(
-                                duration: Durations.extralong4,
-                                curve: Curves.ease,
-                              ),
-                              MoveEffect(
-                                duration: Durations.extralong4,
-                                begin: Offset(-20, 0),
-                                end: Offset(0, 0),
-                                curve: Curves.ease,
-                              ),
-                            ],
-                            child: RichText(
-                              text: TextSpan(
-                                text: 'Roadmap',
-                                style: textTheme.displayMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: '.ai',
-                                    style: textTheme.displayMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: colorScheme.primary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Visibility(
-                        visible: _showTaglines,
-                        replacement: SizedBox(height: screenHeight * 0.1),
-                        child: SizedBox(
-                          height: screenHeight * 0.1,
-                          child: AnimatedTextKit(
-                            pause: Duration(seconds: 2),
-                            repeatForever: true,
-                            animatedTexts: tagLines
-                                .map(
-                                  (text) => TypewriterAnimatedText(
-                                    text,
-                                    speed: Duration(milliseconds: 40),
-                                    textStyle: textTheme.titleLarge!.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    cursor: '|',
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                      if (!_showSignUp) SizedBox(height: 100),
-                      _showSignUp
-                          ? SignUpCard(onLoginTap: _toggleAuthMode)
-                          : LogInCard(onSignUpTap: _toggleAuthMode),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       );
@@ -407,11 +405,9 @@ class _AuthPageState extends ConsumerState<AuthPage> {
                   ),
                 ),
               ),
-              Expanded(
-                child: _showSignUp
-                    ? SignUpCard(onLoginTap: _toggleAuthMode)
-                    : LogInCard(onSignUpTap: _toggleAuthMode),
-              ),
+              _showSignUp
+                  ? SignUpCard(onLoginTap: _toggleAuthMode)
+                  : LogInCard(onSignUpTap: _toggleAuthMode),
             ],
           ),
         ],

@@ -13,7 +13,6 @@ import 'package:roadmap_ai/features/auth/presentation/providers/logout/logout_no
 import 'package:roadmap_ai/features/auth/presentation/screens/profile_page.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/explore_page.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/your_posts_page.dart';
-import 'package:roadmap_ai/features/community/presentation/widgets/post_filters_card.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/screens/create_roadmap_page.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/screens/saved_roadmaps_page.dart';
 
@@ -144,7 +143,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
         },
       ),
       bottomNavigationBar: GNav(
-        color: colorScheme.onSurface,
+        color: colorScheme.primary,
         onTabChange: (value) {
           ref
               .read(selectedScreenIndexProvider.notifier)
@@ -152,10 +151,10 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
         },
         selectedIndex: selectedNavbarIndex,
         gap: 4,
-        activeColor: colorScheme.secondary,
+        activeColor: colorScheme.primaryContainer,
         tabMargin: EdgeInsetsGeometry.only(bottom: 30, left: 10, right: 10),
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        tabBackgroundColor: colorScheme.primary.withAlpha(50),
+        tabBackgroundColor: colorScheme.primary,
         tabs: [
           GButton(icon: Icons.explore, text: 'Explore'),
           GButton(icon: Icons.article, text: 'Posts'),

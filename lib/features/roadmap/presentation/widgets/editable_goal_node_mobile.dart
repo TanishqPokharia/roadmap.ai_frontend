@@ -45,7 +45,7 @@ class _GoalNodeMobileState extends ConsumerState<EditableGoalNodeMobile> {
         : null;
 
     return Card(
-      color: colorScheme.surface,
+      color: colorScheme.primaryContainer,
       margin: EdgeInsets.only(bottom: 16),
       child: Column(
         children: [
@@ -75,7 +75,7 @@ class _GoalNodeMobileState extends ConsumerState<EditableGoalNodeMobile> {
                       widget.goal.title,
                       style: textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: colorScheme.primaryContainer,
+                        color: colorScheme.primary,
                       ),
                     ),
                   ),

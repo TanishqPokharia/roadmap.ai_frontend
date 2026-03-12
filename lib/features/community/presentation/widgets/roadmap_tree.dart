@@ -46,7 +46,6 @@ class _RoadmapTreeState extends State<RoadmapTree> {
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.all(16),
       itemCount: widget.roadmap.goals.length,
       itemBuilder: (context, index) => GoalNodeMobile(
         key: ValueKey(widget.roadmap.goals[index].id),

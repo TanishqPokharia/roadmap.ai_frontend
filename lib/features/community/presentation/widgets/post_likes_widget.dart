@@ -18,16 +18,10 @@ class PostLikesWidget extends StatelessWidget {
       return Row(
         spacing: 4,
         children: [
-          Icon(
-            Icons.favorite_outline,
-            color: Colors.blueGrey.shade300,
-            size: 12,
-          ),
+          Icon(Icons.favorite_outline, size: 16),
           Text(
             '$likes likes',
-            style: textTheme.bodySmall!.copyWith(
-              color: Colors.blueGrey.shade300,
-            ),
+            style: textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
       );
