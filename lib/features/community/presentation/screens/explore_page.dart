@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:roadmap_ai/core/common/toast/error.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
@@ -17,11 +18,33 @@ class ExplorePage extends ConsumerStatefulWidget {
   ConsumerState<ExplorePage> createState() => _ExplorePageState();
 }
 
-class _ExplorePageState extends ConsumerState<ExplorePage> {
+class _ExplorePageState extends ConsumerState<ExplorePage>
+    with AutomaticKeepAliveClientMixin {
+  late ScrollController _scrollController;
   final Set<int> _animatedIndexes = {};
 
   @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()
+      ..addListener(() {
+        final notifier = ref.read(postsProvider.notifier);
+        if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent) {
+          notifier.getNextPage();
+        }
+      });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     final textTheme = context.textTheme;
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
@@ -42,32 +65,16 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
             backgroundColor: colorScheme.primaryContainer,
             foregroundColor: colorScheme.primary,
             onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                backgroundColor: colorScheme.surface,
-                showDragHandle: true,
-                builder: (context) {
-                  return Container(
-                    height: 400,
-                    margin: EdgeInsets.all(10),
-                    child: PostFiltersCard(
-                      onFilterChange: () {
-                        _animatedIndexes.clear();
-                      },
-                    ),
-                  );
-                },
-              );
+              _showFiltersSheet(context);
             },
             child: Icon(Icons.filter_alt),
           ),
         ),
         body: Padding(
-          padding: EdgeInsetsGeometry.all(20),
+          padding: EdgeInsetsGeometry.only(left: 20, right: 20, top: 60),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 40),
               Column(
                 spacing: 10,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,8 +93,13 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
               ),
               Expanded(
                 child: posts.when(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
+                  skipLoadingOnRefresh: false,
+                  loading: () => Center(
+                    child: LoadingAnimationWidget.threeRotatingDots(
+                      color: colorScheme.primary,
+                      size: 30,
+                    ),
+                  ),
                   error: (error, stack) => Center(child: Text('$error')),
                   data: (data) {
                     if (data.posts.isEmpty) {
@@ -96,6 +108,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                     return RefreshIndicator(
                       onRefresh: () => ref.refresh(postsProvider.future),
                       child: ListView.builder(
+                        controller: _scrollController,
                         itemCount: data.posts.length,
                         padding: EdgeInsets.only(bottom: 100, top: 50),
                         itemBuilder: (context, index) => Padding(
@@ -160,6 +173,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                           return Center(child: Text('No posts found'));
                         }
                         return ListView.builder(
+                          controller: _scrollController,
                           itemCount: data.posts.length,
                           itemBuilder: (context, index) => Padding(
                             padding: EdgeInsets.symmetric(
@@ -194,6 +208,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                           return Center(child: Text('No posts found'));
                         }
                         return ListView.separated(
+                          controller: _scrollController,
                           itemCount: data.posts.length,
                           padding: EdgeInsets.only(bottom: 100),
                           separatorBuilder: (context, index) =>
@@ -223,7 +238,30 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
     );
   }
 
+  Future<dynamic> _showFiltersSheet(BuildContext context) {
+    final colorScheme = context.colorScheme;
+    return showModalBottomSheet(
+      context: context,
+      backgroundColor: colorScheme.surface,
+      showDragHandle: true,
+      builder: (context) {
+        return Container(
+          height: 400,
+          margin: EdgeInsets.all(10),
+          child: PostFiltersCard(
+            onFilterChange: () {
+              _animatedIndexes.clear();
+            },
+          ),
+        );
+      },
+    );
+  }
+
   bool shouldAnimate(int index) {
     return _animatedIndexes.add(index);
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

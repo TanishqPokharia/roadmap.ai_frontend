@@ -1,8 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
-import 'package:roadmap_ai/features/auth/domain/usecases/signup_user/signup_user.dart';
-import 'package:roadmap_ai/features/auth/presentation/providers/login/login_notifier.dart';
 import 'package:roadmap_ai/features/community/data/datasource/interface/post_datasource.dart';
 import 'package:roadmap_ai/features/community/data/models/post_metadata/post_metadata.dart';
 import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
@@ -38,19 +36,18 @@ class PostsState {
 class PostsNotifier extends _$PostsNotifier {
   int _limit = 10;
   int _skip = 0;
-  bool _hasMore = true;
+  bool _canGetMore = true;
+  bool _isFetching = false;
   final List<PostMetadata> _posts = [];
 
   // rebuilds whenever the filter changes
   @override
   FutureOr<PostsState> build() async {
-    ref.watch(loginProvider);
-    ref.watch(signUpUserProvider);
     _limit = 10;
     _skip = 0;
-    _hasMore = true;
+    _canGetMore = true;
+    _isFetching = true;
     _posts.clear();
-
     Either<Failure, List<PostMetadata>> posts;
 
     // rebuilt when post title searched by user
@@ -86,22 +83,28 @@ class PostsNotifier extends _$PostsNotifier {
     }
 
     return posts.fold(
-      (failure) =>
-          PostsState(posts: [], hasMore: false, error: failure.toString()),
-      (r) {
-        _posts.addAll(r);
-        _hasMore = r.length == _limit;
-        return PostsState(posts: _posts, hasMore: _hasMore);
+      (failure) {
+        _isFetching = false;
+        _canGetMore = false;
+        return PostsState(posts: [], hasMore: false, error: failure.toString());
+      },
+      (data) {
+        _posts.addAll(data);
+        _canGetMore = data.length == _limit;
+        _isFetching = false;
+        return PostsState(posts: _posts, hasMore: _canGetMore);
       },
     );
   }
 
   /// this is a unified method to get the next page of posts based on the current filter
   /// it checks the current filter and calls the appropriate use case to fetch the next page
-  Future<void> getNextPage(String? title) async {
-    if (!_hasMore) return;
+  Future<void> getNextPage() async {
+    if (!_canGetMore || _isFetching) return;
+    _isFetching = true;
     _skip += _limit;
     final filter = ref.read(postsFilterProvider);
+    final postTitle = ref.read(postTitleProvider);
     Either<Failure, List<PostMetadata>> posts;
     if (isTimeFilter(filter)) {
       posts = await ref
@@ -114,27 +117,37 @@ class PostsNotifier extends _$PostsNotifier {
             ),
           )
           .run();
-    } else {
+    } else if (filter == PostFilter.popular) {
       posts = await ref
           .read(getFilteredPostsProvider)
           .call(GetPopularPostsParams(limit: _limit, skip: _skip))
+          .run();
+    } else {
+      posts = await ref
+          .read(getPostsByTitleProvider)
+          .call(
+            GetPostsByTitleParams(title: postTitle, limit: _limit, skip: _skip),
+          )
           .run();
     }
 
     posts.fold(
       (failure) {
+        _canGetMore = false;
+        _isFetching = false;
         state = AsyncData(
           PostsState(
             posts: _posts,
-            hasMore: _hasMore,
+            hasMore: _canGetMore,
             error: failure.toString(),
           ),
         );
       },
-      (r) {
-        _posts.addAll(r);
-        _hasMore = r.length == _limit;
-        state = AsyncData(PostsState(posts: _posts, hasMore: _hasMore));
+      (data) {
+        _posts.addAll(data);
+        _canGetMore = data.length == _limit;
+        _isFetching = false;
+        state = AsyncData(PostsState(posts: _posts, hasMore: _canGetMore));
       },
     );
   }
@@ -184,7 +197,7 @@ class PostsNotifier extends _$PostsNotifier {
         );
     _posts[index] = modifiedPost;
 
-    state = AsyncData(PostsState(hasMore: _hasMore, posts: _posts));
+    state = AsyncData(PostsState(hasMore: _canGetMore, posts: _posts));
 
     // send request to backend
     final result = await ref
@@ -197,7 +210,11 @@ class PostsNotifier extends _$PostsNotifier {
       _posts[index] = postToToggleLike;
       result.mapLeft((failure) {
         state = AsyncData(
-          PostsState(posts: _posts, hasMore: _hasMore, error: failure.message),
+          PostsState(
+            posts: _posts,
+            hasMore: _canGetMore,
+            error: failure.message,
+          ),
         );
       });
     }

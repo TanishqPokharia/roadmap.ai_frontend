@@ -1,11 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:roadmap_ai/core/common/entities/subgoal.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
+import 'package:roadmap_ai/features/community/presentation/providers/create_post/create_post_notifier.dart';
+import 'package:roadmap_ai/features/roadmap/presentation/widgets/edit_subgoal_bottom_sheet.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/providers/roadmap_view/roadmap_view_notifier.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// Mobile-optimized subgoal node with card layout
 class EditableSubgoalNodeMobile extends ConsumerWidget {
   const EditableSubgoalNodeMobile({
     super.key,
@@ -35,8 +37,11 @@ class EditableSubgoalNodeMobile extends ConsumerWidget {
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
 
-    final notifier = isProgressEditable
+    final roadmapViewNotifier = isProgressEditable
         ? ref.read(roadmapViewProvider(roadmapId).notifier)
+        : null;
+    final createPostNotifier = isCustomizable
+        ? ref.read(createPostProvider(roadmapId).notifier)
         : null;
 
     return Card(
@@ -87,7 +92,12 @@ class EditableSubgoalNodeMobile extends ConsumerWidget {
                             ],
                           ),
                           onTap: () {
-                            // TODO: Edit subgoal
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _showEditSubgoalBottomSheet(
+                                context,
+                                createPostNotifier,
+                              );
+                            });
                           },
                         ),
                         PopupMenuItem(
@@ -106,7 +116,10 @@ class EditableSubgoalNodeMobile extends ConsumerWidget {
                             ],
                           ),
                           onTap: () {
-                            // TODO: Delete subgoal
+                            createPostNotifier?.removeSubgoal(
+                              goalId,
+                              subgoal.id,
+                            );
                           },
                         ),
                       ],
@@ -190,7 +203,7 @@ class EditableSubgoalNodeMobile extends ConsumerWidget {
                             Checkbox(
                               value: subgoal.status?.completed,
                               onChanged: (value) {
-                                notifier?.updateSubgoalStatus(
+                                roadmapViewNotifier?.updateSubgoalStatus(
                                   goalIndex: goalIndex,
                                   subgoalIndex: index,
                                   goalId: goalId,
@@ -222,9 +235,35 @@ class EditableSubgoalNodeMobile extends ConsumerWidget {
 
   Future<void> _launchUrl(String url) async {
     final parsedUrl = url.substring(url.indexOf("https"));
-    debugPrint("PARSED: $parsedUrl");
+    if (kDebugMode) debugPrint("PARSED: $parsedUrl");
     final uri = Uri.parse(parsedUrl);
 
     await launchUrl(uri);
+  }
+
+  void _showEditSubgoalBottomSheet(
+    BuildContext context,
+    CreatePostNotifier? notifier,
+  ) {
+    if (notifier == null) return;
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      builder: (context) => EditSubgoalBottomSheet(
+        subgoal: subgoal,
+        onSave: (title, description, resources) {
+          notifier.setSubgoalDetails(
+            goalId,
+            subgoal.id,
+            title,
+            description,
+            resources,
+          );
+        },
+      ),
+    );
   }
 }

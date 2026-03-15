@@ -12,7 +12,7 @@ Failure httpErrorHandler(int statusCode) {
     case 404:
       return NotFoundFailure('The requested resource was not found');
     case 500:
-      return ServerFailure('Please try again later');
+      return ServerFailure('Error occured, please try again later');
     default:
       return UnknownFailure('An unknown error occurred, please try again');
   }

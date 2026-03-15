@@ -3,7 +3,6 @@ import 'package:roadmap_ai/core/common/entities/subgoal.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// Mobile-optimized subgoal node with card layout
 class SubgoalNodeMobile extends StatelessWidget {
   const SubgoalNodeMobile({
     super.key,
@@ -102,10 +101,10 @@ class SubgoalNodeMobile extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         ...subgoal.resources.map(
-                          (resource) => _buildResourceItem(
-                            resource,
-                            textTheme,
-                            colorScheme,
+                          (resource) => _SubgoalResourceItem(
+                            resource: resource,
+                            textTheme: textTheme,
+                            colorScheme: colorScheme,
                           ),
                         ),
                       ],
@@ -119,12 +118,21 @@ class SubgoalNodeMobile extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildResourceItem(
-    String resource,
-    TextTheme textTheme,
-    ColorScheme colorScheme,
-  ) {
+class _SubgoalResourceItem extends StatelessWidget {
+  final String resource;
+  final TextTheme textTheme;
+  final ColorScheme colorScheme;
+
+  const _SubgoalResourceItem({
+    required this.resource,
+    required this.textTheme,
+    required this.colorScheme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     if (!resource.contains('http')) {
       return Padding(
         padding: EdgeInsets.only(bottom: 4),
@@ -132,7 +140,6 @@ class SubgoalNodeMobile extends StatelessWidget {
       );
     }
 
-    // Extract URL
     String url = resource;
     if (resource.contains("https")) {
       url = resource.substring(resource.indexOf("https"));

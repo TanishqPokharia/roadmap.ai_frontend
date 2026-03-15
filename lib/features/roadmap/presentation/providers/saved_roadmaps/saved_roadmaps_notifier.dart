@@ -1,8 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap_metadata.dart';
-import 'package:roadmap_ai/features/auth/presentation/providers/login/login_notifier.dart';
-import 'package:roadmap_ai/features/auth/presentation/providers/signup/signup_notifier.dart';
 import 'package:roadmap_ai/features/roadmap/domain/usecases/get_saved_roadmaps_metadata/get_saved_roadmaps_metadata.dart';
 
 part 'saved_roadmaps_notifier.g.dart';
@@ -27,8 +25,6 @@ class SavedRoadmapsNotifier extends _$SavedRoadmapsNotifier {
   bool _isFetching = false;
   @override
   FutureOr<SavedRoadmapsState> build() async {
-    ref.watch(loginProvider);
-    ref.watch(signupProvider);
     _skip = 0;
     _roadmaps.clear();
     _canGetMore = true;
@@ -46,13 +42,8 @@ class SavedRoadmapsNotifier extends _$SavedRoadmapsNotifier {
       },
       (data) {
         _roadmaps.addAll(data);
-
-        if (data.length < _limit) {
-          _canGetMore = false;
-        }
-
+        _canGetMore = data.length == _limit;
         _isFetching = false;
-
         final result = SavedRoadmapsState(
           roadmaps: _roadmaps,
           canGetMore: _canGetMore,
@@ -98,9 +89,7 @@ class SavedRoadmapsNotifier extends _$SavedRoadmapsNotifier {
       },
       (data) {
         _roadmaps.addAll(data);
-        if (data.length < _limit) {
-          _canGetMore = false;
-        }
+        _canGetMore = data.length == _limit;
         _isFetching = false;
         state = AsyncData(
           SavedRoadmapsState(

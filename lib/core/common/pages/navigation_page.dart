@@ -15,6 +15,7 @@ import 'package:roadmap_ai/features/community/presentation/screens/explore_page.
 import 'package:roadmap_ai/features/community/presentation/screens/your_posts_page.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/screens/create_roadmap_page.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/screens/saved_roadmaps_page.dart';
+import 'package:roadmap_ai/router/routes.dart';
 
 final selectedScreenIndexProvider = StateProvider.autoDispose<int>((ref) => 0);
 final selectedNavbarIndexProvider = StateProvider.autoDispose<int>((ref) => 0);
@@ -66,10 +67,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
       }
 
       if (next is AsyncData && next.value == LogoutState.success) {
-        context.go('/auth');
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Logged out successfully')));
+        context.goNamed(AppRoutes.auth);
       }
     });
 
@@ -144,6 +142,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
       ),
       bottomNavigationBar: GNav(
         color: colorScheme.primary,
+        backgroundColor: colorScheme.surface,
         onTabChange: (value) {
           ref
               .read(selectedScreenIndexProvider.notifier)
@@ -152,7 +151,12 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
         selectedIndex: selectedNavbarIndex,
         gap: 4,
         activeColor: colorScheme.primaryContainer,
-        tabMargin: EdgeInsetsGeometry.only(bottom: 30, left: 10, right: 10),
+        tabMargin: EdgeInsetsGeometry.only(
+          bottom: 30,
+          left: 10,
+          right: 10,
+          top: 10,
+        ),
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         tabBackgroundColor: colorScheme.primary,
         tabs: [

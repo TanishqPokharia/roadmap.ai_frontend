@@ -1,5 +1,5 @@
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/entities/goal.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
@@ -46,11 +46,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     );
   }
 
-  bool isBannerSelected() {
-    return state.value?.bannerImage != null;
-  }
-
   void createPost(String title, String description) async {
+    if (state.value?.bannerImage == null) {
+      if (kDebugMode) {
+        debugPrint("No banner image selected");
+      }
+      return;
+    }
     state = AsyncData(
       state.value!.copyWith(
         roadmap: state.value?.roadmap?.copyWith(
@@ -77,14 +79,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     });
   }
 
-  void addRoadmapGoal(Goal goal) {
-    if (state.value!.roadmap == null) return;
-    final updatedGoals = [...state.value!.roadmap!.goals, goal];
-    final updatedRoadmap = state.value!.roadmap!.copyWith(goals: updatedGoals);
-    state = AsyncData(state.value!.copyWith(roadmap: updatedRoadmap));
-  }
-
-  void addNewGoal(String title) {
+  void addGoal(String title) {
     if (state.value!.roadmap == null) return;
 
     // Generate a unique ID for the new goal
@@ -96,32 +91,19 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       subgoals: [], // Start with empty subgoals
     );
 
-    addRoadmapGoal(newGoal);
+    _addRoadmapGoal(newGoal);
   }
 
-  void removeRoadmapGoal(Goal goal) {
+  void removeGoal(String goalId) {
     if (state.value!.roadmap == null) return;
     final updatedGoals = state.value!.roadmap!.goals
-        .where((g) => g != goal)
+        .where((g) => g.id != goalId)
         .toList();
     final updatedRoadmap = state.value!.roadmap!.copyWith(goals: updatedGoals);
     state = AsyncData(state.value!.copyWith(roadmap: updatedRoadmap));
   }
 
-  void addRoadmapSubgoal(String goalId, Subgoal subgoal) {
-    if (state.value!.roadmap == null) return;
-    final updatedGoals = state.value!.roadmap!.goals.map((goal) {
-      if (goal.id == goalId) {
-        final updatedSubgoals = [...goal.subgoals, subgoal];
-        return goal.copyWith(subgoals: updatedSubgoals);
-      }
-      return goal;
-    }).toList();
-    final updatedRoadmap = state.value!.roadmap!.copyWith(goals: updatedGoals);
-    state = AsyncData(state.value!.copyWith(roadmap: updatedRoadmap));
-  }
-
-  void addNewSubgoal({
+  void addSubgoal({
     required String goalId,
     required String title,
     required String description,
@@ -143,15 +125,20 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       status: SubgoalStatus(id: statusId, completed: false, completedAt: null),
     );
 
-    addRoadmapSubgoal(goalId, newSubgoal);
+    _addRoadmapSubgoal(goalId, newSubgoal);
   }
 
-  void removeRoadmapSubgoal(String goalId, Subgoal subgoal) {
-    if (state.value!.roadmap == null) return;
+  void removeSubgoal(String goalId, String subgoalId) {
+    if (state.value!.roadmap == null) {
+      if (kDebugMode) {
+        debugPrint("No roadmap attached");
+        return;
+      }
+    }
     final updatedGoals = state.value!.roadmap!.goals.map((goal) {
       if (goal.id == goalId) {
         final updatedSubgoals = goal.subgoals
-            .where((sg) => sg != subgoal)
+            .where((subgoal) => subgoal.id != subgoalId)
             .toList();
         return goal.copyWith(subgoals: updatedSubgoals);
       }
@@ -220,8 +207,30 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   void setBannerImage(FilePickerResult bannerImage) {
-    debugPrint("GOT THE IMAGE");
-    debugPrint(bannerImage.files.first.toString());
+    if (kDebugMode) {
+      debugPrint("GOT BANNER IMAGE");
+      debugPrint(bannerImage.files.first.toString());
+    }
     state = AsyncData(state.value!.copyWith(bannerImage: bannerImage));
+  }
+
+  void _addRoadmapGoal(Goal goal) {
+    if (state.value!.roadmap == null) return;
+    final updatedGoals = [...state.value!.roadmap!.goals, goal];
+    final updatedRoadmap = state.value!.roadmap!.copyWith(goals: updatedGoals);
+    state = AsyncData(state.value!.copyWith(roadmap: updatedRoadmap));
+  }
+
+  void _addRoadmapSubgoal(String goalId, Subgoal subgoal) {
+    if (state.value!.roadmap == null) return;
+    final updatedGoals = state.value!.roadmap!.goals.map((goal) {
+      if (goal.id == goalId) {
+        final updatedSubgoals = [...goal.subgoals, subgoal];
+        return goal.copyWith(subgoals: updatedSubgoals);
+      }
+      return goal;
+    }).toList();
+    final updatedRoadmap = state.value!.roadmap!.copyWith(goals: updatedGoals);
+    state = AsyncData(state.value!.copyWith(roadmap: updatedRoadmap));
   }
 }

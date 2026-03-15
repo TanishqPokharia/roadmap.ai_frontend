@@ -72,7 +72,7 @@ class SavedRoadmapTile extends StatelessWidget {
                       width: screenWidth / 2,
                       child: Text(
                         roadmap.description,
-                        style: textTheme.bodySmall!.copyWith(),
+                        style: textTheme.bodyMedium,
                       ),
                     ),
                     SizedBox(width: 50),
@@ -111,7 +111,7 @@ class SavedRoadmapTile extends StatelessWidget {
                 ),
                 Text(
                   'Contains ${roadmap.goalsCount} goals',
-                  style: textTheme.bodySmall!.copyWith(
+                  style: textTheme.bodyMedium!.copyWith(
                     color: colorScheme.primary,
                     fontWeight: FontWeight.bold,
                   ),
@@ -144,9 +144,6 @@ class SavedRoadmapTile extends StatelessWidget {
                               },
                               style: OutlinedButton.styleFrom(
                                 side: BorderSide(color: colorScheme.primary),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
                               ),
                               child: Text(
                                 'Post',
@@ -158,7 +155,7 @@ class SavedRoadmapTile extends StatelessWidget {
                           );
                         },
                       )
-                    // show a posted chip
+                    // show a posted uninteractive button
                     else
                       FilledButton(onPressed: null, child: Text('Posted')),
                   ],

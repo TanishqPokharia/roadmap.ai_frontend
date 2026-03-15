@@ -3,7 +3,7 @@ import 'package:roadmap_ai/features/auth/domain/usecases/signup_user/signup_user
 
 part 'signup_notifier.g.dart';
 
-enum SignUpState { initial, error, success }
+enum SignUpState { initial, success }
 
 @riverpod
 class SignupNotifier extends _$SignupNotifier {

@@ -17,6 +17,7 @@ import 'package:roadmap_ai/features/auth/presentation/providers/signup/signup_no
 import 'package:roadmap_ai/features/auth/presentation/widgets/feature_item.dart';
 import 'package:roadmap_ai/features/auth/presentation/widgets/log_in_card.dart';
 import 'package:roadmap_ai/features/auth/presentation/widgets/sign_up_card.dart';
+import 'package:roadmap_ai/router/routes.dart';
 
 class AuthPage extends ConsumerStatefulWidget {
   const AuthPage({super.key});
@@ -59,7 +60,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
 
       if (next is AsyncData && next.value != LoginState.initial) {
         showSuccessToast(context: context, success: 'Logged in successfully');
-        context.go('/home');
+        context.goNamed(AppRoutes.home);
       }
     });
     ref.listen(signupProvider, (_, next) {
@@ -72,7 +73,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
 
       if (next is AsyncData && next.value != SignUpState.initial) {
         showSuccessToast(context: context, success: 'Signed up successfully!');
-        context.go('/home');
+        context.goNamed(AppRoutes.home);
       }
     });
 

@@ -68,11 +68,13 @@ class RefreshTokenInterceptor extends Interceptor {
         handler.next(response);
       }
     } catch (e, stackTrace) {
-      log(
-        'Error in refresh token interceptor',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      if (kDebugMode) {
+        log(
+          'Error in refresh token interceptor',
+          error: e,
+          stackTrace: stackTrace,
+        );
+      }
       handler.next(response);
     }
   }
@@ -123,7 +125,9 @@ class RefreshTokenInterceptor extends Interceptor {
         _isRefreshing = false;
       }
 
-      log('Token refresh and retry failed', error: e, stackTrace: stackTrace);
+      if (kDebugMode) {
+        log('Token refresh and retry failed', error: e, stackTrace: stackTrace);
+      }
       return null;
     }
   }
@@ -137,7 +141,9 @@ class RefreshTokenInterceptor extends Interceptor {
         return await _refreshTokensMobile();
       }
     } catch (e, stackTrace) {
-      log('Token refresh failed', error: e, stackTrace: stackTrace);
+      if (kDebugMode) {
+        log('Token refresh failed', error: e, stackTrace: stackTrace);
+      }
       return false;
     }
   }
@@ -148,12 +154,12 @@ class RefreshTokenInterceptor extends Interceptor {
       // Get current refresh token from storage
       final tokensResult = await tokenStorage.getTokens().run();
       final refreshToken = tokensResult.fold((failure) {
-        log('Failed to get tokens from storage: $failure');
+        if (kDebugMode) log('Failed to get tokens from storage: $failure');
         return null;
       }, (tokens) => tokens?.refreshToken);
 
       if (refreshToken == null) {
-        log('No refresh token available');
+        if (kDebugMode) log('No refresh token available');
         return false;
       }
 
@@ -185,15 +191,19 @@ class RefreshTokenInterceptor extends Interceptor {
 
         final success = saveResult.isRight();
         if (!success) {
-          log('Failed to save new tokens to storage');
+          if (kDebugMode) log('Failed to save new tokens to storage');
         }
         return success;
       } else {
-        log('Refresh request failed with status: ${response.statusCode}');
+        if (kDebugMode) {
+          log('Refresh request failed with status: ${response.statusCode}');
+        }
         return false;
       }
     } catch (e, stackTrace) {
-      log('Mobile token refresh failed', error: e, stackTrace: stackTrace);
+      if (kDebugMode) {
+        log('Mobile token refresh failed', error: e, stackTrace: stackTrace);
+      }
       return false;
     }
   }
@@ -201,11 +211,13 @@ class RefreshTokenInterceptor extends Interceptor {
   /// Web refresh tokens implementation
   Future<bool> _refreshTokensWeb() async {
     try {
-      log("INITIALIZING COOKIE REFRESH");
+      if (kDebugMode) log("INITIALIZING COOKIE REFRESH");
       final response = await _dio.post('/auth/refresh');
       return response.statusCode == 200;
     } catch (e, stackTrace) {
-      log('Web token refresh failed', error: e, stackTrace: stackTrace);
+      if (kDebugMode) {
+        log('Web token refresh failed', error: e, stackTrace: stackTrace);
+      }
       return false;
     }
   }
@@ -247,7 +259,7 @@ class RefreshTokenInterceptor extends Interceptor {
       // Don't refresh if it's explicitly not a token issue
       if (errorMessage.contains('invalid credentials') ||
           errorMessage.contains('wrong password')) {
-        log('Not attempting refresh - invalid credentials');
+        if (kDebugMode) log('Not attempting refresh - invalid credentials');
         return false;
       }
 

@@ -1,6 +1,4 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:roadmap_ai/features/auth/presentation/providers/login/login_notifier.dart';
-import 'package:roadmap_ai/features/auth/presentation/providers/signup/signup_notifier.dart';
 import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
 import 'package:roadmap_ai/features/community/domain/usecases/get_user_posts_metadata/get_user_posts_metadata.dart';
 
@@ -12,14 +10,14 @@ class UserPostsNotifier extends _$UserPostsNotifier {
   int _skip = 0;
   final List<PostMetadata> _posts = [];
   bool _canGetMore = true;
+  bool _isFetching = false;
 
   @override
   FutureOr<List<PostMetadata>> build() async {
-    ref.watch(loginProvider);
-    ref.watch(signupProvider);
     _skip = 0;
     _posts.clear();
     _canGetMore = true;
+    _isFetching = true;
 
     final posts = await ref
         .read(getUserPostsMetaDataProvider)
@@ -28,14 +26,14 @@ class UserPostsNotifier extends _$UserPostsNotifier {
 
     return posts.fold(
       (failure) {
+        _isFetching = false;
         throw failure;
       },
       (posts) {
         _posts.addAll(posts);
+        _canGetMore = posts.length == _limit;
 
-        if (posts.length < _limit) {
-          _canGetMore = false;
-        }
+        _isFetching = false;
 
         return _posts;
       },
@@ -46,12 +44,13 @@ class UserPostsNotifier extends _$UserPostsNotifier {
     _skip = 0;
     _posts.clear();
     _canGetMore = true;
+    _isFetching = false;
     ref.invalidateSelf();
   }
 
   void getNextPage() async {
-    if (!_canGetMore) return;
-    state = const AsyncLoading();
+    if (!_canGetMore || _isFetching) return;
+    _isFetching = true;
     _skip += _limit;
     final posts = await ref
         .read(getUserPostsMetaDataProvider)
@@ -60,14 +59,14 @@ class UserPostsNotifier extends _$UserPostsNotifier {
     posts.fold(
       (failure) {
         _canGetMore = false;
+        _isFetching = false;
         // Return current state on error
         state = AsyncData(_posts);
       },
       (posts) {
-        if (posts.length < _limit) {
-          _canGetMore = false;
-        }
+        _canGetMore = posts.length == _limit;
         _posts.addAll(posts);
+        _isFetching = false;
         state = AsyncData(_posts);
       },
     );

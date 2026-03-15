@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:roadmap_ai/core/common/entities/goal.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/create_post/create_post_notifier.dart';
-import 'package:roadmap_ai/features/roadmap/presentation/widgets/add_subgoal_dialog.dart';
+import 'package:roadmap_ai/features/roadmap/presentation/widgets/add_subgoal_bottom_sheet.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/widgets/edit_goal_dialog.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/widgets/editable_subgoal_node_mobile.dart';
 
-/// Mobile-optimized goal node with simplified layout
 class EditableGoalNodeMobile extends ConsumerStatefulWidget {
   const EditableGoalNodeMobile({
     super.key,
@@ -89,7 +89,8 @@ class _GoalNodeMobileState extends ConsumerState<EditableGoalNodeMobile> {
                     IconButton(
                       icon: Icon(Icons.delete, size: 20),
                       color: colorScheme.error,
-                      onPressed: () => _showDeleteConfirmation(notifier),
+                      onPressed: () =>
+                          _showRemoveGoalConfirmation(notifier, widget.goal.id),
                     ),
                   ],
                   // Expand icon
@@ -112,12 +113,12 @@ class _GoalNodeMobileState extends ConsumerState<EditableGoalNodeMobile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (widget.goal.subgoals.isEmpty)
-                    Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Text(
-                        'No subgoals yet',
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey,
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'No subgoals yet',
+                          style: textTheme.bodyMedium,
                         ),
                       ),
                     )
@@ -178,7 +179,7 @@ class _GoalNodeMobileState extends ConsumerState<EditableGoalNodeMobile> {
     );
   }
 
-  void _showEditDialog(dynamic notifier) {
+  void _showEditDialog(CreatePostNotifier? notifier) {
     showDialog(
       context: context,
       builder: (context) => EditGoalDialog(
@@ -190,7 +191,10 @@ class _GoalNodeMobileState extends ConsumerState<EditableGoalNodeMobile> {
     );
   }
 
-  void _showDeleteConfirmation(dynamic notifier) {
+  void _showRemoveGoalConfirmation(
+    CreatePostNotifier? notifier,
+    String goalId,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -205,8 +209,8 @@ class _GoalNodeMobileState extends ConsumerState<EditableGoalNodeMobile> {
           ),
           FilledButton(
             onPressed: () {
-              // TODO: Implement delete
-              Navigator.pop(context);
+              notifier?.removeGoal(goalId);
+              context.pop();
             },
             child: Text('Delete'),
           ),
@@ -215,10 +219,13 @@ class _GoalNodeMobileState extends ConsumerState<EditableGoalNodeMobile> {
     );
   }
 
-  void _showAddSubgoalDialog(dynamic notifier) {
-    showDialog(
+  void _showAddSubgoalDialog(CreatePostNotifier? notifier) {
+    showModalBottomSheet<void>(
       context: context,
-      builder: (context) => AddSubgoalDialog(
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      builder: (context) => AddSubgoalBottomSheet(
         onSave:
             ({
               required String title,
@@ -226,7 +233,7 @@ class _GoalNodeMobileState extends ConsumerState<EditableGoalNodeMobile> {
               required String duration,
               required List<String> resources,
             }) {
-              notifier?.addNewSubgoal(
+              notifier?.addSubgoal(
                 goalId: widget.goal.id,
                 title: title,
                 description: description,

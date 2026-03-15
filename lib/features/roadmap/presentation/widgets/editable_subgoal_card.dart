@@ -94,25 +94,14 @@ class _EditableSubgoalCardState extends ConsumerState<EditableSubgoalCard> {
                         context: context,
                         builder: (context) => EditSubgoalDialog(
                           subgoal: widget.subgoal,
-                          onSave: (newTitle, newDescription, newResources) {
-                            if (notifier != null) {
-                              notifier.setSubgoalDetails(
+                          onSave: (newTitle, newDescription, newResources) =>
+                              notifier?.setSubgoalDetails(
                                 widget.goalId,
                                 widget.subgoal.id,
                                 newTitle,
                                 newDescription,
                                 newResources,
-                              );
-                            } else {
-                              // TODO: Implement subgoal edit functionality with roadmap notifier
-                              debugPrint(
-                                'Edit subgoal: ${widget.subgoal.title}',
-                              );
-                              debugPrint('New title: $newTitle');
-                              debugPrint('New description: $newDescription');
-                              debugPrint('New resources: $newResources');
-                            }
-                          },
+                              ),
                         ),
                       );
                     },
@@ -126,8 +115,7 @@ class _EditableSubgoalCardState extends ConsumerState<EditableSubgoalCard> {
                   ),
                   IconButton(
                     onPressed: () {
-                      // TODO: Delete subgoal functionality
-                      debugPrint('Delete subgoal: ${widget.subgoal.title}');
+                      notifier?.removeSubgoal(widget.goalId, widget.subgoal.id);
                     },
                     icon: Icon(
                       Icons.delete,

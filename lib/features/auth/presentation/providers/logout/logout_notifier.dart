@@ -16,7 +16,6 @@ class LogoutNotifier extends _$LogoutNotifier {
   void logout() async {
     state = AsyncLoading();
 
-    // FIRST: Perform the actual logout (clears tokens)
     final logoutResult = await ref
         .read(logoutUserProvider)
         .call(NoParams())

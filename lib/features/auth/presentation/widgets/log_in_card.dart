@@ -119,7 +119,7 @@ class _LogInCardState extends ConsumerState<LogInCard> {
                         TextFormField(
                           style: textTheme.bodyLarge,
                           decoration: InputDecoration(
-                            errorStyle: textTheme.bodyLarge?.copyWith(
+                            errorStyle: textTheme.bodySmall?.copyWith(
                               color: Colors.red,
                               fontWeight: FontWeight.bold,
                             ),
@@ -160,7 +160,7 @@ class _LogInCardState extends ConsumerState<LogInCard> {
                         TextFormField(
                           style: textTheme.bodyLarge,
                           decoration: InputDecoration(
-                            errorStyle: textTheme.bodyLarge?.copyWith(
+                            errorStyle: textTheme.bodySmall?.copyWith(
                               color: Colors.red,
                               fontWeight: FontWeight.bold,
                             ),

@@ -26,6 +26,7 @@ class CreatePostPage extends ConsumerStatefulWidget {
 class _CreatePostPageState extends ConsumerState<CreatePostPage> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
+  FilePickerResult? _bannerImage;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -100,18 +101,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                           padding: EdgeInsets.symmetric(horizontal: 8),
                         ),
                         onPressed: () {
-                          if (_formKey.currentState!.validate() &&
-                              notifier.isBannerSelected()) {
-                            notifier.createPost(
-                              _titleController.text,
-                              _descriptionController.text,
-                            );
-                            return;
-                          }
-                          showErrorToast(
-                            context: context,
-                            error: "Please fill all required fields.",
-                          );
+                          _validateAndCreatePost(context, notifier);
                         },
                         iconAlignment: IconAlignment.end,
                         icon: Icon(Icons.publish),
@@ -130,24 +120,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   delegate: SliverChildListDelegate([
                     // Banner Image Selection
                     GestureDetector(
-                      onTap: () async {
-                        final image = await FilePicker.platform.pickFiles(
-                          type: FileType.image,
-                          allowMultiple: false,
-                          withData: true,
-                        );
-
-                        if (image == null) {
-                          if (context.mounted) {
-                            showErrorToast(
-                              context: context,
-                              error: "No image selected",
-                            );
-                          }
-                          return;
-                        }
-                        notifier.setBannerImage(image);
-                      },
+                      onTap: () async => await _selectBannerImage(notifier),
                       child: Center(
                         child: DottedBorder(
                           options: RoundedRectDottedBorderOptions(
@@ -366,8 +339,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     height: screenHeight * 0.03,
                     child: FilledButton.icon(
                       onPressed: () {
-                        if (_formKey.currentState!.validate() &&
-                            notifier.isBannerSelected()) {
+                        if (_formKey.currentState!.validate()) {
                           notifier.createPost(
                             _titleController.text,
                             _descriptionController.text,
@@ -625,5 +597,40 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
         ),
       },
     );
+  }
+
+  Future<void> _selectBannerImage(CreatePostNotifier notifier) async {
+    final image = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+      withData: true,
+    );
+
+    if (image == null) {
+      if (mounted) {
+        showErrorToast(context: context, error: "No image selected");
+      }
+      return;
+    }
+    _bannerImage = image;
+    notifier.setBannerImage(image);
+  }
+
+  void _validateAndCreatePost(
+    BuildContext context,
+    CreatePostNotifier notifier,
+  ) {
+    if (_bannerImage == null) {
+      showErrorToast(context: context, error: "Please select banner image");
+      return;
+    }
+    if (_formKey.currentState!.validate()) {
+      notifier.createPost(_titleController.text, _descriptionController.text);
+    } else {
+      showErrorToast(
+        context: context,
+        error: "Please fill all required fields.",
+      );
+    }
   }
 }

@@ -50,142 +50,31 @@ class _EditableRoadmapTreeState extends ConsumerState<EditableRoadmapTree> {
 
   @override
   Widget build(BuildContext context) {
-    final notifier = widget.isCustomizable
+    final CreatePostNotifier? notifier = widget.isCustomizable
         ? ref.read(createPostProvider(widget.roadmap.id).notifier)
         : null;
+    final isMobile = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
 
-    // Mobile layout
-    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-      return _buildMobileLayout(notifier);
-    }
-
-    // Web/Desktop layout
-    return _buildWebLayout(notifier);
-  }
-
-  Widget _buildMobileLayout(dynamic notifier) {
-    if (widget.shrinkWrap) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.all(16),
-            itemCount: widget.roadmap.goals.length,
-            itemBuilder: (context, index) => EditableGoalNodeMobile(
-              key: ValueKey(widget.roadmap.goals[index].id),
-              goal: widget.roadmap.goals[index],
-              roadmapId: widget.roadmap.id,
-              index: index,
-              isExpanded: _expandedGoals.contains(index),
-              onToggle: () => _toggleGoal(index),
-              isProgressEditable: widget.isProgressEditable,
-              isCustomizable: widget.isCustomizable,
-            ),
-          ),
-          if (widget.isCustomizable) _buildAddGoalButton(notifier),
-        ],
+    if (isMobile) {
+      return _EditableRoadmapMobileLayout(
+        roadmap: widget.roadmap,
+        expandedGoals: _expandedGoals,
+        shrinkWrap: widget.shrinkWrap,
+        isProgressEditable: widget.isProgressEditable,
+        isCustomizable: widget.isCustomizable,
+        onToggleGoal: _toggleGoal,
+        onAddGoal: notifier == null ? null : () => _showAddGoalDialog(notifier),
       );
     }
 
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.all(16),
-            itemCount: widget.roadmap.goals.length,
-            itemBuilder: (context, index) => EditableGoalNodeMobile(
-              key: ValueKey(widget.roadmap.goals[index].id),
-              goal: widget.roadmap.goals[index],
-              roadmapId: widget.roadmap.id,
-              index: index,
-              isExpanded: _expandedGoals.contains(index),
-              onToggle: () => _toggleGoal(index),
-              isProgressEditable: widget.isProgressEditable,
-              isCustomizable: widget.isCustomizable,
-            ),
-          ),
-        ),
-        if (widget.isCustomizable) _buildAddGoalButton(notifier),
-      ],
-    );
-  }
-
-  Widget _buildWebLayout(dynamic notifier) {
-    if (widget.shrinkWrap) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            itemCount: widget.roadmap.goals.length,
-            itemBuilder: (context, index) => GoalNodeWeb(
-              key: ValueKey(widget.roadmap.goals[index].id),
-              goal: widget.roadmap.goals[index],
-              roadmapId: widget.roadmap.id,
-              index: index,
-              isExpanded: _expandedGoals.contains(index),
-              onToggle: () => _toggleGoal(index),
-              haveDivider: index < widget.roadmap.goals.length - 1,
-              isProgressEditable: widget.isProgressEditable,
-              isCustomizable: widget.isCustomizable,
-            ),
-          ),
-          if (widget.isCustomizable) _buildAddGoalButton(notifier),
-        ],
-      );
-    }
-
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            itemCount: widget.roadmap.goals.length,
-            itemBuilder: (context, index) => GoalNodeWeb(
-              key: ValueKey(widget.roadmap.goals[index].id),
-              goal: widget.roadmap.goals[index],
-              roadmapId: widget.roadmap.id,
-              index: index,
-              isExpanded: _expandedGoals.contains(index),
-              onToggle: () => _toggleGoal(index),
-              haveDivider: index < widget.roadmap.goals.length - 1,
-              isProgressEditable: widget.isProgressEditable,
-              isCustomizable: widget.isCustomizable,
-            ),
-          ),
-        ),
-        if (widget.isCustomizable) _buildAddGoalButton(notifier),
-      ],
-    );
-  }
-
-  Widget _buildAddGoalButton(dynamic notifier) {
-    return Padding(
-      padding: EdgeInsets.all(16),
-      child: SizedBox(
-        width: double.infinity,
-        child: !kIsWeb && (Platform.isAndroid || Platform.isIOS)
-            ? FilledButton.icon(
-                onPressed: () => _showAddGoalDialog(notifier),
-                icon: Icon(Icons.add),
-                label: Text('Add Goal'),
-                style: FilledButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 14),
-                ),
-              )
-            : OutlinedButton.icon(
-                onPressed: () => _showAddGoalDialog(notifier),
-                icon: Icon(Icons.add),
-                label: Text('Add Goal'),
-                style: OutlinedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                ),
-              ),
-      ),
+    return _EditableRoadmapWebLayout(
+      roadmap: widget.roadmap,
+      expandedGoals: _expandedGoals,
+      shrinkWrap: widget.shrinkWrap,
+      isProgressEditable: widget.isProgressEditable,
+      isCustomizable: widget.isCustomizable,
+      onToggleGoal: _toggleGoal,
+      onAddGoal: notifier == null ? null : () => _showAddGoalDialog(notifier),
     );
   }
 
@@ -199,13 +88,185 @@ class _EditableRoadmapTreeState extends ConsumerState<EditableRoadmapTree> {
     });
   }
 
-  void _showAddGoalDialog(dynamic notifier) {
+  void _showAddGoalDialog(CreatePostNotifier? notifier) {
     if (notifier == null) return;
 
     showDialog(
       context: context,
       builder: (context) =>
-          AddGoalDialog(onSave: (title) => notifier.addNewGoal(title)),
+          AddGoalDialog(onSave: (title) => notifier.addGoal(title)),
+    );
+  }
+}
+
+class _EditableRoadmapMobileLayout extends StatelessWidget {
+  final Roadmap roadmap;
+  final List<int> expandedGoals;
+  final bool isProgressEditable;
+  final bool isCustomizable;
+  final bool shrinkWrap;
+  final ValueChanged<int> onToggleGoal;
+  final VoidCallback? onAddGoal;
+
+  const _EditableRoadmapMobileLayout({
+    required this.roadmap,
+    required this.expandedGoals,
+    required this.isProgressEditable,
+    required this.isCustomizable,
+    required this.shrinkWrap,
+    required this.onToggleGoal,
+    required this.onAddGoal,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (shrinkWrap) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.all(16),
+            itemCount: roadmap.goals.length,
+            itemBuilder: (context, index) => EditableGoalNodeMobile(
+              key: ValueKey(roadmap.goals[index].id),
+              goal: roadmap.goals[index],
+              roadmapId: roadmap.id,
+              index: index,
+              isExpanded: expandedGoals.contains(index),
+              onToggle: () => onToggleGoal(index),
+              isProgressEditable: isProgressEditable,
+              isCustomizable: isCustomizable,
+            ),
+          ),
+          if (isCustomizable && onAddGoal != null)
+            _AddGoalButton(onPressed: onAddGoal!),
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: false,
+            padding: EdgeInsets.all(16),
+            itemCount: roadmap.goals.length,
+            itemBuilder: (context, index) => EditableGoalNodeMobile(
+              key: ValueKey(roadmap.goals[index].id),
+              goal: roadmap.goals[index],
+              roadmapId: roadmap.id,
+              index: index,
+              isExpanded: expandedGoals.contains(index),
+              onToggle: () => onToggleGoal(index),
+              isProgressEditable: isProgressEditable,
+              isCustomizable: isCustomizable,
+            ),
+          ),
+        ),
+        if (isCustomizable && onAddGoal != null)
+          _AddGoalButton(onPressed: onAddGoal!),
+      ],
+    );
+  }
+}
+
+class _EditableRoadmapWebLayout extends StatelessWidget {
+  final Roadmap roadmap;
+  final List<int> expandedGoals;
+  final bool isProgressEditable;
+  final bool isCustomizable;
+  final bool shrinkWrap;
+  final ValueChanged<int> onToggleGoal;
+  final VoidCallback? onAddGoal;
+
+  const _EditableRoadmapWebLayout({
+    required this.roadmap,
+    required this.expandedGoals,
+    required this.isProgressEditable,
+    required this.isCustomizable,
+    required this.shrinkWrap,
+    required this.onToggleGoal,
+    required this.onAddGoal,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (shrinkWrap) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            itemCount: roadmap.goals.length,
+            itemBuilder: (context, index) => GoalNodeWeb(
+              key: ValueKey(roadmap.goals[index].id),
+              goal: roadmap.goals[index],
+              roadmapId: roadmap.id,
+              index: index,
+              isExpanded: expandedGoals.contains(index),
+              onToggle: () => onToggleGoal(index),
+              haveDivider: index < roadmap.goals.length - 1,
+              isProgressEditable: isProgressEditable,
+              isCustomizable: isCustomizable,
+            ),
+          ),
+          if (isCustomizable && onAddGoal != null)
+            _AddGoalButton(onPressed: onAddGoal!),
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: false,
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            itemCount: roadmap.goals.length,
+            itemBuilder: (context, index) => GoalNodeWeb(
+              key: ValueKey(roadmap.goals[index].id),
+              goal: roadmap.goals[index],
+              roadmapId: roadmap.id,
+              index: index,
+              isExpanded: expandedGoals.contains(index),
+              onToggle: () => onToggleGoal(index),
+              haveDivider: index < roadmap.goals.length - 1,
+              isProgressEditable: isProgressEditable,
+              isCustomizable: isCustomizable,
+            ),
+          ),
+        ),
+        if (isCustomizable && onAddGoal != null)
+          _AddGoalButton(onPressed: onAddGoal!),
+      ],
+    );
+  }
+}
+
+class _AddGoalButton extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const _AddGoalButton({required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: SizedBox(
+        width: double.infinity,
+        child: FilledButton.icon(
+          onPressed: onPressed,
+          icon: Icon(Icons.add),
+          label: Text('Add Goal'),
+          style: FilledButton.styleFrom(
+            padding: EdgeInsets.symmetric(vertical: 14),
+          ),
+        ),
+      ),
     );
   }
 }

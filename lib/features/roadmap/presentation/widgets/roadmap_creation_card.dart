@@ -29,7 +29,7 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
     final roadmap = ref.watch(roadmapProvider);
     if (!kIsWeb && Platform.isAndroid) {
       return Card(
-        elevation: 10,
+        elevation: 5,
         color: colorScheme.surfaceContainer,
         child: Padding(
           padding: EdgeInsets.all(20),
@@ -71,7 +71,7 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
                       ),
                       onPressed: () {},
                       child: LoadingAnimationWidget.fourRotatingDots(
-                        color: Colors.white,
+                        color: colorScheme.onPrimary,
                         size: 24,
                       ),
                     ),
@@ -146,7 +146,7 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
                     AsyncLoading() => FilledButton(
                       onPressed: () {},
                       child: LoadingAnimationWidget.fourRotatingDots(
-                        color: Colors.white,
+                        color: colorScheme.primary,
                         size: 20,
                       ),
                     ),

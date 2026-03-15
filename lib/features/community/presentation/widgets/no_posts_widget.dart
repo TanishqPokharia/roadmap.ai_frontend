@@ -7,33 +7,34 @@ class NoPostsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.textTheme;
-
+    final colorScheme = context.colorScheme;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.post_add, size: 80, color: Colors.grey.shade400),
+          Icon(Icons.post_add, size: 80, color: colorScheme.primary),
           SizedBox(height: 16),
           Text(
             'No posts yet',
             style: textTheme.titleLarge!.copyWith(
               fontWeight: FontWeight.bold,
-              color: Colors.grey.shade700,
+              color: colorScheme.onSurface,
             ),
           ),
           SizedBox(height: 8),
           Text(
             'Create and share your first roadmap!',
-            style: textTheme.bodyMedium!.copyWith(color: Colors.grey.shade600),
+            style: textTheme.bodyMedium!.copyWith(color: colorScheme.onSurface),
           ),
           SizedBox(height: 24),
-          FilledButton.icon(
-            onPressed: () {
-              // Navigate to create roadmap
-            },
-            icon: Icon(Icons.add),
-            label: Text('Create Roadmap'),
-          ),
+          // FilledButton.icon(
+          //   onPressed: () {
+          //     // Navigate to create roadmap
+
+          //   },
+          //   icon: Icon(Icons.add),
+          //   label: Text('Create Roadmap'),
+          // ),
         ],
       ),
     );

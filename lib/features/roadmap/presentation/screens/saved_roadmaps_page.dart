@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/core/utils/failure_message.dart';
@@ -16,7 +17,8 @@ class SavedRoadmapsPage extends ConsumerStatefulWidget {
   ConsumerState<SavedRoadmapsPage> createState() => _SavedRoadmapsPageState();
 }
 
-class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage> {
+class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage>
+    with AutomaticKeepAliveClientMixin {
   late ScrollController _scrollController;
   final Set<int> _animatedIndexes = {};
   @override
@@ -40,18 +42,19 @@ class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
+    final colorScheme = context.colorScheme;
     final savedRoadmaps = ref.watch(savedRoadmapsProvider);
 
     if (!kIsWeb && Platform.isAndroid) {
       return Padding(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 60),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: screenHeight * 0.04),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: screenHeight * 0.01,
@@ -68,9 +71,9 @@ class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage> {
                 ),
               ],
             ),
-            SizedBox(height: screenHeight * 0.04),
             Expanded(
               child: savedRoadmaps.when(
+                skipLoadingOnRefresh: false,
                 data: (data) {
                   if (data.roadmaps.isEmpty) {
                     return Center(
@@ -108,12 +111,13 @@ class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage> {
                     },
                     child: ListView.separated(
                       controller: _scrollController,
-                      padding: EdgeInsets.only(bottom: 100),
+                      padding: EdgeInsets.only(bottom: 100, top: 50),
                       itemBuilder: (context, index) {
                         final roadmap = data.roadmaps[index];
 
                         if (index == data.roadmaps.length - 1 &&
-                            data.canGetMore) {
+                            data.canGetMore &&
+                            data.isFetching) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
@@ -146,10 +150,25 @@ class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage> {
                   );
                 },
                 loading: () {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(
+                    child: LoadingAnimationWidget.threeRotatingDots(
+                      color: colorScheme.primary,
+                      size: 30,
+                    ),
+                  );
                 },
                 error: (error, stackTrace) {
-                  return Center(child: Text(failureMessage(error)));
+                  return RefreshIndicator(
+                    onRefresh: () => ref.refresh(savedRoadmapsProvider.future),
+                    child: ListView(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: screenHeight / 4),
+                          child: Center(child: Text(failureMessage(error))),
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
             ),
@@ -264,4 +283,7 @@ class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage> {
   bool shouldAnimate(int index) {
     return _animatedIndexes.add(index);
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

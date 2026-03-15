@@ -33,71 +33,89 @@ class _RoadmapTreeState extends State<RoadmapTree> {
 
   @override
   Widget build(BuildContext context) {
-    // Mobile layout
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-      return _buildMobileLayout();
+      return _RoadmapTreeMobileLayout(
+        roadmap: widget.roadmap,
+        expandedGoalIndexes: _expandedGoalIndexes,
+        onToggleGoal: _toggleGoal,
+      );
     }
 
-    // Web/Desktop layout
-    return _buildWebLayout();
-  }
-
-  Widget _buildMobileLayout() {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: widget.roadmap.goals.length,
-      itemBuilder: (context, index) => GoalNodeMobile(
-        key: ValueKey(widget.roadmap.goals[index].id),
-        goal: widget.roadmap.goals[index],
-        index: index,
-        isExpanded: _expandedGoalIndexes.contains(index),
-        onToggle: () {
-          setState(() {
-            if (_expandedGoalIndexes.contains(index)) {
-              _expandedGoalIndexes.remove(index);
-            } else {
-              _expandedGoalIndexes.add(index);
-            }
-          });
-        },
-      ),
+    return _RoadmapTreeWebLayout(
+      roadmap: widget.roadmap,
+      expandedGoalIndexes: _expandedGoalIndexes,
+      onToggleGoal: _toggleGoal,
     );
   }
 
-  Widget _buildWebLayout() {
+  void _toggleGoal(int index) {
+    setState(() {
+      if (_expandedGoalIndexes.contains(index)) {
+        _expandedGoalIndexes.remove(index);
+      } else {
+        _expandedGoalIndexes.add(index);
+      }
+    });
+  }
+}
+
+class _RoadmapTreeMobileLayout extends StatelessWidget {
+  final Roadmap roadmap;
+  final List<int> expandedGoalIndexes;
+  final ValueChanged<int> onToggleGoal;
+
+  const _RoadmapTreeMobileLayout({
+    required this.roadmap,
+    required this.expandedGoalIndexes,
+    required this.onToggleGoal,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: roadmap.goals.length,
+      itemBuilder: (context, index) => GoalNodeMobile(
+        key: ValueKey(roadmap.goals[index].id),
+        goal: roadmap.goals[index],
+        index: index,
+        isExpanded: expandedGoalIndexes.contains(index),
+        onToggle: () => onToggleGoal(index),
+      ),
+    );
+  }
+}
+
+class _RoadmapTreeWebLayout extends StatelessWidget {
+  final Roadmap roadmap;
+  final List<int> expandedGoalIndexes;
+  final ValueChanged<int> onToggleGoal;
+
+  const _RoadmapTreeWebLayout({
+    required this.roadmap,
+    required this.expandedGoalIndexes,
+    required this.onToggleGoal,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      itemCount: widget.roadmap.goals.length,
+      itemCount: roadmap.goals.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: EdgeInsets.only(bottom: 10),
           child: GestureDetector(
-            onTap: () {
-              setState(() {
-                if (_expandedGoalIndexes.contains(index)) {
-                  _expandedGoalIndexes.remove(index);
-                } else {
-                  _expandedGoalIndexes.add(index);
-                }
-              });
-            },
+            onTap: () => onToggleGoal(index),
             child: GoalNodeWeb(
-              goal: widget.roadmap.goals[index],
+              goal: roadmap.goals[index],
               index: index,
-              haveDivider: index < widget.roadmap.goals.length - 1,
-              isExpanded: _expandedGoalIndexes.contains(index),
-              onToggle: () {
-                setState(() {
-                  if (_expandedGoalIndexes.contains(index)) {
-                    _expandedGoalIndexes.remove(index);
-                  } else {
-                    _expandedGoalIndexes.add(index);
-                  }
-                });
-              },
+              haveDivider: index < roadmap.goals.length - 1,
+              isExpanded: expandedGoalIndexes.contains(index),
+              onToggle: () => onToggleGoal(index),
             ),
           ),
         );

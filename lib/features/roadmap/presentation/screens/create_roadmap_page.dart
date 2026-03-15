@@ -61,9 +61,8 @@ class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage> {
 
     if (!kIsWeb && Platform.isAndroid) {
       return Padding(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 10),
         child: ListView(
-          physics: const ClampingScrollPhysics(),
           children: [
             Column(
               spacing: 10,
@@ -140,7 +139,7 @@ class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage> {
                                     height: screenHeight * 0.025,
                                     child:
                                         LoadingAnimationWidget.staggeredDotsWave(
-                                          color: Colors.white,
+                                          color: colorScheme.onPrimary,
                                           size: screenHeight * 0.025,
                                         ),
                                   ),
@@ -156,6 +155,8 @@ class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage> {
                                       'Saved',
                                       style: textTheme.bodyMedium!.copyWith(
                                         color: colorScheme.onPrimary,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "",
                                       ),
                                     ),
 

@@ -109,7 +109,7 @@ class _SignUpCardState extends ConsumerState<SignUpCard> {
                     TextFormField(
                       style: textTheme.bodyLarge,
                       decoration: InputDecoration(
-                        errorStyle: textTheme.bodyLarge?.copyWith(
+                        errorStyle: textTheme.bodySmall?.copyWith(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
                         ),
@@ -148,7 +148,7 @@ class _SignUpCardState extends ConsumerState<SignUpCard> {
                     TextFormField(
                       style: textTheme.bodyLarge,
                       decoration: InputDecoration(
-                        errorStyle: textTheme.bodyLarge?.copyWith(
+                        errorStyle: textTheme.bodySmall?.copyWith(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
                         ),
@@ -182,7 +182,7 @@ class _SignUpCardState extends ConsumerState<SignUpCard> {
                     TextFormField(
                       style: textTheme.bodyLarge,
                       decoration: InputDecoration(
-                        errorStyle: textTheme.bodyLarge?.copyWith(
+                        errorStyle: textTheme.bodySmall?.copyWith(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
                         ),
@@ -248,7 +248,7 @@ class _SignUpCardState extends ConsumerState<SignUpCard> {
                     TextFormField(
                       style: textTheme.bodyLarge,
                       decoration: InputDecoration(
-                        errorStyle: textTheme.bodyLarge?.copyWith(
+                        errorStyle: textTheme.bodySmall?.copyWith(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
                         ),

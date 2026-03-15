@@ -4,7 +4,6 @@ import 'package:roadmap_ai/core/common/entities/goal.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/subgoal_node_mobile.dart';
 
-/// Mobile-optimized goal node with card-based layout
 class GoalNodeMobile extends StatefulWidget {
   const GoalNodeMobile({
     super.key,
