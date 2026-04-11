@@ -7,4 +7,5 @@ class AppRoutes {
   static const String createPost = '/createPost';
   static const String profile = '/profile';
   static const String roadmapView = '/roadmap/view';
+  static const String authorPosts = '/posts/author';
 }

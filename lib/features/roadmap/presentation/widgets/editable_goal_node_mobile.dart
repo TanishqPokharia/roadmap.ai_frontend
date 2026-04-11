@@ -165,6 +165,7 @@ class _GoalNodeMobileState extends ConsumerState<EditableGoalNodeMobile> {
                           icon: Icon(Icons.add, size: 18),
                           label: Text('Add Subgoal'),
                           style: OutlinedButton.styleFrom(
+                            foregroundColor: colorScheme.onSurface,
                             padding: EdgeInsets.symmetric(vertical: 12),
                           ),
                         ),

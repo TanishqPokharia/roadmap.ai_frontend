@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/features/auth/domain/usecases/login_user/login_user.dart';
+import 'package:roadmap_ai/features/auth/domain/usecases/login_user_with_google/login_user_with_google.dart';
 
 part 'login_notifier.g.dart';
 
@@ -17,6 +18,22 @@ class LoginNotifier extends _$LoginNotifier {
     final login = await ref
         .read(loginUserProvider)
         .call(LoginUserParams(email: email, password: password))
+        .run();
+    login.fold(
+      (failure) {
+        state = AsyncError(failure, StackTrace.current);
+      },
+      (r) {
+        state = const AsyncData(LoginState.success);
+      },
+    );
+  }
+
+  void loginWithGoogle({required String googleIdToken}) async {
+    state = AsyncLoading();
+    final login = await ref
+        .read(loginUserWihGoogleProvider)
+        .call(LoginUserWithGoogleParams(googleIdToken: googleIdToken))
         .run();
     login.fold(
       (failure) {

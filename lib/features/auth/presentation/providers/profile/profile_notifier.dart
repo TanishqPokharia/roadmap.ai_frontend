@@ -6,6 +6,8 @@ import 'package:roadmap_ai/features/auth/domain/usecases/get_user_details/get_us
 import 'package:roadmap_ai/features/auth/domain/usecases/update_user_avatar/update_user_avatar.dart';
 part 'profile_notifier.g.dart';
 
+Duration? preventProfileRetry(int _, Object __) => null;
+
 class ProfileState {
   final UserDetails userDetails;
   final String? error;
@@ -13,7 +15,7 @@ class ProfileState {
   ProfileState({required this.userDetails, this.error});
 }
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: true, retry: preventProfileRetry)
 class ProfileNotifier extends _$ProfileNotifier {
   @override
   FutureOr<ProfileState> build() async {
@@ -47,6 +49,7 @@ class ProfileNotifier extends _$ProfileNotifier {
           username: currentState.value.userDetails.username,
           email: currentState.value.userDetails.email,
           avatarUrl: newAvatarUrl,
+          createdAt: currentState.value.userDetails.createdAt,
         );
         state = AsyncData(ProfileState(userDetails: updatedUserDetails));
       },

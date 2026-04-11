@@ -59,16 +59,13 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
 
     if (!kIsWeb && Platform.isAndroid) {
       return Scaffold(
-        floatingActionButton: Padding(
-          padding: EdgeInsetsGeometry.only(bottom: 20),
-          child: FloatingActionButton(
-            backgroundColor: colorScheme.primaryContainer,
-            foregroundColor: colorScheme.primary,
-            onPressed: () {
-              _showFiltersSheet(context);
-            },
-            child: Icon(Icons.filter_alt),
-          ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: colorScheme.primaryContainer,
+          foregroundColor: colorScheme.primary,
+          onPressed: () {
+            _showFiltersSheet(context);
+          },
+          child: Icon(Icons.filter_alt),
         ),
         body: Padding(
           padding: EdgeInsetsGeometry.only(left: 20, right: 20, top: 60),

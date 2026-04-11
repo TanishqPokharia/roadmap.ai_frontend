@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:roadmap_ai/core/common/providers/theme_notifier.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/themes/themes.dart';
 import 'package:roadmap_ai/features/auth/presentation/providers/login/login_notifier.dart';
 import 'package:roadmap_ai/features/auth/presentation/providers/profile/profile_notifier.dart';
@@ -14,6 +16,9 @@ import 'package:toastification/toastification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GoogleSignIn.instance.initialize(
+    serverClientId: AppConstants.googleClientId,
+  );
   runApp(ProviderScope(child: const MyApp()));
 }
 
@@ -30,8 +35,6 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // when a successfull login or signup occurs, refresh the whole state of the app
-
     ref.listen(loginProvider, (prev, next) {
       if (prev?.asData?.value != LoginState.success &&
           next.asData?.value == LoginState.success) {

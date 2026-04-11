@@ -36,10 +36,6 @@ class PostTile extends ConsumerWidget {
       return Animate(
         effects: animate
             ? [
-                // FadeEffect(
-                //   delay: Duration(milliseconds: 200 * index),
-                //   duration: Duration(milliseconds: 500),
-                // ),
                 SlideEffect(
                   delay: Duration(milliseconds: 100 * index),
                   duration: Durations.extralong2,
@@ -66,10 +62,9 @@ class PostTile extends ConsumerWidget {
                 Row(
                   children: [
                     Text(
-                      'Created by  ',
+                      'Posted by  ',
                       style: textTheme.bodyMedium!.copyWith(),
                     ),
-                    SizedBox(width: screenWidth * 0.005),
                     CircleAvatar(
                       radius: screenHeight * 0.02,
                       backgroundImage: post.author.avatar != null
@@ -79,10 +74,12 @@ class PostTile extends ConsumerWidget {
                           ? Icon(Icons.person, color: Colors.white)
                           : null,
                     ),
+                    SizedBox(width: 10),
                     Text(
-                      '  ${post.author.username}',
+                      post.author.username,
                       style: textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
                       ),
                     ),
                   ],
@@ -224,7 +221,7 @@ class PostTile extends ConsumerWidget {
               SizedBox(height: screenHeight * 0.005),
               Row(
                 children: [
-                  Text('Created by', style: textTheme.bodyLarge!.copyWith()),
+                  Text('Posted by', style: textTheme.bodyLarge!.copyWith()),
                   SizedBox(width: screenWidth * 0.005),
                   CircleAvatar(
                     radius: screenHeight * 0.02,

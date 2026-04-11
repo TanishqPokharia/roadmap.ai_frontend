@@ -227,4 +227,33 @@ class AuthDatasourceImpl implements AuthDatasource {
       ),
     );
   }
+
+  @override
+  TaskEither<Failure, TokensModel> loginMobileWithGoogle({
+    required String googleIdToken,
+  }) {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.post(
+          '/auth/login',
+          data: {'googleIdToken': googleIdToken},
+        );
+
+        if (response.statusCode == 400) {
+          throw BadRequestFailure('Invalid email or password');
+        } else if (response.statusCode == 404) {
+          throw NotFoundFailure('User not found');
+        } else if (response.statusCode != 200) {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+
+        final data = response.data;
+        return TokensModel.fromJson(data);
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Login on mobile failed',
+      ),
+    );
+  }
 }

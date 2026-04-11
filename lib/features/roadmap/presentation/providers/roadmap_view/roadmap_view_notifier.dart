@@ -29,13 +29,13 @@ class RoadmapViewNotifier extends _$RoadmapViewNotifier {
         .call(GetRoadmapByIdParams(roadmapId: roadmapId))
         .run();
 
-    return roadmap.fold(
-      (failure) => throw Exception('Failed to load roadmap'),
-      (roadmap) {
-        _roadmap = roadmap;
-        return RoadmapViewState(roadmap: roadmap);
-      },
-    );
+    // artificial delay to wait for page transition
+    await Future.delayed(Duration(milliseconds: 200));
+
+    return roadmap.fold((failure) => throw 'Failed to load roadmap', (roadmap) {
+      _roadmap = roadmap;
+      return RoadmapViewState(roadmap: roadmap);
+    });
   }
 
   Future<void> updateSubgoalStatus({

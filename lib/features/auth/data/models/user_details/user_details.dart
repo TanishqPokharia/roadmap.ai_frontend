@@ -10,6 +10,7 @@ abstract class UserDetailsModel with _$UserDetailsModel {
     required String username,
     required String email,
     required String? avatarUrl,
+    required String createdAt,
   }) = _UserDetailsModel;
 
   factory UserDetailsModel.fromJson(Map<String, dynamic> json) =>
@@ -20,12 +21,18 @@ abstract class UserDetailsModel with _$UserDetailsModel {
       username: userDetails.username,
       email: userDetails.email,
       avatarUrl: userDetails.avatarUrl,
+      createdAt: userDetails.createdAt,
     );
   }
 }
 
 extension UserDetailsModelEntity on UserDetailsModel {
   UserDetails toEntity() {
-    return UserDetails(username: username, email: email, avatarUrl: avatarUrl);
+    return UserDetails(
+      username: username,
+      email: email,
+      avatarUrl: avatarUrl,
+      createdAt: createdAt,
+    );
   }
 }

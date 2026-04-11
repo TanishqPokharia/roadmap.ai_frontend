@@ -113,7 +113,7 @@ class PostDatasourceImpl implements PostDatasource {
   }) {
     return TaskEither.tryCatch(
       () async {
-        final response = await _dio.get('/post/details/$postId');
+        final response = await _dio.get('/post/$postId');
 
         if (response.statusCode != 200) {
           throw httpErrorHandler(response.statusCode ?? 0);
@@ -247,6 +247,40 @@ class PostDatasourceImpl implements PostDatasource {
       (error, stackTrace) => dataSourceErrorHandler(
         error: error,
         message: 'Failed to toggle like',
+      ),
+    );
+  }
+
+  @override
+  TaskEither<Failure, List<PostMetadataModel>> getPostsByAuthor({
+    int limit = 10,
+    int skip = 0,
+    required String authorId,
+  }) {
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.get(
+          '/post/author/$authorId',
+          queryParameters: {'limit': limit, 'skip': skip},
+        );
+
+        if (response.statusCode != 200) {
+          throw httpErrorHandler(response.statusCode ?? 0);
+        }
+
+        final data = response.data;
+        final List<dynamic> posts = data['posts'];
+        final result = posts
+            .map(
+              (postJson) =>
+                  PostMetadataModel.fromJson(postJson as Map<String, dynamic>),
+            )
+            .toList();
+        return result;
+      },
+      (error, stackTrace) => dataSourceErrorHandler(
+        error: error,
+        message: 'Fetching posts by author failed',
       ),
     );
   }

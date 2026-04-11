@@ -4,12 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:roadmap_ai/core/common/toast/error.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/core/utils/format_date.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/post_details/post_details_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/roadmap_tree.dart';
+import 'package:roadmap_ai/router/routes.dart';
 
 class PostPage extends ConsumerWidget {
   const PostPage({super.key, required this.postId, required this.title});
@@ -28,6 +30,9 @@ class PostPage extends ConsumerWidget {
       if (next is AsyncData<PostDetailsState> && next.value.error != null) {
         showErrorToast(context: context, error: "${next.value.error}");
       }
+      if (next is AsyncError<PostDetailsState>) {
+        showErrorToast(context: context, error: "${next.error}");
+      }
     });
 
     if (!kIsWeb && Platform.isAndroid) {
@@ -36,7 +41,13 @@ class PostPage extends ConsumerWidget {
           child: Padding(
             padding: EdgeInsets.only(left: 20, right: 20),
             child: postDetails.when(
-              loading: () => Center(child: CircularProgressIndicator()),
+              skipLoadingOnRefresh: false,
+              loading: () => Center(
+                child: LoadingAnimationWidget.threeRotatingDots(
+                  color: colorScheme.primary,
+                  size: 30,
+                ),
+              ),
               error: (error, stackTrace) {
                 return Center(
                   child: Text(
@@ -52,6 +63,7 @@ class PostPage extends ConsumerWidget {
                     children: [
                       SizedBox(height: 20),
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           IconButton(
@@ -80,11 +92,22 @@ class PostPage extends ConsumerWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(
-                                data.postDetails.post.author.username,
-                                style: textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: colorScheme.primary,
+                              GestureDetector(
+                                onTap: () {
+                                  context.pushNamed(
+                                    AppRoutes.authorPosts,
+                                    pathParameters: {
+                                      "authorId":
+                                          data.postDetails.post.author.id,
+                                    },
+                                  );
+                                },
+                                child: Text(
+                                  data.postDetails.post.author.username,
+                                  style: textTheme.bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 10),

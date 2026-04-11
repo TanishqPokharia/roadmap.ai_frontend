@@ -32,5 +32,10 @@ abstract class PostRepository {
     int skip = 0,
     required String title,
   });
+  TaskEither<Failure, List<PostMetadata>> getPostsByAuthor({
+    int limit = 10,
+    int skip = 0,
+    required String authorId,
+  });
   TaskEither<Failure, void> togglePostLike({required String postId});
 }

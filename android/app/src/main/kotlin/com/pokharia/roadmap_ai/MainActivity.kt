@@ -1,4 +1,4 @@
-package com.example.roadmap_ai
+package com.pokharia.roadmap_ai
 
 import io.flutter.embedding.android.FlutterActivity
 

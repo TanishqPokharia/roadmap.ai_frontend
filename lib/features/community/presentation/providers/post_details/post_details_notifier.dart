@@ -6,6 +6,8 @@ import 'package:roadmap_ai/features/roadmap/presentation/providers/saved_roadmap
 
 part 'post_details_notifier.g.dart';
 
+Duration? _disableRetry(int retryCount, Object error) => null;
+
 class PostDetailsState {
   final PostDetails postDetails;
   final String? error;
@@ -13,7 +15,7 @@ class PostDetailsState {
   PostDetailsState({required this.postDetails, required this.error});
 }
 
-@riverpod
+@Riverpod(retry: _disableRetry)
 class PostDetailsNotifier extends _$PostDetailsNotifier {
   @override
   FutureOr<PostDetailsState> build(String postId) async {
@@ -21,6 +23,7 @@ class PostDetailsNotifier extends _$PostDetailsNotifier {
         .read(getPostDetailsProvider)
         .call(GetPostDetailsParams(postId: postId))
         .run();
+    await Future.delayed(Duration(milliseconds: 200));
     return postDetails.fold(
       (failure) => throw failure,
       (details) => PostDetailsState(error: null, postDetails: details),

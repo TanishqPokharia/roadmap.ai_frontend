@@ -71,7 +71,7 @@ class _YourPostsPageState extends ConsumerState<YourPostsPage> {
     if (!kIsWeb && Platform.isAndroid) {
       return Scaffold(
         body: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+          padding: EdgeInsets.only(left: 20, right: 20, top: 30),
           child: RefreshIndicator(
             onRefresh: () {
               return Future.wait([

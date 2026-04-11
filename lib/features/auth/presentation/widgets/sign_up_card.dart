@@ -44,7 +44,7 @@ class _SignUpCardState extends ConsumerState<SignUpCard> {
       return Form(
         key: _formKey,
         child: Card(
-          color: colorScheme.surface,
+          color: colorScheme.surfaceContainer,
           elevation: 20,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),

@@ -5,6 +5,7 @@ import 'package:roadmap_ai/core/common/pages/navigation_page.dart';
 import 'package:roadmap_ai/features/auth/presentation/screens/auth_page.dart';
 import 'package:roadmap_ai/features/auth/presentation/screens/profile_page.dart';
 import 'package:roadmap_ai/features/auth/presentation/screens/splash_page.dart';
+import 'package:roadmap_ai/features/community/presentation/screens/author_posts_page.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/create_post_page.dart';
 import 'package:roadmap_ai/features/community/presentation/screens/post_page.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/screens/roadmap_view_page.dart';
@@ -80,18 +81,15 @@ final class AppRouter {
                 transitionDuration: Durations.medium1,
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
-                      return FadeTransition(
-                        opacity: animation,
-                        child: SlideTransition(
-                          position:
-                              Tween<Offset>(
-                                    begin: Offset(1, 0),
-                                    end: Offset(0, 0),
-                                  )
-                                  .chain(CurveTween(curve: Curves.ease))
-                                  .animate(animation),
-                          child: child,
-                        ),
+                      return SlideTransition(
+                        position:
+                            Tween<Offset>(
+                                  begin: Offset(1, 0),
+                                  end: Offset(0, 0),
+                                )
+                                .chain(CurveTween(curve: Curves.ease))
+                                .animate(animation),
+                        child: child,
                       );
                     },
                 child: PostPage(postId: postId!, title: title!),
@@ -103,12 +101,47 @@ final class AppRouter {
             name: AppRoutes.createPost,
             pageBuilder: (context, state) {
               final roadmap = state.extra as RoadmapMetadata;
-              return MaterialPage(
+              return CustomTransitionPage(
+                transitionDuration: Durations.medium1,
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                      return SlideTransition(
+                        position:
+                            Tween<Offset>(
+                                  begin: Offset(1, 0),
+                                  end: Offset(0, 0),
+                                )
+                                .chain(CurveTween(curve: Curves.ease))
+                                .animate(animation),
+                        child: child,
+                      );
+                    },
                 child: CreatePostPage(roadmapMetaData: roadmap),
               );
             },
           ),
         ],
+      ),
+      GoRoute(
+        path: "/posts/author/:authorId",
+        name: AppRoutes.authorPosts,
+        pageBuilder: (context, state) {
+          final authorId = state.pathParameters['authorId'] ?? "";
+          return CustomTransitionPage(
+            transitionDuration: Durations.medium1,
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return SlideTransition(
+                    position: Tween<Offset>(
+                      begin: Offset(1, 0),
+                      end: Offset(0, 0),
+                    ).chain(CurveTween(curve: Curves.ease)).animate(animation),
+                    child: child,
+                  );
+                },
+            child: AuthorPostsPage(authorId: authorId),
+          );
+        },
       ),
     ],
   );

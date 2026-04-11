@@ -18,7 +18,7 @@ final class PostDetailsNotifierProvider
     required PostDetailsNotifierFamily super.from,
     required String super.argument,
   }) : super(
-         retry: null,
+         retry: _disableRetry,
          name: r'postDetailsProvider',
          isAutoDispose: true,
          dependencies: null,
@@ -51,7 +51,7 @@ final class PostDetailsNotifierProvider
 }
 
 String _$postDetailsNotifierHash() =>
-    r'7dbe8c2275fe4c46329e2f142512feb2f80b2770';
+    r'9acbbf6f91b2a87dbb38d5debdab69c03ca831fc';
 
 final class PostDetailsNotifierFamily extends $Family
     with
@@ -64,7 +64,7 @@ final class PostDetailsNotifierFamily extends $Family
         > {
   PostDetailsNotifierFamily._()
     : super(
-        retry: null,
+        retry: _disableRetry,
         name: r'postDetailsProvider',
         dependencies: null,
         $allTransitiveDependencies: null,

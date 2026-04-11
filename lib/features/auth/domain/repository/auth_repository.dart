@@ -9,6 +9,9 @@ abstract class AuthRepository {
     required String email,
     required String password,
   });
+  TaskEither<Failure, Tokens> loginMobileWithGoogle({
+    required String googleIdToken,
+  });
   TaskEither<Failure, Tokens> signUpMobile({
     required String email,
     required String password,

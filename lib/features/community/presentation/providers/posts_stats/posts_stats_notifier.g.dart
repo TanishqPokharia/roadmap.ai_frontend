@@ -46,4 +46,4 @@ final class UserPostStatsProvider
   }
 }
 
-String _$userPostStatsHash() => r'deb67c0b90e802d8eec330ad0351df028b2785e8';
+String _$userPostStatsHash() => r'ff907314bfd5c63efc9a3e3d5e865810815b0a6b';

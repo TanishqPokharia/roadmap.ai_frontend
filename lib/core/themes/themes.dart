@@ -27,7 +27,7 @@ class AppTheme {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-        foregroundColor: _lightColorScheme.primaryContainer,
+        foregroundColor: _lightColorScheme.primary,
         textStyle: GoogleFonts.teachers(fontWeight: FontWeight.bold),
       ),
     ),
@@ -61,7 +61,7 @@ class AppTheme {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-        foregroundColor: _lightColorScheme.primaryContainer,
+        foregroundColor: _lightColorScheme.primary,
         textStyle: GoogleFonts.teachers(fontWeight: FontWeight.bold),
       ),
     ),

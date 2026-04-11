@@ -35,6 +35,21 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  TaskEither<Failure, Tokens> loginMobileWithGoogle({
+    required String googleIdToken,
+  }) {
+    final result = _datasource.loginMobileWithGoogle(
+      googleIdToken: googleIdToken,
+    );
+    return result.map(
+      (tokensModel) => Tokens(
+        accessToken: tokensModel.accessToken,
+        refreshToken: tokensModel.refreshToken,
+      ),
+    );
+  }
+
+  @override
   TaskEither<Failure, Tokens> signUpMobile({
     required String email,
     required String password,
@@ -101,6 +116,7 @@ class AuthRepositoryImpl implements AuthRepository {
         username: userDetailsModel.username,
         email: userDetailsModel.email,
         avatarUrl: userDetailsModel.avatarUrl,
+        createdAt: userDetailsModel.createdAt,
       ),
     );
   }

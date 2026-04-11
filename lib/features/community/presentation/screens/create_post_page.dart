@@ -89,7 +89,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                         ),
                         onPressed: () {},
                         child: LoadingAnimationWidget.fourRotatingDots(
-                          color: Colors.white,
+                          color: colorScheme.onPrimary,
                           size: 20,
                         ),
                       ),
@@ -285,8 +285,9 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     return SizedBox(
                       height: screenHeight * 0.3,
                       child: Center(
-                        child: CircularProgressIndicator(
+                        child: LoadingAnimationWidget.threeRotatingDots(
                           color: colorScheme.primary,
+                          size: 30,
                         ),
                       ),
                     );
@@ -302,8 +303,9 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   loading: () => SizedBox(
                     height: screenHeight * 0.3,
                     child: Center(
-                      child: CircularProgressIndicator(
+                      child: LoadingAnimationWidget.threeRotatingDots(
                         color: colorScheme.primary,
+                        size: 30,
                       ),
                     ),
                   ),
@@ -578,8 +580,9 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     loading: () => SizedBox(
                       height: screenHeight * 0.3,
                       child: Center(
-                        child: CircularProgressIndicator(
+                        child: LoadingAnimationWidget.threeRotatingDots(
                           color: colorScheme.primary,
+                          size: 30,
                         ),
                       ),
                     ),

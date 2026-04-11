@@ -34,7 +34,7 @@ final class SavedRoadmapsNotifierProvider
 }
 
 String _$savedRoadmapsNotifierHash() =>
-    r'6bb2f7ef52be783d40c3ecd2a4ff11585ccb4bda';
+    r'081d815d18aac291c40dbe214f5a5aab357b4bf1';
 
 abstract class _$SavedRoadmapsNotifier
     extends $AsyncNotifier<SavedRoadmapsState> {

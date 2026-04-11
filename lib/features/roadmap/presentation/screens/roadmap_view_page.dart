@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
@@ -44,11 +45,15 @@ class _LoadingContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final colorScheme = context.colorScheme;
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(),
+          LoadingAnimationWidget.threeRotatingDots(
+            color: colorScheme.primary,
+            size: 30,
+          ),
           SizedBox(height: 16),
           Text('Loading roadmap...'),
         ],
@@ -114,19 +119,9 @@ class _RoadmapContent extends ConsumerStatefulWidget {
 }
 
 class _RoadmapContentState extends ConsumerState<_RoadmapContent> {
-  late bool _showTree;
-
   @override
   void initState() {
     super.initState();
-    _showTree = false;
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted) {
-        setState(() {
-          _showTree = true;
-        });
-      }
-    });
   }
 
   @override
@@ -159,12 +154,11 @@ class _RoadmapContentState extends ConsumerState<_RoadmapContent> {
                   ),
                 ],
               ),
-              if (_showTree)
-                EditableRoadmapTree(
-                  roadmap: widget.roadmap,
-                  isProgressEditable: true,
-                  shrinkWrap: true,
-                ),
+              EditableRoadmapTree(
+                roadmap: widget.roadmap,
+                isProgressEditable: true,
+                shrinkWrap: true,
+              ),
             ],
           ),
         ),
@@ -188,13 +182,12 @@ class _RoadmapContentState extends ConsumerState<_RoadmapContent> {
             style: textTheme.bodyLarge!.copyWith(color: Colors.blueGrey),
           ),
           SizedBox(height: screenHeight * 0.03),
-          if (_showTree)
-            Expanded(
-              child: EditableRoadmapTree(
-                roadmap: widget.roadmap,
-                isProgressEditable: true,
-              ),
+          Expanded(
+            child: EditableRoadmapTree(
+              roadmap: widget.roadmap,
+              isProgressEditable: true,
             ),
+          ),
         ],
       ),
     );

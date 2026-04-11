@@ -86,7 +86,7 @@ class PostsNotifier extends _$PostsNotifier {
       (failure) {
         _isFetching = false;
         _canGetMore = false;
-        return PostsState(posts: [], hasMore: false, error: failure.toString());
+        return PostsState(posts: [], hasMore: false, error: failure.message);
       },
       (data) {
         _posts.addAll(data);

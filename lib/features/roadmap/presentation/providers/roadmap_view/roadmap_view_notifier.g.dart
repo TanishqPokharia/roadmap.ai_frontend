@@ -51,7 +51,7 @@ final class RoadmapViewNotifierProvider
 }
 
 String _$roadmapViewNotifierHash() =>
-    r'4668daccf788c5eaf0457c627c1d8a29daed7a60';
+    r'e01c4677d573e7a36f684ae7f86afd1384d69b17';
 
 final class RoadmapViewNotifierFamily extends $Family
     with

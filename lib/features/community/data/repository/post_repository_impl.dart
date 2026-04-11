@@ -95,4 +95,15 @@ class PostRepositoryImpl implements PostRepository {
   TaskEither<Failure, void> togglePostLike({required String postId}) {
     return _datasource.togglePostLike(postId: postId);
   }
+
+  @override
+  TaskEither<Failure, List<PostMetadata>> getPostsByAuthor({
+    int limit = 10,
+    int skip = 0,
+    required String authorId,
+  }) {
+    return _datasource
+        .getPostsByAuthor(limit: limit, skip: skip, authorId: authorId)
+        .map((models) => models.map((model) => model.toEntity()).toList());
+  }
 }

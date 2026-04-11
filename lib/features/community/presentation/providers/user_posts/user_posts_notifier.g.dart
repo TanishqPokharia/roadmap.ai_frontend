@@ -33,7 +33,7 @@ final class UserPostsNotifierProvider
   UserPostsNotifier create() => UserPostsNotifier();
 }
 
-String _$userPostsNotifierHash() => r'5255078906759a0a59bfc3eed94f375090459c3d';
+String _$userPostsNotifierHash() => r'30ed1e4f03c56075ea34a2f3cce05e72073e80c6';
 
 abstract class _$UserPostsNotifier extends $AsyncNotifier<List<PostMetadata>> {
   FutureOr<List<PostMetadata>> build();

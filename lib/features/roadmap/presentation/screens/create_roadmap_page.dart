@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:roadmap_ai/core/common/toast/error.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/roadmap_tree.dart';
@@ -43,17 +44,13 @@ class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage> {
 
     ref.listen(roadmapProvider, (_, next) {
       if (next is AsyncError) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(next.error.toString())));
+        showErrorToast(context: context, error: next.error.toString());
       }
     });
 
     ref.listen(saveRoadmapProvider, (_, next) {
       if (next is AsyncError) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(next.error.toString())));
+        showErrorToast(context: context, error: next.error.toString());
       }
     });
 
@@ -61,7 +58,7 @@ class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage> {
 
     if (!kIsWeb && Platform.isAndroid) {
       return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
         child: ListView(
           children: [
             Column(

@@ -9,6 +9,11 @@ abstract class AuthDatasource {
     required String email,
     required String password,
   });
+
+  TaskEither<Failure, TokensModel> loginMobileWithGoogle({
+    required String googleIdToken,
+  });
+
   TaskEither<Failure, TokensModel> signUpMobile({
     required String email,
     required String password,
