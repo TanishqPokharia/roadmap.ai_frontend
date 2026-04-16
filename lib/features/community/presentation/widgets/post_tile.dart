@@ -1,16 +1,15 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
+import 'package:roadmap_ai/core/extensions/datetime_utility_extension.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
-import 'package:roadmap_ai/core/utils/format_date.dart';
 import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/posts/posts_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/post_like_button.dart';
+import 'package:roadmap_ai/features/community/presentation/widgets/post_views_widget.dart';
 import 'package:roadmap_ai/router/routes.dart';
 
 class PostTile extends ConsumerWidget {
@@ -32,7 +31,7 @@ class PostTile extends ConsumerWidget {
     final theme = context.theme;
     final colorScheme = context.colorScheme;
 
-    if (!kIsWeb && Platform.isAndroid) {
+    if (AppConstants.isAndroid) {
       return Animate(
         effects: animate
             ? [
@@ -55,18 +54,14 @@ class PostTile extends ConsumerWidget {
                 Text(
                   post.title,
                   style: context.textTheme.titleMedium!.copyWith(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
                 SizedBox(height: 10),
                 Row(
                   children: [
-                    Text(
-                      'Posted by  ',
-                      style: textTheme.bodyMedium!.copyWith(),
-                    ),
                     CircleAvatar(
-                      radius: screenHeight * 0.02,
+                      radius: 20,
                       backgroundImage: post.author.avatar != null
                           ? NetworkImage(post.author.avatar!)
                           : null,
@@ -75,76 +70,76 @@ class PostTile extends ConsumerWidget {
                           : null,
                     ),
                     SizedBox(width: 10),
-                    Text(
-                      post.author.username,
-                      style: textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline,
+                    RichText(
+                      text: TextSpan(
+                        text: "${post.author.username} on ",
+                        style: textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: (post.createdAt).formatDate(),
+                            style: TextStyle(color: colorScheme.primary),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 4),
-                Text(
-                  'On ${formatDate(post.createdAt)}',
-                  style: textTheme.bodyMedium!.copyWith(
-                    color: colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
                 SizedBox(height: 20),
                 Center(
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: SizedBox(
-                      height: 140,
-                      width: 300,
-                      child: Image.network(
-                        width: 300,
-                        height: 200,
-                        fit: BoxFit.cover,
-                        post.bannerImage,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Center(
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                  : null,
-                            ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[300],
-                            child: const Icon(
-                              Icons.broken_image,
-                              color: Colors.grey,
-                            ),
-                          );
-                        },
-                      ),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                    ),
+                    child: Image.network(
+                      height: 150,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      post.bannerImage,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[300],
+                          child: const Icon(
+                            Icons.broken_image,
+                            color: Colors.grey,
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
-                SizedBox(height: screenHeight * 0.02),
+                SizedBox(height: 10),
                 SizedBox(
                   width: screenWidth - 50,
                   child: Text(
                     post.description,
                     style: textTheme.bodyMedium?.copyWith(),
-                    maxLines: 5,
+                    textAlign: TextAlign.justify,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-
-                SizedBox(height: screenHeight * 0.02),
+                const SizedBox(height: 10),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.end,
                   spacing: 10,
                   children: [
+                    PostViewsWidget(views: post.views),
+                    const Spacer(),
                     GestureDetector(
                       onTap: () {
                         ref.read(postsProvider.notifier).toggleLike(index);
@@ -152,7 +147,7 @@ class PostTile extends ConsumerWidget {
                       child: AnimatedContainer(
                         duration: Durations.long1,
                         child: Row(
-                          spacing: 10,
+                          spacing: 6,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Icon(
@@ -168,7 +163,7 @@ class PostTile extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    SizedBox(width: screenHeight * 0.01),
+                    const SizedBox(),
                     FilledButton(
                       onPressed: () {
                         context.goNamed(
@@ -243,7 +238,7 @@ class PostTile extends ConsumerWidget {
               ),
               SizedBox(height: screenHeight * 0.005),
               Text(
-                'On ${formatDate(post.createdAt)}',
+                'On ${(post.createdAt).formatDate()}',
                 style: textTheme.bodyMedium!.copyWith(
                   color: Colors.blueGrey.shade300,
                 ),

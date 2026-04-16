@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -10,6 +8,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap_metadata.dart';
 import 'package:roadmap_ai/core/common/toast/error.dart';
 import 'package:roadmap_ai/core/common/toast/success.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/create_post/create_post_notifier.dart';
@@ -67,7 +66,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
       }
     });
 
-    if (!kIsWeb && Platform.isAndroid) {
+    if (AppConstants.isAndroid) {
       return Scaffold(
         body: Form(
           key: _formKey,

@@ -1,14 +1,12 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap_metadata.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
-import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/router/routes.dart';
 
 class SavedRoadmapTile extends StatelessWidget {
@@ -30,14 +28,10 @@ class SavedRoadmapTile extends StatelessWidget {
     final colorScheme = context.colorScheme;
     final theme = context.theme;
 
-    if (!kIsWeb && Platform.isAndroid) {
+    if (AppConstants.isAndroid) {
       return Animate(
         effects: animate
             ? [
-                // FadeEffect(
-                //   delay: Duration(milliseconds: 200 * index),
-                //   duration: Duration(milliseconds: 500),
-                // ),
                 SlideEffect(
                   delay: Duration(milliseconds: 100 * index),
                   duration: Durations.extralong2,

@@ -1,7 +1,5 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 
@@ -18,7 +16,7 @@ class ProfileField extends StatelessWidget {
     final screenHeight = context.screenHeight;
     final textTheme = context.textTheme;
 
-    if (!kIsWeb && Platform.isAndroid) {
+    if (AppConstants.isAndroid) {
       return Container(
         width: double.infinity,
         margin: EdgeInsets.symmetric(horizontal: 40),

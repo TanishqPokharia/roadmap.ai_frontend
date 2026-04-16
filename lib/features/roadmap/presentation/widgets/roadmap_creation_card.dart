@@ -1,9 +1,7 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/providers/roadmap/roadmap_notifier.dart';
@@ -27,7 +25,7 @@ class _RoadmapCreationCardState extends ConsumerState<RoadmapCreationCard> {
     final textTheme = context.textTheme;
     final theme = context.theme;
     final roadmap = ref.watch(roadmapProvider);
-    if (!kIsWeb && Platform.isAndroid) {
+    if (AppConstants.isAndroid) {
       return Card(
         elevation: 5,
         color: colorScheme.surfaceContainer,

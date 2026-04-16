@@ -1,14 +1,12 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:toastification/toastification.dart';
 
 void showErrorToast({required BuildContext context, required String error}) {
   final textTheme = context.textTheme;
   final colorScheme = context.colorScheme;
-  final isMobile = !kIsWeb && Platform.isAndroid;
+  final isMobile = AppConstants.isAndroid;
   toastification.show(
     title: Text(
       'Error',

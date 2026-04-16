@@ -1,7 +1,5 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:toastification/toastification.dart';
 
@@ -11,13 +9,19 @@ void showSuccessToast({
 }) {
   final textTheme = context.textTheme;
   final colorScheme = context.colorScheme;
-  final isMobile = !kIsWeb && Platform.isAndroid;
+  final isMobile = AppConstants.isAndroid;
   toastification.show(
     title: Text(
       'Success',
       style: isMobile
-          ? textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)
-          : textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+          ? textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: colorScheme.primary,
+            )
+          : textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: colorScheme.primary,
+            ),
     ),
     description: Text(
       success,
@@ -27,6 +31,7 @@ void showSuccessToast({
     ),
     type: ToastificationType.success,
     backgroundColor: colorScheme.surface,
+    primaryColor: colorScheme.primary,
     borderSide: BorderSide(width: 2, color: colorScheme.onSurface),
     style: ToastificationStyle.minimal,
     foregroundColor: colorScheme.onSurface,

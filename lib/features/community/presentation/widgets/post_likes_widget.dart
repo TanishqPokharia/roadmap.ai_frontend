@@ -1,7 +1,5 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 
@@ -14,9 +12,9 @@ class PostLikesWidget extends StatelessWidget {
     final textTheme = context.textTheme;
     final screenHeight = context.screenHeight;
 
-    if (!kIsWeb && Platform.isAndroid) {
+    if (AppConstants.isAndroid) {
       return Row(
-        spacing: 4,
+        spacing: 6,
         children: [
           Icon(Icons.favorite_outline, size: 16),
           Text(

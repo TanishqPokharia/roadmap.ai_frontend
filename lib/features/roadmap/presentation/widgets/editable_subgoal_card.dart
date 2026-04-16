@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:roadmap_ai/core/common/entities/subgoal.dart';
+import 'package:roadmap_ai/core/extensions/datetime_utility_extension.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
-import 'package:roadmap_ai/core/utils/format_date.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/create_post/create_post_notifier.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/providers/roadmap_view/roadmap_view_notifier.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/widgets/edit_subgoal_dialog.dart';
@@ -248,7 +248,7 @@ class _EditableSubgoalCardState extends ConsumerState<EditableSubgoalCard> {
                     children: [
                       Text(
                         widget.subgoal.status!.completed
-                            ? ' Completed on ${formatDate(widget.subgoal.status?.completedAt)}'
+                            ? ' Completed on ${widget.subgoal.status?.completedAt.formatDate()}'
                             : 'In Progress',
                         style: textTheme.bodyMedium?.copyWith(
                           color: widget.subgoal.status!.completed

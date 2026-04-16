@@ -1,10 +1,8 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:roadmap_ai/core/common/toast/error.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
@@ -68,168 +66,165 @@ class _YourPostsPageState extends ConsumerState<YourPostsPage> {
       }
     });
 
-    if (!kIsWeb && Platform.isAndroid) {
+    if (AppConstants.isAndroid) {
       return Scaffold(
-        body: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 30),
-          child: RefreshIndicator(
-            onRefresh: () {
-              return Future.wait([
-                ref.refresh(userPostStatsProvider.future),
-                ref.refresh(userPostsProvider.future),
-              ]);
-            },
-            child: ListView(
-              controller: _scrollController,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      spacing: 10,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Your Posts',
-                          style: textTheme.headlineMedium!.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'Manage and track your published roadmaps',
-                          style: textTheme.bodyLarge!.copyWith(),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: screenHeight * 0.03),
+        body: RefreshIndicator(
+          onRefresh: () {
+            return Future.wait([
+              ref.refresh(userPostStatsProvider.future),
+              ref.refresh(userPostsProvider.future),
+            ]);
+          },
+          child: ListView(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 40),
 
-                    userPostsStats.maybeWhen(
-                      skipLoadingOnRefresh: false,
-                      data: (posts) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          spacing: 20,
-                          children: [
-                            Expanded(
-                              child: PostStatCard(
-                                icon: Icons.article,
-                                value: posts.totalPosts,
-                                label: 'Posts',
-                                textStyle: textTheme.bodyLarge,
-                              ),
+            controller: _scrollController,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    spacing: 10,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Your Posts',
+                        style: textTheme.headlineMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'Manage and track your published roadmaps',
+                        style: textTheme.bodyLarge!.copyWith(),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: screenHeight * 0.03),
+
+                  userPostsStats.maybeWhen(
+                    skipLoadingOnRefresh: false,
+                    data: (posts) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        spacing: 20,
+                        children: [
+                          Expanded(
+                            child: PostStatCard(
+                              icon: Icons.article,
+                              value: posts.totalPosts,
+                              label: 'Posts',
+                              textStyle: textTheme.bodyLarge,
                             ),
-                            Expanded(
-                              child: PostStatCard(
-                                icon: Icons.visibility,
-                                value: posts.totalViews,
-                                label: 'Total Views',
-                                textStyle: textTheme.bodyLarge,
-                              ),
-                            ),
-                            Expanded(
-                              child: PostStatCard(
-                                icon: Icons.favorite,
-                                value: posts.totalLikes,
-                                label: 'Total Likes',
-                                textStyle: textTheme.bodyLarge,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                      orElse: () {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          spacing: 20,
-                          children: [
-                            Expanded(
-                              child: PostStatCard(
-                                icon: Icons.article,
-                                value: null,
-                                label: 'Posts',
-                              ),
-                            ),
-                            Expanded(
-                              child: PostStatCard(
-                                icon: Icons.visibility,
-                                value: null,
-                                label: 'Total Views',
-                              ),
-                            ),
-                            Expanded(
-                              child: PostStatCard(
-                                icon: Icons.favorite,
-                                value: null,
-                                label: 'Total Likes',
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    userPosts.when(
-                      skipLoadingOnRefresh: false,
-                      data: (data) => data.isEmpty
-                          ? const NoPostsWidget()
-                          : Builder(
-                              builder: (context) {
-                                final List<PostMetadata> sortedPosts =
-                                    List.from(data);
-                                sortedPosts.sort(
-                                  (a, b) => b.createdAt.compareTo(a.createdAt),
-                                );
-                                return ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  padding: EdgeInsets.only(
-                                    bottom: 100,
-                                    top: 10,
-                                  ),
-                                  separatorBuilder: (context, index) =>
-                                      SizedBox(height: screenHeight * 0.03),
-                                  itemCount: sortedPosts.length,
-                                  itemBuilder: (context, index) {
-                                    final post = sortedPosts[index];
-                                    return YourPostTile(
-                                      post: post,
-                                      views: post.views,
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                      loading: () => Padding(
-                        padding: EdgeInsets.only(top: screenHeight / 4),
-                        child: Center(
-                          child: LoadingAnimationWidget.threeRotatingDots(
-                            color: colorScheme.primary,
-                            size: 30,
                           ),
-                        ),
-                      ),
-                      error: (error, stack) => Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.error_outline,
-                              size: 64,
-                              color: Colors.grey,
+                          Expanded(
+                            child: PostStatCard(
+                              icon: Icons.visibility,
+                              value: posts.totalViews,
+                              label: 'Total Views',
+                              textStyle: textTheme.bodyLarge,
                             ),
-                            SizedBox(height: 16),
-                            Text(
-                              'Failed to load posts',
-                              style: TextStyle(color: Colors.grey),
+                          ),
+                          Expanded(
+                            child: PostStatCard(
+                              icon: Icons.favorite,
+                              value: posts.totalLikes,
+                              label: 'Total Likes',
+                              textStyle: textTheme.bodyLarge,
                             ),
-                          ],
+                          ),
+                        ],
+                      );
+                    },
+                    orElse: () {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        spacing: 20,
+                        children: [
+                          Expanded(
+                            child: PostStatCard(
+                              icon: Icons.article,
+                              value: null,
+                              label: 'Posts',
+                            ),
+                          ),
+                          Expanded(
+                            child: PostStatCard(
+                              icon: Icons.visibility,
+                              value: null,
+                              label: 'Total Views',
+                            ),
+                          ),
+                          Expanded(
+                            child: PostStatCard(
+                              icon: Icons.favorite,
+                              value: null,
+                              label: 'Total Likes',
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  userPosts.when(
+                    skipLoadingOnRefresh: false,
+                    data: (data) => data.isEmpty
+                        ? const NoPostsWidget()
+                        : Builder(
+                            builder: (context) {
+                              final List<PostMetadata> sortedPosts = List.from(
+                                data,
+                              );
+                              sortedPosts.sort(
+                                (a, b) => b.createdAt.compareTo(a.createdAt),
+                              );
+                              return ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.only(bottom: 100, top: 10),
+                                separatorBuilder: (context, index) =>
+                                    SizedBox(height: screenHeight * 0.03),
+                                itemCount: sortedPosts.length,
+                                itemBuilder: (context, index) {
+                                  final post = sortedPosts[index];
+                                  return YourPostTile(
+                                    post: post,
+                                    views: post.views,
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                    loading: () => Padding(
+                      padding: EdgeInsets.only(top: screenHeight / 4),
+                      child: Center(
+                        child: LoadingAnimationWidget.threeRotatingDots(
+                          color: colorScheme.primary,
+                          size: 30,
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                    error: (error, stack) => Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            size: 64,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'Failed to load posts',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       );

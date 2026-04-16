@@ -13,7 +13,7 @@ part of 'posts_filter_notifier.dart';
 final postsFilterProvider = PostsFilterProvider._();
 
 final class PostsFilterProvider
-    extends $NotifierProvider<PostsFilter, PostFilter> {
+    extends $NotifierProvider<PostsFilter, PostsFilterState> {
   PostsFilterProvider._()
     : super(
         from: null,
@@ -33,27 +33,27 @@ final class PostsFilterProvider
   PostsFilter create() => PostsFilter();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(PostFilter value) {
+  Override overrideWithValue(PostsFilterState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<PostFilter>(value),
+      providerOverride: $SyncValueProvider<PostsFilterState>(value),
     );
   }
 }
 
-String _$postsFilterHash() => r'894aafbfd762af69713fb68e73384c0523cda149';
+String _$postsFilterHash() => r'6dc4b52426c610057cc40af3a6bba11630678c59';
 
-abstract class _$PostsFilter extends $Notifier<PostFilter> {
-  PostFilter build();
+abstract class _$PostsFilter extends $Notifier<PostsFilterState> {
+  PostsFilterState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<PostFilter, PostFilter>;
+    final ref = this.ref as $Ref<PostsFilterState, PostsFilterState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<PostFilter, PostFilter>,
-              PostFilter,
+              AnyNotifier<PostsFilterState, PostsFilterState>,
+              PostsFilterState,
               Object?,
               Object?
             >;

@@ -44,6 +44,7 @@ class _AuthorPostsPageState extends ConsumerState<AuthorPostsPage> {
     final colorScheme = context.colorScheme;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () => context.pop(),

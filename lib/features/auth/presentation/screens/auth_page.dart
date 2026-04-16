@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:roadmap_ai/core/common/toast/error.dart';
 import 'package:roadmap_ai/core/common/toast/success.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
@@ -77,7 +75,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
       }
     });
 
-    if (!kIsWeb && Platform.isAndroid) {
+    if (AppConstants.isAndroid) {
       return Scaffold(
         body: DecoratedBox(
           decoration: BoxDecoration(

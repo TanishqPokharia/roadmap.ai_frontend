@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,9 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:roadmap_ai/core/common/providers/theme_notifier.dart';
 import 'package:roadmap_ai/core/common/toast/error.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
+import 'package:roadmap_ai/core/extensions/datetime_utility_extension.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
-import 'package:roadmap_ai/core/utils/format_date.dart';
 import 'package:roadmap_ai/features/auth/presentation/providers/logout/logout_notifier.dart';
 import 'package:roadmap_ai/features/auth/presentation/providers/profile/profile_notifier.dart';
 import 'package:roadmap_ai/features/auth/presentation/widgets/profile_field.dart';
@@ -37,20 +36,37 @@ class ProfilePage extends ConsumerWidget {
     final colorScheme = context.colorScheme;
     final userPostsStats = ref.watch(userPostStatsProvider);
 
-    if (!kIsWeb && Platform.isAndroid) {
+    if (AppConstants.isAndroid) {
       return Scaffold(
-        body: profile.when(
-          skipLoadingOnRefresh: false,
-          data: (userDetails) {
-            final details = userDetails.userDetails;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Stack(
+        body: Padding(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 40),
+          child: Column(
+            spacing: 10,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                spacing: 10,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Profile',
+                    style: textTheme.headlineMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'View personal information',
+                    style: textTheme.bodyLarge!.copyWith(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              profile.when(
+                skipLoadingOnRefresh: false,
+                data: (userDetails) {
+                  final details = userDetails.userDetails;
+                  return Stack(
                     alignment: Alignment.topCenter,
                     children: [
                       Padding(
@@ -112,9 +128,9 @@ class ProfilePage extends ConsumerWidget {
                                             color: colorScheme.primary,
                                           ),
                                           Text(
-                                            formatDate(
-                                              DateTime.parse(details.createdAt),
-                                            ),
+                                            DateTime.parse(
+                                              details.createdAt,
+                                            ).formatDate(),
                                           ),
                                         ],
                                       ),
@@ -320,169 +336,98 @@ class ProfilePage extends ConsumerWidget {
                         ),
                       ),
                     ],
-                  ),
-                ),
-                const Spacer(),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    color: colorScheme.surface,
-                    border: Border.all(color: colorScheme.primary, width: 2),
-                  ),
-                  padding: EdgeInsets.all(8),
-                  child: Row(
+                  );
+                },
+                loading: () {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 200),
+                    child: Center(
+                      child: LoadingAnimationWidget.threeRotatingDots(
+                        color: colorScheme.primary,
+                        size: 30,
+                      ),
+                    ),
+                  );
+                },
+                error: (error, stack) => Center(
+                  child: Column(
+                    spacing: 20,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ref
-                          .watch(themeProvider)
-                          .when(
-                            data: (themeMode) => SizedBox(
-                              width: screenWidth / 2,
-                              child: PopupMenuButton<ThemeMode>(
-                                borderRadius: BorderRadius.circular(6),
-                                offset: Offset(-45, -70),
-                                position: PopupMenuPosition.over,
-                                initialValue: themeMode,
-                                tooltip: 'Toggle Theme',
-                                popUpAnimationStyle: AnimationStyle(
-                                  curve: Curves.ease,
-                                  duration: Durations.long1,
-                                  reverseCurve: Curves.ease,
-                                  reverseDuration: Durations.medium4,
-                                ),
-                                onSelected: (mode) {
-                                  ref
-                                      .read(themeProvider.notifier)
-                                      .setTheme(mode);
-                                },
-                                itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 80,
-                                    ),
-                                    value: ThemeMode.light,
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.light_mode_outlined,
-                                          color: colorScheme.onSurface,
-                                        ),
-                                        SizedBox(width: screenHeight * 0.01),
-                                        Text(
-                                          'Light',
-                                          style: textTheme.bodyMedium,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                    value: ThemeMode.dark,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 80,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.dark_mode_outlined,
-                                          color: colorScheme.onSurface,
-                                        ),
-                                        SizedBox(width: screenHeight * 0.01),
-                                        Text(
-                                          'Dark',
-                                          style: textTheme.bodyMedium,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                    value: ThemeMode.system,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 80,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.settings,
-                                          color: colorScheme.onSurface,
-                                        ),
-                                        SizedBox(width: screenHeight * 0.01),
-                                        Text(
-                                          'System',
-                                          style: textTheme.bodyMedium,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                                child: Row(
-                                  spacing: 10,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      '${themeMode.name[0].toUpperCase()}${themeMode.name.substring(1)} Theme',
-                                      style: textTheme.bodyLarge,
-                                    ),
-                                    Icon(
-                                      themeMode == ThemeMode.dark
-                                          ? Icons.dark_mode_outlined
-                                          : Icons.light_mode_outlined,
-                                      size: 28,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            loading: () => const SizedBox.shrink(),
-                            error: (_, _) => const SizedBox.shrink(),
-                          ),
+                      Text('$error'),
+                      FilledButton(
+                        onPressed: () {
+                          ref.invalidate(profileProvider);
+                        },
+                        child: const Text('Retry'),
+                      ),
                     ],
                   ),
                 ),
-                Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.all(20),
-                  child: FilledButton.icon(
-                    style: FilledButton.styleFrom(padding: EdgeInsets.all(12)),
-                    onPressed: () {
-                      _showLogoutConfirmationDialog(context, ref);
-                    },
-                    icon: Icon(Icons.logout),
-                    iconAlignment: IconAlignment.end,
-                    label: Text(
-                      'Logout',
-                      style: textTheme.bodyLarge?.copyWith(
-                        color: colorScheme.onPrimary,
-                        fontWeight: FontWeight.bold,
+              ),
+              const Spacer(),
+              Builder(
+                builder: (context) {
+                  final selectedTheme = ref.watch(themeProvider).value;
+                  final notifier = ref.read(themeProvider.notifier);
+                  return Row(
+                    spacing: 10,
+                    children: [
+                      Text(
+                        "Theme",
+                        style: textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
+                      const Spacer(),
+                      ChoiceChip(
+                        label: Icon(Icons.light_mode),
+                        selected: selectedTheme == ThemeMode.light,
+                        onSelected: (value) {
+                          notifier.setTheme(ThemeMode.light);
+                        },
+                        showCheckmark: false,
+                      ),
+                      ChoiceChip(
+                        label: Icon(Icons.dark_mode),
+                        selected: selectedTheme == ThemeMode.dark,
+                        onSelected: (value) {
+                          notifier.setTheme(ThemeMode.dark);
+                        },
+                        showCheckmark: false,
+                      ),
+                      ChoiceChip(
+                        label: Icon(Icons.settings),
+                        selected: selectedTheme == ThemeMode.system,
+                        onSelected: (value) {
+                          notifier.setTheme(ThemeMode.system);
+                        },
+                        showCheckmark: false,
+                      ),
+                    ],
+                  );
+                },
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(padding: EdgeInsets.all(12)),
+                  onPressed: () {
+                    _showLogoutConfirmationDialog(context, ref);
+                  },
+                  icon: Icon(Icons.logout),
+                  iconAlignment: IconAlignment.end,
+                  label: Text(
+                    'Logout',
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              ],
-            );
-          },
-          loading: () {
-            return Center(
-              child: LoadingAnimationWidget.threeRotatingDots(
-                color: colorScheme.primary,
-                size: 30,
               ),
-            );
-          },
-          error: (error, stack) => Center(
-            child: Column(
-              spacing: 20,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('$error'),
-                FilledButton(
-                  onPressed: () {
-                    ref.invalidate(profileProvider);
-                  },
-                  child: const Text('Retry'),
-                ),
-              ],
-            ),
+              const SizedBox(),
+            ],
           ),
         ),
       );

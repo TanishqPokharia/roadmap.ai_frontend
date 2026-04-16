@@ -1,7 +1,6 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:roadmap_ai/core/common/widgets/animated_shadow.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/stat_counter.dart';
@@ -32,7 +31,7 @@ class _PostStatCardState extends State<PostStatCard> {
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
 
-    if (!kIsWeb && Platform.isAndroid) {
+    if (AppConstants.isAndroid) {
       return Container(
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(

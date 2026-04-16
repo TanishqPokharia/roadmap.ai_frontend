@@ -1,12 +1,10 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:roadmap_ai/core/common/widgets/clickable_text.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/features/auth/presentation/providers/signup/signup_notifier.dart';
@@ -37,372 +35,395 @@ class _SignUpCardState extends ConsumerState<SignUpCard> {
     final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
     final theme = context.theme;
+    final isLoading = ref.watch(signupProvider).isLoading;
 
-    if (!kIsWeb && Platform.isAndroid) {
-      final signupState = ref.watch(signupProvider);
-      final isLoading = signupState is AsyncLoading;
+    if (AppConstants.isAndroid) {
       return Form(
         key: _formKey,
         child: Card(
           color: colorScheme.surfaceContainer,
-          elevation: 20,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              spacing: 5,
-              children: [
-                Column(
+          elevation: 50,
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 30,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  spacing: 5,
                   children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'Create ',
-                            style: textTheme.headlineMedium,
-                          ),
-                          TextSpan(
-                            text: 'Account',
-                            style: textTheme.headlineMedium?.copyWith(
-                              color: context.colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text('Ready to ', style: textTheme.headlineSmall),
-                        Animate(
-                          onComplete: (controller) {
-                            controller.repeat(reverse: false);
-                          },
-                          effects: [
-                            ShimmerEffect(
-                              duration: Duration(seconds: 5),
-                              colors: [
-                                colorScheme.primary,
-                                colorScheme.surface,
-                                colorScheme.primary,
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Create ',
+                                style: textTheme.headlineMedium,
+                              ),
+                              TextSpan(
+                                text: 'Account',
+                                style: textTheme.headlineMedium?.copyWith(
+                                  color: context.colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Ready to ', style: textTheme.headlineSmall),
+                            Animate(
+                              onComplete: (controller) {
+                                controller.repeat(reverse: false);
+                              },
+                              effects: [
+                                ShimmerEffect(
+                                  duration: Duration(seconds: 5),
+                                  colors: [
+                                    colorScheme.primary,
+                                    colorScheme.surface,
+                                    colorScheme.primary,
+                                  ],
+                                ),
                               ],
+                              child: Text(
+                                'Level Up?',
+                                style: textTheme.headlineSmall?.copyWith(
+                                  color: context.colorScheme.secondary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ],
-                          child: Text(
-                            'Level Up?',
-                            style: textTheme.headlineSmall?.copyWith(
-                              color: context.colorScheme.secondary,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 40),
+                    Column(
+                      children: [
+                        TextFormField(
+                          style: textTheme.bodyLarge,
+                          decoration: InputDecoration(
+                            errorStyle: textTheme.bodySmall?.copyWith(
+                              color: Colors.red,
                               fontWeight: FontWeight.bold,
                             ),
+                            contentPadding: EdgeInsets.all(10),
+                            hoverColor: Colors.transparent,
+                            fillColor: colorScheme.primary.withValues(
+                              alpha: 240,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: colorScheme.primary,
+
+                                width: 1,
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            hintText: 'Email',
+                            hintStyle: textTheme.bodyLarge!.copyWith(
+                              color: Colors.grey,
+                            ),
+                            prefixIcon: Icon(Icons.email_outlined),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) => Validatorless.multiple([
+                            Validatorless.required('Email is required'),
+                            Validatorless.email('Enter a valid email'),
+                          ])(value),
+                          onSaved: (newValue) {
+                            _email = newValue ?? '';
+                          },
+                        ),
+
+                        SizedBox(height: 12),
+
+                        TextFormField(
+                          style: textTheme.bodyLarge,
+                          decoration: InputDecoration(
+                            errorStyle: textTheme.bodySmall?.copyWith(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            contentPadding: EdgeInsets.all(10),
+                            hoverColor: Colors.transparent,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: colorScheme.primary,
+                                width: 1,
+                              ),
+                            ),
+                            fillColor: colorScheme.primary.withValues(
+                              alpha: 240,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            hintText: 'Username',
+                            hintStyle: textTheme.bodyLarge!.copyWith(
+                              color: Colors.grey,
+                            ),
+                            prefixIcon: Icon(Icons.person_outline),
+                          ),
+                          validator: Validatorless.required(
+                            'Username is required',
+                          ),
+                          onSaved: (newValue) {
+                            _username = newValue ?? '';
+                          },
+                        ),
+                        SizedBox(height: 12),
+
+                        // Password field
+                        TextFormField(
+                          style: textTheme.bodyLarge,
+                          decoration: InputDecoration(
+                            errorStyle: textTheme.bodySmall?.copyWith(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            contentPadding: EdgeInsets.all(10),
+                            hoverColor: Colors.transparent,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: colorScheme.primary,
+                                width: 1,
+                              ),
+                            ),
+                            fillColor: colorScheme.primary.withValues(
+                              alpha: 240,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            hintText: 'Password',
+                            hintStyle: textTheme.bodyLarge!.copyWith(
+                              color: Colors.grey,
+                            ),
+                            prefixIcon: Icon(Icons.lock_outline),
+                            suffixIcon: _showPassword
+                                ? IconButton(
+                                    icon: Icon(
+                                      Icons.visibility_outlined,
+                                      color: colorScheme.secondary,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _showPassword = false;
+                                      });
+                                    },
+                                  )
+                                : IconButton(
+                                    icon: Icon(
+                                      Icons.visibility_off_outlined,
+                                      color: colorScheme.secondary,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _showPassword = true;
+                                      });
+                                    },
+                                  ),
+                          ),
+                          obscureText: !_showPassword,
+                          onChanged: (value) {
+                            _password = value;
+                          },
+                          validator: (value) => Validatorless.multiple([
+                            Validatorless.required('Password is required'),
+                            Validatorless.min(
+                              8,
+                              'Password must be at least 8 characters',
+                            ),
+                          ])(value),
+                          onSaved: (newValue) {
+                            _password = newValue ?? '';
+                          },
+                        ),
+                        SizedBox(height: 12),
+                        // Confirm Password field
+                        TextFormField(
+                          style: textTheme.bodyLarge,
+                          decoration: InputDecoration(
+                            errorStyle: textTheme.bodySmall?.copyWith(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            contentPadding: EdgeInsets.all(10),
+                            hoverColor: Colors.transparent,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: colorScheme.primary,
+                                width: 1,
+                              ),
+                            ),
+                            fillColor: colorScheme.primary.withValues(
+                              alpha: 240,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            hintText: 'Confirm Password',
+                            hintStyle: textTheme.bodyLarge!.copyWith(
+                              color: Colors.grey,
+                            ),
+                            prefixIcon: Icon(Icons.lock_outline),
+                            suffixIcon: _showConfirmPassword
+                                ? IconButton(
+                                    icon: Icon(
+                                      Icons.visibility_outlined,
+                                      color: colorScheme.secondary,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _showConfirmPassword = false;
+                                      });
+                                    },
+                                  )
+                                : IconButton(
+                                    icon: Icon(
+                                      Icons.visibility_off_outlined,
+                                      color: colorScheme.secondary,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _showConfirmPassword = true;
+                                      });
+                                    },
+                                  ),
+                          ),
+                          obscureText: !_showConfirmPassword,
+                          onChanged: (value) {
+                            _confirmPassword = value;
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Confirm Password is required';
+                            }
+                            if (value != _password) {
+                              return 'Passwords do not match';
+                            }
+                            return null;
+                          },
+                          onSaved: (newValue) {
+                            _confirmPassword = newValue ?? '';
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      spacing: 10,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 2,
+                            color: colorScheme.primary,
+                          ),
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            text: "Already have an account?  ",
+                            style: textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                            children: [
+                              TextSpan(
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = widget.onLoginTap,
+                                style: textTheme.bodyLarge?.copyWith(
+                                  color: colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                text: 'Log In',
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 2,
+                            color: colorScheme.primary,
                           ),
                         ),
                       ],
                     ),
-                  ],
-                ),
-                SizedBox(height: 40),
-                Column(
-                  children: [
-                    TextFormField(
-                      style: textTheme.bodyLarge,
-                      decoration: InputDecoration(
-                        errorStyle: textTheme.bodySmall?.copyWith(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        contentPadding: EdgeInsets.all(10),
-                        hoverColor: Colors.transparent,
-                        fillColor: colorScheme.primary.withValues(alpha: 240),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: colorScheme.primary,
-
-                            width: 1,
-                          ),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        hintText: 'Email',
-                        hintStyle: textTheme.bodyLarge!.copyWith(
-                          color: Colors.grey,
-                        ),
-                        prefixIcon: Icon(Icons.email_outlined),
-                      ),
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) => Validatorless.multiple([
-                        Validatorless.required('Email is required'),
-                        Validatorless.email('Enter a valid email'),
-                      ])(value),
-                      onSaved: (newValue) {
-                        _email = newValue ?? '';
-                      },
-                    ),
-
-                    SizedBox(height: 12),
-
-                    TextFormField(
-                      style: textTheme.bodyLarge,
-                      decoration: InputDecoration(
-                        errorStyle: textTheme.bodySmall?.copyWith(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        contentPadding: EdgeInsets.all(10),
-                        hoverColor: Colors.transparent,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: colorScheme.primary,
-                            width: 1,
-                          ),
-                        ),
-                        fillColor: colorScheme.primary.withValues(alpha: 240),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        hintText: 'Username',
-                        hintStyle: textTheme.bodyLarge!.copyWith(
-                          color: Colors.grey,
-                        ),
-                        prefixIcon: Icon(Icons.person_outline),
-                      ),
-                      validator: Validatorless.required('Username is required'),
-                      onSaved: (newValue) {
-                        _username = newValue ?? '';
-                      },
-                    ),
-                    SizedBox(height: 12),
-
-                    // Password field
-                    TextFormField(
-                      style: textTheme.bodyLarge,
-                      decoration: InputDecoration(
-                        errorStyle: textTheme.bodySmall?.copyWith(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        contentPadding: EdgeInsets.all(10),
-                        hoverColor: Colors.transparent,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: colorScheme.primary,
-                            width: 1,
-                          ),
-                        ),
-                        fillColor: colorScheme.primary.withValues(alpha: 240),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        hintText: 'Password',
-                        hintStyle: textTheme.bodyLarge!.copyWith(
-                          color: Colors.grey,
-                        ),
-                        prefixIcon: Icon(Icons.lock_outline),
-                        suffixIcon: _showPassword
-                            ? IconButton(
-                                icon: Icon(
-                                  Icons.visibility_outlined,
-                                  color: colorScheme.secondary,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _showPassword = false;
-                                  });
-                                },
-                              )
-                            : IconButton(
-                                icon: Icon(
-                                  Icons.visibility_off_outlined,
-                                  color: colorScheme.secondary,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _showPassword = true;
-                                  });
-                                },
+                    SizedBox(height: 20),
+                    // Sign Up button
+                    SizedBox(
+                      width: double.infinity,
+                      child: Consumer(
+                        builder: (context, ref, _) {
+                          return GestureDetector(
+                            onTap: () {
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                ref
+                                    .read(signupProvider.notifier)
+                                    .signUp(
+                                      email: _email,
+                                      username: _username,
+                                      password: _password,
+                                    );
+                              }
+                            },
+                            child: AnimatedContainer(
+                              duration: Durations.short4,
+                              curve: Curves.easeOut,
+                              width: double.infinity,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: colorScheme.primary,
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                      ),
-                      obscureText: !_showPassword,
-                      onChanged: (value) {
-                        _password = value;
-                      },
-                      validator: (value) => Validatorless.multiple([
-                        Validatorless.required('Password is required'),
-                        Validatorless.min(
-                          8,
-                          'Password must be at least 8 characters',
-                        ),
-                      ])(value),
-                      onSaved: (newValue) {
-                        _password = newValue ?? '';
-                      },
-                    ),
-                    SizedBox(height: 12),
-                    // Confirm Password field
-                    TextFormField(
-                      style: textTheme.bodyLarge,
-                      decoration: InputDecoration(
-                        errorStyle: textTheme.bodySmall?.copyWith(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        contentPadding: EdgeInsets.all(10),
-                        hoverColor: Colors.transparent,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: colorScheme.primary,
-                            width: 1,
-                          ),
-                        ),
-                        fillColor: colorScheme.primary.withValues(alpha: 240),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        hintText: 'Confirm Password',
-                        hintStyle: textTheme.bodyLarge!.copyWith(
-                          color: Colors.grey,
-                        ),
-                        prefixIcon: Icon(Icons.lock_outline),
-                        suffixIcon: _showConfirmPassword
-                            ? IconButton(
-                                icon: Icon(
-                                  Icons.visibility_outlined,
-                                  color: colorScheme.secondary,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _showConfirmPassword = false;
-                                  });
-                                },
-                              )
-                            : IconButton(
-                                icon: Icon(
-                                  Icons.visibility_off_outlined,
-                                  color: colorScheme.secondary,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _showConfirmPassword = true;
-                                  });
-                                },
-                              ),
-                      ),
-                      obscureText: !_showConfirmPassword,
-                      onChanged: (value) {
-                        _confirmPassword = value;
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Confirm Password is required';
-                        }
-                        if (value != _password) {
-                          return 'Passwords do not match';
-                        }
-                        return null;
-                      },
-                      onSaved: (newValue) {
-                        _confirmPassword = newValue ?? '';
-                      },
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Row(
-                  spacing: 10,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      child: Container(height: 2, color: colorScheme.primary),
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        text: "Already have an account?  ",
-                        style: textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        children: [
-                          TextSpan(
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = widget.onLoginTap,
-                            style: textTheme.bodyLarge?.copyWith(
-                              color: colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            text: 'Log In',
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(height: 2, color: colorScheme.primary),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                // Sign Up button
-                SizedBox(
-                  width: double.infinity,
-                  child: Consumer(
-                    builder: (context, ref, _) {
-                      return GestureDetector(
-                        onTap: isLoading
-                            ? null
-                            : () {
-                                if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState!.save();
-                                  ref
-                                      .read(signupProvider.notifier)
-                                      .signUp(
-                                        email: _email,
-                                        username: _username,
-                                        password: _password,
-                                      );
-                                }
-                              },
-                        child: AnimatedContainer(
-                          duration: Durations.short4,
-                          curve: Curves.easeOut,
-                          width: double.infinity,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: isLoading
-                                ? colorScheme.primary.withAlpha(180)
-                                : colorScheme.primary,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Center(
-                            child: isLoading
-                                ? SizedBox(
-                                    width: 30,
-                                    height: 30,
-                                    child:
-                                        LoadingAnimationWidget.staggeredDotsWave(
-                                          color: colorScheme.onPrimary,
-                                          size: screenHeight * 0.025,
-                                        ),
-                                  )
-                                : Text(
-                                    'Sign Up',
-                                    style: textTheme.titleLarge!.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: colorScheme.onPrimary,
-                                    ),
+                              child: Center(
+                                child: Text(
+                                  'Sign Up',
+                                  style: textTheme.titleLarge!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: colorScheme.onPrimary,
                                   ),
-                          ),
-                        ),
-                      );
-                    },
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (isLoading)
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: colorScheme.surface.withAlpha(150),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: colorScheme.primary,
+                        size: 40,
+                      ),
+                    ),
                   ),
                 ),
-              ],
-            ),
+            ],
           ),
         ),
       );

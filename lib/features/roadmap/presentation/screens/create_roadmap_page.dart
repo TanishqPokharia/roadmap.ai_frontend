@@ -1,11 +1,9 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:roadmap_ai/core/common/toast/error.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/roadmap_tree.dart';
@@ -20,8 +18,12 @@ class CreateRoadmapPage extends ConsumerStatefulWidget {
   ConsumerState<CreateRoadmapPage> createState() => _CreateRoadmapPageState();
 }
 
-class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage> {
+class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage>
+    with AutomaticKeepAliveClientMixin {
   late TextEditingController _descriptionController;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -37,6 +39,7 @@ class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final textTheme = context.textTheme;
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
@@ -56,10 +59,10 @@ class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage> {
 
     final roadmap = ref.watch(roadmapProvider);
 
-    if (!kIsWeb && Platform.isAndroid) {
-      return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
-        child: ListView(
+    if (AppConstants.isAndroid) {
+      return Scaffold(
+        body: ListView(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 40),
           children: [
             Column(
               spacing: 10,

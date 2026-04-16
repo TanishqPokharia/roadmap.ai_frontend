@@ -1,13 +1,13 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:roadmap_ai/core/common/toast/error.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
+import 'package:roadmap_ai/core/utils/debouncer.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/posts/posts_notifier.dart';
+import 'package:roadmap_ai/features/community/presentation/providers/posts_filter/posts_filter_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/post_filters_card.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/post_tile.dart';
 
@@ -22,6 +22,8 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
     with AutomaticKeepAliveClientMixin {
   late ScrollController _scrollController;
   final Set<int> _animatedIndexes = {};
+
+  final Debouncer _debouncer = Debouncer(duration: Duration(seconds: 1));
 
   @override
   void initState() {
@@ -51,13 +53,22 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
     final colorScheme = context.colorScheme;
 
     final posts = ref.watch(postsProvider);
+
+    // debouncing after filtering to reduce server load
+    ref.listen(postsFilterProvider, (_, _) {
+      if (ref.watch(postsProvider).isLoading) return;
+      _debouncer.debounce(() {
+        ref.invalidate(postsProvider);
+      });
+    });
+
     ref.listen(postsProvider, (_, next) {
       if (next is AsyncData && next.value?.error != null) {
         showErrorToast(context: context, error: "${next.value?.error}");
       }
     });
 
-    if (!kIsWeb && Platform.isAndroid) {
+    if (AppConstants.isAndroid) {
       return Scaffold(
         floatingActionButton: FloatingActionButton(
           backgroundColor: colorScheme.primaryContainer,
@@ -68,7 +79,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
           child: Icon(Icons.filter_alt),
         ),
         body: Padding(
-          padding: EdgeInsetsGeometry.only(left: 20, right: 20, top: 60),
+          padding: EdgeInsetsGeometry.only(left: 20, right: 20, top: 40),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -104,17 +115,16 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                     }
                     return RefreshIndicator(
                       onRefresh: () => ref.refresh(postsProvider.future),
-                      child: ListView.builder(
+                      child: ListView.separated(
                         controller: _scrollController,
                         itemCount: data.posts.length,
-                        padding: EdgeInsets.only(bottom: 100, top: 50),
-                        itemBuilder: (context, index) => Padding(
-                          padding: EdgeInsets.only(bottom: 40),
-                          child: PostTile(
-                            post: data.posts[index],
-                            index: index,
-                            animate: shouldAnimate(index),
-                          ),
+                        padding: EdgeInsets.only(bottom: 100, top: 20),
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: 20),
+                        itemBuilder: (context, index) => PostTile(
+                          post: data.posts[index],
+                          index: index,
+                          animate: shouldAnimate(index),
                         ),
                       ),
                     );

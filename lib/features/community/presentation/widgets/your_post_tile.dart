@@ -1,14 +1,13 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:roadmap_ai/core/common/widgets/animated_shadow.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
+import 'package:roadmap_ai/core/extensions/datetime_utility_extension.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/post_likes_widget.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/post_views_widget.dart';
-import 'package:go_router/go_router.dart';
 import 'package:roadmap_ai/router/routes.dart';
 
 class YourPostTile extends StatefulWidget {
@@ -29,7 +28,7 @@ class _YourPostTileState extends State<YourPostTile> {
     final theme = context.theme;
     final colorScheme = context.colorScheme;
 
-    if (!kIsWeb && Platform.isAndroid) {
+    if (AppConstants.isAndroid) {
       return Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
         child: Row(
@@ -42,25 +41,28 @@ class _YourPostTileState extends State<YourPostTile> {
                 children: [
                   Text(
                     widget.post.title,
-                    style: context.textTheme.titleMedium!.copyWith(
-                      fontWeight: FontWeight.w700,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   Text(
-                    'Posted on ${_formatDate(widget.post.createdAt)}',
+                    'Posted on ${widget.post.createdAt.formatDate()}',
                     style: textTheme.bodyMedium!.copyWith(
                       color: colorScheme.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 20),
                   Center(
                     child: SizedBox(
-                      width: 300,
                       height: 150,
+                      width: double.infinity,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                        ),
                         child: Image.network(
                           widget.post.bannerImage,
                           fit: BoxFit.cover,
@@ -89,12 +91,13 @@ class _YourPostTileState extends State<YourPostTile> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   Text(
                     widget.post.description,
-                    style: textTheme.bodySmall!,
+                    style: textTheme.bodyMedium,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.justify,
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   Row(
@@ -152,7 +155,7 @@ class _YourPostTileState extends State<YourPostTile> {
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   Text(
-                    'Posted on ${_formatDate(widget.post.createdAt)}',
+                    'Posted on ${(widget.post.createdAt).formatDate()}',
                     style: textTheme.bodyLarge!.copyWith(
                       color: Colors.blueGrey,
                     ),
@@ -244,9 +247,5 @@ class _YourPostTileState extends State<YourPostTile> {
         ),
       ),
     );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
   }
 }

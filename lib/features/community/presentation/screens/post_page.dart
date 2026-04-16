@@ -1,14 +1,12 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:roadmap_ai/core/common/toast/error.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
+import 'package:roadmap_ai/core/extensions/datetime_utility_extension.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
-import 'package:roadmap_ai/core/utils/format_date.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/post_details/post_details_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/roadmap_tree.dart';
 import 'package:roadmap_ai/router/routes.dart';
@@ -35,7 +33,7 @@ class PostPage extends ConsumerWidget {
       }
     });
 
-    if (!kIsWeb && Platform.isAndroid) {
+    if (AppConstants.isAndroid) {
       return Scaffold(
         body: SafeArea(
           child: Padding(
@@ -128,7 +126,7 @@ class PostPage extends ConsumerWidget {
                             ],
                           ),
                           Text(
-                            'on ${formatDate(data.postDetails.post.createdAt)}',
+                            'on ${(data.postDetails.post.createdAt).formatDate()}',
                             style: textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.bold,
                               color: colorScheme.primary,
@@ -346,7 +344,7 @@ class PostPage extends ConsumerWidget {
                             ),
                             SizedBox(width: screenWidth * 0.004),
                             Text(
-                              'on ${formatDate(data.postDetails.post.createdAt)}',
+                              'on ${data.postDetails.post.createdAt.formatDate()}',
                               style: textTheme.bodyLarge!.copyWith(
                                 color: Colors.blueGrey,
                                 fontWeight: FontWeight.bold,

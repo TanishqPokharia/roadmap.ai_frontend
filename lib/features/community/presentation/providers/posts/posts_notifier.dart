@@ -53,8 +53,9 @@ class PostsNotifier extends _$PostsNotifier {
     // rebuilt when post title searched by user
     final postTitle = ref.watch(postTitleProvider);
 
-    // rebuilt when filter added by user
-    final filter = ref.watch(postsFilterProvider);
+    // !!! intentionally reading not watching
+    // rebuilding logic handled in explore page via debouncing
+    final filter = ref.read(postsFilterProvider).generalFilter;
 
     if (isTimeFilter(filter)) {
       posts = await ref
@@ -67,7 +68,7 @@ class PostsNotifier extends _$PostsNotifier {
             ),
           )
           .run();
-    } else if (filter == PostFilter.popular) {
+    } else if (filter == PostGeneralFilter.popular) {
       posts = await ref
           .read(getFilteredPostsProvider)
           .call(GetPopularPostsParams(limit: _limit, skip: _skip))
@@ -103,7 +104,7 @@ class PostsNotifier extends _$PostsNotifier {
     if (!_canGetMore || _isFetching) return;
     _isFetching = true;
     _skip += _limit;
-    final filter = ref.read(postsFilterProvider);
+    final filter = ref.read(postsFilterProvider).generalFilter;
     final postTitle = ref.read(postTitleProvider);
     Either<Failure, List<PostMetadata>> posts;
     if (isTimeFilter(filter)) {
@@ -117,7 +118,7 @@ class PostsNotifier extends _$PostsNotifier {
             ),
           )
           .run();
-    } else if (filter == PostFilter.popular) {
+    } else if (filter == PostGeneralFilter.popular) {
       posts = await ref
           .read(getFilteredPostsProvider)
           .call(GetPopularPostsParams(limit: _limit, skip: _skip))
@@ -152,26 +153,26 @@ class PostsNotifier extends _$PostsNotifier {
     );
   }
 
-  bool isTimeFilter(PostFilter filter) {
-    return filter == PostFilter.day ||
-        filter == PostFilter.week ||
-        filter == PostFilter.month ||
-        filter == PostFilter.year;
+  bool isTimeFilter(PostGeneralFilter filter) {
+    return filter == PostGeneralFilter.day ||
+        filter == PostGeneralFilter.week ||
+        filter == PostGeneralFilter.month ||
+        filter == PostGeneralFilter.year;
   }
 
-  PostTime filterToPostTime(PostFilter filter) {
+  PostTime filterToPostTime(PostGeneralFilter filter) {
     assert(
       isTimeFilter(filter),
       'filter must be a time filter: day, week, month, year',
     );
     switch (filter) {
-      case PostFilter.day:
+      case PostGeneralFilter.day:
         return PostTime.day;
-      case PostFilter.week:
+      case PostGeneralFilter.week:
         return PostTime.week;
-      case PostFilter.month:
+      case PostGeneralFilter.month:
         return PostTime.month;
-      case PostFilter.year:
+      case PostGeneralFilter.year:
         return PostTime.year;
       default:
         throw ArgumentError('Invalid filter: $filter');

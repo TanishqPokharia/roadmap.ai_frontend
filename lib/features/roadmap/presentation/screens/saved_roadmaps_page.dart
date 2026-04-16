@@ -1,9 +1,7 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
 import 'package:roadmap_ai/core/utils/failure_message.dart';
@@ -49,9 +47,9 @@ class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage>
     final colorScheme = context.colorScheme;
     final savedRoadmaps = ref.watch(savedRoadmapsProvider);
 
-    if (!kIsWeb && Platform.isAndroid) {
+    if (AppConstants.isAndroid) {
       return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 60),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -111,7 +109,7 @@ class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage>
                     },
                     child: ListView.separated(
                       controller: _scrollController,
-                      padding: EdgeInsets.only(bottom: 100, top: 50),
+                      padding: EdgeInsets.only(bottom: 100, top: 20),
                       itemBuilder: (context, index) {
                         final roadmap = data.roadmaps[index];
 

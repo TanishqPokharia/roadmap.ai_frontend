@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:roadmap_ai/core/common/widgets/animated_shadow.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
+import 'package:roadmap_ai/core/extensions/string_utility_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
-import 'package:roadmap_ai/core/utils/debouncer.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/post_title/post_title_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/posts/posts_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/posts_filter/posts_filter_notifier.dart';
 
-final postFilterChipMap = {
-  PostFilter.popular: 'Popular',
-  PostFilter.day: 'Past Day',
-  PostFilter.week: 'Past Week',
-  PostFilter.month: 'Past Month',
-  PostFilter.year: 'Past Year',
+final _postGeneralFilterChipMap = {
+  PostGeneralFilter.popular: 'Popular',
+  PostGeneralFilter.day: 'Past Day',
+  PostGeneralFilter.week: 'Past Week',
+  PostGeneralFilter.month: 'Past Month',
+  PostGeneralFilter.year: 'Past Year',
 };
 
 class PostFiltersCard extends ConsumerStatefulWidget {
@@ -27,7 +28,34 @@ class PostFiltersCard extends ConsumerStatefulWidget {
 
 class _PostFiltersCardState extends ConsumerState<PostFiltersCard> {
   late TextEditingController _textEditingController;
-  final Debouncer _debouncer = Debouncer(duration: Duration(seconds: 1));
+
+  void _onGeneralFilterSelected(PostGeneralFilter filter) {
+    if (ref.read(postsProvider).isLoading) {
+      return;
+    }
+    widget.onFilterChange();
+    ref.read(postsFilterProvider.notifier).setGeneralFilter(filter);
+  }
+
+  void _onGenreFilterSelected(PostGenreFilter filter) {
+    if (ref.read(postsProvider).isLoading) {
+      return;
+    }
+    ref.read(postsFilterProvider.notifier).toggleGenreFilter(filter);
+  }
+
+  void _onTitleChanged(String value) {
+    if (ref.read(postsProvider).isLoading) {
+      return;
+    }
+    if (value.isNotEmpty) {
+      widget.onFilterChange();
+      ref.read(postTitleProvider.notifier).setTitle(value);
+      ref
+          .read(postsFilterProvider.notifier)
+          .setGeneralFilter(PostGeneralFilter.title);
+    }
+  }
 
   @override
   void initState() {
@@ -47,6 +75,100 @@ class _PostFiltersCardState extends ConsumerState<PostFiltersCard> {
     final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
     final colorScheme = context.colorScheme;
+    if (AppConstants.isAndroid) {
+      return Card(
+        color: colorScheme.surface,
+        elevation: 0,
+        child: Padding(
+          padding: EdgeInsets.all(4),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Filters',
+                  style: textTheme.headlineSmall!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 12),
+                TextField(
+                  controller: _textEditingController,
+                  onChanged: _onTitleChanged,
+                  decoration: InputDecoration(
+                    hintText: 'Search...',
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Sort by Time',
+                  style: textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 10,
+                  children: _postGeneralFilterChipMap.entries
+                      .map(
+                        (e) => SizedBox(
+                          child: ChoiceChip(
+                            checkmarkColor: colorScheme.primary,
+                            label: Text(e.value),
+                            selected:
+                                ref.watch(postsFilterProvider).generalFilter ==
+                                e.key,
+                            onSelected: (selected) =>
+                                _onGeneralFilterSelected(e.key),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Sort by Genre',
+                  style: textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 10,
+                  children: PostGenreFilter.values
+                      .map(
+                        (e) => SizedBox(
+                          child: ChoiceChip(
+                            checkmarkColor: colorScheme.primary,
+                            label: Text(e.name.capitalize()),
+                            selected: ref
+                                .watch(postsFilterProvider)
+                                .genreFilter
+                                .contains(e),
+                            onSelected: (value) {
+                              _onGenreFilterSelected(e);
+                            },
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+                const SizedBox(height: 100),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     return AnimatedShadow(
       borderRadius: BorderRadius.circular(10),
       shadowColor: colorScheme.primary,
@@ -54,7 +176,7 @@ class _PostFiltersCardState extends ConsumerState<PostFiltersCard> {
         width: widget.width,
         child: Card(
           color: colorScheme.surface,
-          elevation: 0,
+          elevation: 10,
           child: Padding(
             padding: EdgeInsets.all(4),
             child: Column(
@@ -70,17 +192,7 @@ class _PostFiltersCardState extends ConsumerState<PostFiltersCard> {
                 SizedBox(height: 12),
                 TextField(
                   controller: _textEditingController,
-                  onChanged: (value) {
-                    if (value.isNotEmpty) {
-                      _debouncer.debounce(() {
-                        widget.onFilterChange();
-                        ref.read(postTitleProvider.notifier).setTitle(value);
-                        ref
-                            .read(postsFilterProvider.notifier)
-                            .setFilter(PostFilter.title);
-                      });
-                    }
-                  },
+                  onChanged: _onTitleChanged,
                   decoration: InputDecoration(
                     hintText: 'Search...',
                     prefixIcon: Icon(Icons.search),
@@ -104,7 +216,7 @@ class _PostFiltersCardState extends ConsumerState<PostFiltersCard> {
                 Wrap(
                   spacing: 10,
                   runSpacing: 10,
-                  children: postFilterChipMap.entries
+                  children: _postGeneralFilterChipMap.entries
                       .map(
                         (e) => SizedBox(
                           height: 40,
@@ -112,16 +224,8 @@ class _PostFiltersCardState extends ConsumerState<PostFiltersCard> {
                             checkmarkColor: colorScheme.primary,
                             label: Text(e.value),
                             selected: ref.watch(postsFilterProvider) == e.key,
-                            onSelected: (selected) {
-                              if (ref.read(postsProvider).isLoading) {
-                                return;
-                              }
-                              widget.onFilterChange();
-
-                              ref
-                                  .read(postsFilterProvider.notifier)
-                                  .setFilter(e.key);
-                            },
+                            onSelected: (selected) =>
+                                _onGeneralFilterSelected(e.key),
                           ),
                         ),
                       )

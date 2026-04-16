@@ -33,7 +33,7 @@ final class PostsNotifierProvider
   PostsNotifier create() => PostsNotifier();
 }
 
-String _$postsNotifierHash() => r'ea493455c4d8495b4bf1e43c3f00be269cbea605';
+String _$postsNotifierHash() => r'80d357ce698124732133ea8bc1c074ddc6b86062';
 
 abstract class _$PostsNotifier extends $AsyncNotifier<PostsState> {
   FutureOr<PostsState> build();

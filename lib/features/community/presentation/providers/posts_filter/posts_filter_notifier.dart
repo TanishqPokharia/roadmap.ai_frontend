@@ -1,17 +1,60 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'posts_filter_notifier.g.dart';
 
-enum PostFilter { popular, day, week, month, year, title }
+enum PostGeneralFilter { popular, day, week, month, year, title }
+
+enum PostGenreFilter {
+  technology,
+  business,
+  finance,
+  healthcare,
+  education,
+  entertainment,
+  sports,
+  science,
+  productivity,
+}
+
+class PostsFilterState {
+  final PostGeneralFilter generalFilter;
+  final List<PostGenreFilter> genreFilter;
+
+  PostsFilterState({required this.generalFilter, required this.genreFilter});
+
+  PostsFilterState copyWith({
+    PostGeneralFilter? generalFilter,
+    List<PostGenreFilter>? genreFilter,
+  }) {
+    return PostsFilterState(
+      generalFilter: generalFilter ?? this.generalFilter,
+      genreFilter: genreFilter ?? this.genreFilter,
+    );
+  }
+}
 
 @Riverpod(keepAlive: true)
 class PostsFilter extends _$PostsFilter {
   @override
-  PostFilter build() {
-    return PostFilter.popular;
+  PostsFilterState build() {
+    return PostsFilterState(
+      generalFilter: PostGeneralFilter.popular,
+      genreFilter: [],
+    );
   }
 
-  void setFilter(PostFilter filter) {
-    state = filter;
+  void setGeneralFilter(PostGeneralFilter filter) {
+    state = state.copyWith(generalFilter: filter);
+  }
+
+  void toggleGenreFilter(PostGenreFilter filter) {
+    if (state.genreFilter.contains(filter)) {
+      state = state.copyWith(
+        genreFilter: List.from(state.genreFilter)..remove(filter),
+      );
+    } else {
+      state = state.copyWith(genreFilter: [...state.genreFilter, filter]);
+    }
   }
 }
