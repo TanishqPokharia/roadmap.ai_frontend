@@ -28,6 +28,7 @@ class PostDatasourceImpl implements PostDatasource {
   TaskEither<Failure, void> createPost({
     required RoadmapModel roadmap,
     required MultipartFile bannerImage,
+    List<String>? genre,
   }) {
     return TaskEither.tryCatch(
       () async {
@@ -35,6 +36,7 @@ class PostDatasourceImpl implements PostDatasource {
         final formData = FormData.fromMap({
           'roadmap': roadmapJsonString,
           'bannerImage': bannerImage,
+          'genre': genre,
         });
 
         final response = await _dio.post(
@@ -134,13 +136,15 @@ class PostDatasourceImpl implements PostDatasource {
   TaskEither<Failure, List<PostMetadataModel>> getPopularPosts({
     int limit = 10,
     int skip = 0,
+    List<String>? genre,
   }) {
     return TaskEither.tryCatch(
       () async {
-        final response = await _dio.get(
-          '/post',
-          queryParameters: {'limit': limit, 'skip': skip},
-        );
+        final Map<String, dynamic> queryParams = {'limit': limit, 'skip': skip};
+        if (genre != null && genre.isNotEmpty) {
+          queryParams['genre'] = genre;
+        }
+        final response = await _dio.get('/post', queryParameters: queryParams);
 
         if (response.statusCode != 200) {
           throw httpErrorHandler(response.statusCode ?? 0);
@@ -168,16 +172,22 @@ class PostDatasourceImpl implements PostDatasource {
     int limit = 10,
     int skip = 0,
     required PostTime postTime,
+    List<String>? genre,
   }) {
     return TaskEither.tryCatch(
       () async {
+        final queryParams = {
+          'limit': limit,
+          'skip': skip,
+          'time': postTime.name,
+        };
+
+        if (genre != null && genre.isNotEmpty) {
+          queryParams['genre'] = genre;
+        }
         final response = await _dio.get(
           '/post/time',
-          queryParameters: {
-            'limit': limit,
-            'skip': skip,
-            'time': postTime.name,
-          },
+          queryParameters: queryParams,
         );
 
         if (response.statusCode != 200) {

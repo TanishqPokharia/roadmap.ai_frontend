@@ -15,8 +15,7 @@ class SavedRoadmapsPage extends ConsumerStatefulWidget {
   ConsumerState<SavedRoadmapsPage> createState() => _SavedRoadmapsPageState();
 }
 
-class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage>
-    with AutomaticKeepAliveClientMixin {
+class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage> {
   late ScrollController _scrollController;
   final Set<int> _animatedIndexes = {};
   @override
@@ -40,7 +39,6 @@ class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
@@ -49,7 +47,7 @@ class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage>
 
     if (AppConstants.isAndroid) {
       return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 40),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 50),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -281,7 +279,4 @@ class _SavedRoadmapsPageState extends ConsumerState<SavedRoadmapsPage>
   bool shouldAnimate(int index) {
     return _animatedIndexes.add(index);
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

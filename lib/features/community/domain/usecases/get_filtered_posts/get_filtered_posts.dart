@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
+import 'package:roadmap_ai/core/utils/post_filters.dart';
 import 'package:roadmap_ai/core/utils/usecase.dart';
 import 'package:roadmap_ai/features/community/data/datasource/interface/post_datasource.dart';
 import 'package:roadmap_ai/features/community/data/repository/post_repository_impl.dart';
@@ -29,9 +30,14 @@ class GetFilteredPosts
           postTime: postTime,
           limit: limit,
           skip: skip,
+          genre: params.genre,
         ),
       GetPopularPostsParams(:final limit, :final skip) =>
-        _repository.getPopularPosts(limit: limit, skip: skip),
+        _repository.getPopularPosts(
+          limit: limit,
+          skip: skip,
+          genre: params.genre,
+        ),
     };
   }
 }
@@ -39,16 +45,22 @@ class GetFilteredPosts
 sealed class GetFilteredPostsParams {
   final int limit;
   final int skip;
+  final List<PostGenreFilter>? genre;
 
-  GetFilteredPostsParams({this.limit = 10, this.skip = 0});
+  GetFilteredPostsParams({this.limit = 10, this.skip = 0, this.genre});
 }
 
 class GetPostsByTimeParams extends GetFilteredPostsParams {
   final PostTime postTime;
 
-  GetPostsByTimeParams({required this.postTime, int limit = 10, int skip = 0});
+  GetPostsByTimeParams({
+    required this.postTime,
+    int limit = 10,
+    int skip = 0,
+    super.genre,
+  });
 }
 
 class GetPopularPostsParams extends GetFilteredPostsParams {
-  GetPopularPostsParams({super.limit, super.skip});
+  GetPopularPostsParams({super.limit, super.skip, super.genre});
 }

@@ -39,7 +39,7 @@ class ProfilePage extends ConsumerWidget {
     if (AppConstants.isAndroid) {
       return Scaffold(
         body: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 40),
+          padding: EdgeInsets.only(left: 20, right: 20, top: 50),
           child: Column(
             spacing: 10,
             mainAxisAlignment: MainAxisAlignment.center,

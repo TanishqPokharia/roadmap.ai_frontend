@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/entities/goal.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/common/entities/subgoal.dart';
+import 'package:roadmap_ai/core/utils/post_filters.dart';
 import 'package:roadmap_ai/features/community/domain/usecases/create_post/create_post.dart'
     as create_post_usecase;
 import 'package:roadmap_ai/features/roadmap/presentation/providers/roadmap_view/roadmap_view_notifier.dart';
@@ -15,22 +16,26 @@ class CreatePostState {
   final Roadmap? roadmap;
   final FilePickerResult? bannerImage;
   final bool isUploaded;
+  final Set<PostGenreFilter> selectedGenre;
 
   CreatePostState({
     required this.roadmap,
     this.bannerImage,
     this.isUploaded = false,
+    this.selectedGenre = const {},
   });
 
   CreatePostState copyWith({
     Roadmap? roadmap,
     FilePickerResult? bannerImage,
     bool? isUploaded,
+    Set<PostGenreFilter>? selectedGenre,
   }) {
     return CreatePostState(
       roadmap: roadmap ?? this.roadmap,
       bannerImage: bannerImage ?? this.bannerImage,
       isUploaded: isUploaded ?? this.isUploaded,
+      selectedGenre: selectedGenre ?? this.selectedGenre,
     );
   }
 }
@@ -44,6 +49,26 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       data: (data) => CreatePostState(roadmap: data.roadmap),
       orElse: () => CreatePostState(roadmap: null),
     );
+  }
+
+  void addGenre(PostGenreFilter genre) {
+    if (state.value != null) {
+      state = AsyncData(
+        state.value!.copyWith(
+          selectedGenre: Set.from(state.value!.selectedGenre)..add(genre),
+        ),
+      );
+    }
+  }
+
+  void removeGenre(PostGenreFilter genre) {
+    if (state.value != null) {
+      state = AsyncData(
+        state.value!.copyWith(
+          selectedGenre: Set.from(state.value!.selectedGenre)..remove(genre),
+        ),
+      );
+    }
   }
 
   void createPost(String title, String description) async {
@@ -68,6 +93,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           create_post_usecase.CreatePostParams(
             roadmap: state.value!.roadmap!,
             bannerImage: state.value!.bannerImage!,
+            genre: state.value!.selectedGenre.isNotEmpty
+                ? List.from(state.value!.selectedGenre)
+                : null,
           ),
         )
         .run();

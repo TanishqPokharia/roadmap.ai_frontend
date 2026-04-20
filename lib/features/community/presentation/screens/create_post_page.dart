@@ -10,7 +10,9 @@ import 'package:roadmap_ai/core/common/toast/error.dart';
 import 'package:roadmap_ai/core/common/toast/success.dart';
 import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
+import 'package:roadmap_ai/core/extensions/string_utility_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
+import 'package:roadmap_ai/core/utils/post_filters.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/create_post/create_post_notifier.dart';
 import 'package:roadmap_ai/features/roadmap/presentation/widgets/editable_roadmap_tree.dart';
 
@@ -25,6 +27,7 @@ class CreatePostPage extends ConsumerStatefulWidget {
 class _CreatePostPageState extends ConsumerState<CreatePostPage> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
+  late TextEditingController _genreController;
   FilePickerResult? _bannerImage;
   final _formKey = GlobalKey<FormState>();
 
@@ -33,12 +36,14 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     super.initState();
     _titleController = TextEditingController();
     _descriptionController = TextEditingController();
+    _genreController = TextEditingController();
   }
 
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
+    _genreController.dispose();
     super.dispose();
   }
 
@@ -51,6 +56,8 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     final createPostNotifier = createPostProvider(widget.roadmapMetaData.id);
     final createPostState = ref.watch(createPostNotifier);
     final notifier = ref.read(createPostNotifier.notifier);
+
+    final selectedGenre = createPostState.value?.selectedGenre;
 
     ref.listen(createPostNotifier, (_, next) {
       if (next is AsyncError) {
@@ -245,7 +252,81 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                       },
                     ),
                     SizedBox(height: 24),
+                    SizedBox(height: 24),
 
+                    DropdownMenu<PostGenreFilter>(
+                      label: Text("Genre"),
+                      width: screenWidth - 30,
+                      maxLines: 1,
+                      keyboardType: TextInputType.text,
+                      requestFocusOnTap: true,
+                      controller: _genreController,
+                      selectOnly: false,
+                      onSelected: (value) {
+                        if (value != null) {
+                          notifier.addGenre(value);
+                        }
+                      },
+
+                      dropdownMenuEntries: PostGenreFilter.values
+                          .map(
+                            (genre) => DropdownMenuEntry<PostGenreFilter>(
+                              value: genre,
+                              label: genre.name.capitalize(),
+                            ),
+                          )
+                          .toList(),
+                      searchCallback: (entries, query) {
+                        if (query.isEmpty) return null;
+
+                        final index = entries.indexWhere(
+                          (e) => e.value.name == query.toLowerCase(),
+                        );
+
+                        return index != -1 ? index : 0;
+                      },
+                      enableSearch: true,
+                      enableFilter: true,
+                    ),
+
+                    SizedBox(height: 24),
+
+                    if (selectedGenre != null)
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: selectedGenre.isEmpty
+                            ? Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Center(
+                                  child: Text(
+                                    "Select Genre for better visibility",
+                                  ),
+                                ),
+                              )
+                            : Wrap(
+                                spacing: 10,
+                                children: selectedGenre
+                                    .map(
+                                      (genre) => Chip(
+                                        label: Text(genre.name.capitalize()),
+                                        deleteIcon: Icon(Icons.remove),
+                                        onDeleted: () =>
+                                            notifier.removeGenre(genre),
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                      )
+                    else
+                      Text("Error selecting genre"),
+
+                    SizedBox(height: 24),
                     // Roadmap Editor Section
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

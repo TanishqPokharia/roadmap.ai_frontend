@@ -58,7 +58,6 @@ class SavedRoadmapTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

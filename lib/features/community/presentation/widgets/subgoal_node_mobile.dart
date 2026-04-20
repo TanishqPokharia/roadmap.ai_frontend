@@ -72,7 +72,7 @@ class SubgoalNodeMobile extends StatelessWidget {
                   padding: EdgeInsets.only(top: 8, left: 28),
                   child: Chip(
                     labelPadding: EdgeInsets.only(right: 8),
-                    label: Text(subgoal.duration, style: textTheme.labelSmall),
+                    label: Text(subgoal.duration, style: textTheme.labelMedium),
                     avatar: Icon(Icons.schedule, size: 16),
                     padding: EdgeInsets.zero,
                     visualDensity: VisualDensity.compact,
@@ -88,24 +88,29 @@ class SubgoalNodeMobile extends StatelessWidget {
                     children: [
                       // Description
                       if (subgoal.description.isNotEmpty) ...[
-                        Text(subgoal.description, style: textTheme.bodySmall),
+                        Text(subgoal.description, style: textTheme.bodyMedium),
                         SizedBox(height: 8),
                       ],
                       // Resources
                       if (subgoal.resources.isNotEmpty) ...[
                         Text(
                           'Resources:',
-                          style: textTheme.labelMedium?.copyWith(
+                          style: textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         SizedBox(height: 4),
-                        ...subgoal.resources.map(
-                          (resource) => _SubgoalResourceItem(
-                            resource: resource,
-                            textTheme: textTheme,
-                            colorScheme: colorScheme,
-                          ),
+                        Column(
+                          spacing: 4,
+                          children: subgoal.resources
+                              .map(
+                                (resource) => _SubgoalResourceItem(
+                                  resource: resource,
+                                  textTheme: textTheme,
+                                  colorScheme: colorScheme,
+                                ),
+                              )
+                              .toList(),
                         ),
                       ],
                     ],
@@ -162,7 +167,7 @@ class _SubgoalResourceItem extends StatelessWidget {
               },
               child: Text(
                 url,
-                style: textTheme.bodySmall?.copyWith(
+                style: textTheme.labelMedium?.copyWith(
                   color: colorScheme.primary,
                   decoration: TextDecoration.underline,
                 ),

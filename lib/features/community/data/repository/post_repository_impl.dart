@@ -4,6 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/common/models/roadmap/roadmap.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
+import 'package:roadmap_ai/core/utils/post_filters.dart';
 import 'package:roadmap_ai/features/community/data/datasource/impl/post_datasource_impl.dart';
 import 'package:roadmap_ai/features/community/data/datasource/interface/post_datasource.dart';
 import 'package:roadmap_ai/features/community/data/models/post_details/post_details.dart';
@@ -30,10 +31,12 @@ class PostRepositoryImpl implements PostRepository {
   TaskEither<Failure, void> createPost({
     required Roadmap roadmap,
     required MultipartFile bannerImage,
+    List<PostGenreFilter>? genre,
   }) {
     return _datasource.createPost(
       roadmap: RoadmapModel.fromEntity(roadmap),
       bannerImage: bannerImage,
+      genre: genre?.map((e) => e.name).toList(),
     );
   }
 
@@ -63,9 +66,14 @@ class PostRepositoryImpl implements PostRepository {
   TaskEither<Failure, List<PostMetadata>> getPopularPosts({
     int limit = 10,
     int skip = 0,
+    List<PostGenreFilter>? genre,
   }) {
     return _datasource
-        .getPopularPosts(limit: limit, skip: skip)
+        .getPopularPosts(
+          limit: limit,
+          skip: skip,
+          genre: genre?.map((e) => e.name).toList(),
+        )
         .map((models) => models.map((model) => model.toEntity()).toList());
   }
 
@@ -74,9 +82,15 @@ class PostRepositoryImpl implements PostRepository {
     int limit = 10,
     int skip = 0,
     required PostTime postTime,
+    List<PostGenreFilter>? genre,
   }) {
     return _datasource
-        .getPostsByTime(limit: limit, skip: skip, postTime: postTime)
+        .getPostsByTime(
+          limit: limit,
+          skip: skip,
+          postTime: postTime,
+          genre: genre?.map((e) => e.name).toList(),
+        )
         .map((models) => models.map((model) => model.toEntity()).toList());
   }
 

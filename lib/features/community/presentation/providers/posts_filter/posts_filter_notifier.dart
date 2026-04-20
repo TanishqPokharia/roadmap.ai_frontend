@@ -1,21 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:roadmap_ai/core/utils/post_filters.dart';
 
 part 'posts_filter_notifier.g.dart';
-
-enum PostGeneralFilter { popular, day, week, month, year, title }
-
-enum PostGenreFilter {
-  technology,
-  business,
-  finance,
-  healthcare,
-  education,
-  entertainment,
-  sports,
-  science,
-  productivity,
-}
 
 class PostsFilterState {
   final PostGeneralFilter generalFilter;

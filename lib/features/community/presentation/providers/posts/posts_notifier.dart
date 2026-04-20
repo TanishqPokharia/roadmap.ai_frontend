@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
+import 'package:roadmap_ai/core/utils/post_filters.dart';
 import 'package:roadmap_ai/features/community/data/datasource/interface/post_datasource.dart';
 import 'package:roadmap_ai/features/community/data/models/post_metadata/post_metadata.dart';
 import 'package:roadmap_ai/features/community/domain/entities/post_metadata.dart';
@@ -55,23 +56,32 @@ class PostsNotifier extends _$PostsNotifier {
 
     // !!! intentionally reading not watching
     // rebuilding logic handled in explore page via debouncing
-    final filter = ref.read(postsFilterProvider).generalFilter;
+    final filters = ref.read(postsFilterProvider);
+    final generalFilter = filters.generalFilter;
+    final genreFilter = filters.genreFilter;
 
-    if (isTimeFilter(filter)) {
+    if (_isTimeFilter(generalFilter)) {
       posts = await ref
           .read(getFilteredPostsProvider)
           .call(
             GetPostsByTimeParams(
-              postTime: filterToPostTime(filter),
+              postTime: _filterToPostTime(generalFilter),
               limit: _limit,
               skip: _skip,
+              genre: genreFilter,
             ),
           )
           .run();
-    } else if (filter == PostGeneralFilter.popular) {
+    } else if (generalFilter == PostGeneralFilter.popular) {
       posts = await ref
           .read(getFilteredPostsProvider)
-          .call(GetPopularPostsParams(limit: _limit, skip: _skip))
+          .call(
+            GetPopularPostsParams(
+              limit: _limit,
+              skip: _skip,
+              genre: genreFilter,
+            ),
+          )
           .run();
     } else {
       // search by post title
@@ -104,24 +114,34 @@ class PostsNotifier extends _$PostsNotifier {
     if (!_canGetMore || _isFetching) return;
     _isFetching = true;
     _skip += _limit;
-    final filter = ref.read(postsFilterProvider).generalFilter;
+
+    final filters = ref.read(postsFilterProvider);
+    final generalFilter = filters.generalFilter;
+    final genreFilter = filters.genreFilter;
     final postTitle = ref.read(postTitleProvider);
     Either<Failure, List<PostMetadata>> posts;
-    if (isTimeFilter(filter)) {
+    if (_isTimeFilter(generalFilter)) {
       posts = await ref
           .read(getFilteredPostsProvider)
           .call(
             GetPostsByTimeParams(
-              postTime: filterToPostTime(filter),
+              postTime: _filterToPostTime(generalFilter),
               limit: _limit,
               skip: _skip,
+              genre: genreFilter,
             ),
           )
           .run();
-    } else if (filter == PostGeneralFilter.popular) {
+    } else if (generalFilter == PostGeneralFilter.popular) {
       posts = await ref
           .read(getFilteredPostsProvider)
-          .call(GetPopularPostsParams(limit: _limit, skip: _skip))
+          .call(
+            GetPopularPostsParams(
+              limit: _limit,
+              skip: _skip,
+              genre: genreFilter,
+            ),
+          )
           .run();
     } else {
       posts = await ref
@@ -153,16 +173,16 @@ class PostsNotifier extends _$PostsNotifier {
     );
   }
 
-  bool isTimeFilter(PostGeneralFilter filter) {
+  bool _isTimeFilter(PostGeneralFilter filter) {
     return filter == PostGeneralFilter.day ||
         filter == PostGeneralFilter.week ||
         filter == PostGeneralFilter.month ||
         filter == PostGeneralFilter.year;
   }
 
-  PostTime filterToPostTime(PostGeneralFilter filter) {
+  PostTime _filterToPostTime(PostGeneralFilter filter) {
     assert(
-      isTimeFilter(filter),
+      _isTimeFilter(filter),
       'filter must be a time filter: day, week, month, year',
     );
     switch (filter) {

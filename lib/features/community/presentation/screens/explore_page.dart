@@ -18,8 +18,7 @@ class ExplorePage extends ConsumerStatefulWidget {
   ConsumerState<ExplorePage> createState() => _ExplorePageState();
 }
 
-class _ExplorePageState extends ConsumerState<ExplorePage>
-    with AutomaticKeepAliveClientMixin {
+class _ExplorePageState extends ConsumerState<ExplorePage> {
   late ScrollController _scrollController;
   final Set<int> _animatedIndexes = {};
 
@@ -46,7 +45,6 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final textTheme = context.textTheme;
     final screenHeight = context.screenHeight;
     final screenWidth = context.screenWidth;
@@ -79,7 +77,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
           child: Icon(Icons.filter_alt),
         ),
         body: Padding(
-          padding: EdgeInsetsGeometry.only(left: 20, right: 20, top: 40),
+          padding: EdgeInsetsGeometry.only(left: 20, right: 20, top: 50),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -268,7 +266,4 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
   bool shouldAnimate(int index) {
     return _animatedIndexes.add(index);
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

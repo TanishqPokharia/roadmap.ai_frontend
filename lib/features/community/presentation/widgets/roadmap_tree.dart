@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
+import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/goal_node_mobile.dart';
 import 'package:roadmap_ai/features/community/presentation/widgets/goal_node_web.dart';
 
@@ -33,7 +34,7 @@ class _RoadmapTreeState extends State<RoadmapTree> {
 
   @override
   Widget build(BuildContext context) {
-    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+    if (AppConstants.isAndroid) {
       return _RoadmapTreeMobileLayout(
         roadmap: widget.roadmap,
         expandedGoalIndexes: _expandedGoalIndexes,

@@ -5,6 +5,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:roadmap_ai/core/common/entities/roadmap.dart';
 import 'package:roadmap_ai/core/utils/failures.dart';
+import 'package:roadmap_ai/core/utils/post_filters.dart';
 import 'package:roadmap_ai/core/utils/usecase.dart';
 import 'package:roadmap_ai/features/community/data/repository/post_repository_impl.dart';
 import 'package:roadmap_ai/features/community/domain/repository/post_repository.dart';
@@ -50,7 +51,11 @@ class CreatePost implements Usecase<CreatePostParams, void> {
           );
         }
         final result = await _repository
-            .createPost(roadmap: params.roadmap, bannerImage: multipartFile)
+            .createPost(
+              roadmap: params.roadmap,
+              bannerImage: multipartFile,
+              genre: params.genre,
+            )
             .run();
         return result.fold((failure) => throw failure, (success) => success);
       },
@@ -65,6 +70,11 @@ class CreatePost implements Usecase<CreatePostParams, void> {
 class CreatePostParams {
   final Roadmap roadmap;
   final FilePickerResult bannerImage;
+  final List<PostGenreFilter>? genre;
 
-  CreatePostParams({required this.roadmap, required this.bannerImage});
+  CreatePostParams({
+    required this.roadmap,
+    required this.bannerImage,
+    this.genre,
+  });
 }

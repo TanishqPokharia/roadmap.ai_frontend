@@ -10,6 +10,7 @@ abstract class PostDatasource {
   TaskEither<Failure, void> createPost({
     required RoadmapModel roadmap,
     required MultipartFile bannerImage,
+    List<String>? genre,
   });
 
   TaskEither<Failure, List<PostMetadataModel>> getUserPostsMetaData({
@@ -24,11 +25,13 @@ abstract class PostDatasource {
   TaskEither<Failure, List<PostMetadataModel>> getPopularPosts({
     int limit = 10,
     int skip = 0,
+    List<String>? genre,
   });
   TaskEither<Failure, List<PostMetadataModel>> getPostsByTime({
     int limit = 10,
     int skip = 0,
     required PostTime postTime,
+    List<String>? genre,
   });
   TaskEither<Failure, List<PostMetadataModel>> getPostsByTitle({
     int limit = 10,

@@ -5,6 +5,7 @@ import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';
 import 'package:roadmap_ai/core/extensions/string_utility_extensions.dart';
 import 'package:roadmap_ai/core/extensions/theme_extensions.dart';
+import 'package:roadmap_ai/core/utils/post_filters.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/post_title/post_title_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/posts/posts_notifier.dart';
 import 'package:roadmap_ai/features/community/presentation/providers/posts_filter/posts_filter_notifier.dart';

@@ -62,7 +62,7 @@ class _CreateRoadmapPageState extends ConsumerState<CreateRoadmapPage>
     if (AppConstants.isAndroid) {
       return Scaffold(
         body: ListView(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 40),
+          padding: EdgeInsets.only(left: 20, right: 20, top: 50),
           children: [
             Column(
               spacing: 10,

@@ -63,6 +63,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
   google_sign_in: ^7.2.0
   flutter_svg: ^2.2.4
+  vector_math: ^2.2.0
 
 dependency_overrides:
   web: ^0.5.1

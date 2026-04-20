@@ -41,6 +41,8 @@ class _YourPostsPageState extends ConsumerState<YourPostsPage> {
     super.dispose();
   }
 
+  void a() {}
+
   @override
   Widget build(BuildContext context) {
     final textTheme = context.textTheme;
@@ -76,7 +78,7 @@ class _YourPostsPageState extends ConsumerState<YourPostsPage> {
             ]);
           },
           child: ListView(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 40),
+            padding: EdgeInsets.only(left: 20, right: 20, top: 50),
 
             controller: _scrollController,
             children: [

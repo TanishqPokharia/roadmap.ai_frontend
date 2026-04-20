@@ -82,24 +82,6 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
 
     final colorScheme = context.colorScheme;
 
-    if (kIsWeb) {
-      return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(60),
-          child: WebAppBar(),
-        ),
-        body: PageView(
-          controller: _pageController,
-          children: _pages,
-          // onPageChanged: (value) {
-          //   ref
-          //       .read(navigationNotifierProvider.notifier)
-          //       .setSelectedIndex(value);
-          // },
-        ),
-      );
-    }
-
     if (AppConstants.isAndroid) {
       ref.listen(selectedScreenIndexProvider, (prev, next) {
         // update navbar state first
@@ -108,63 +90,85 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
         // then update and animate the selected page
         if (!_isAnimating && _pageController.hasClients) {
           _isAnimating = true;
-          _pageController
-              .animateToPage(
-                next,
-                duration: Duration(
-                  milliseconds: 300 * (next - (prev ?? 0)).abs(),
-                ),
-                curve: Curves.ease,
-              )
-              .then((_) {
-                setState(() {
-                  _isAnimating = false;
+
+          // only animate if page is immediately next one
+          if (prev != null && (prev - next).abs() == 1) {
+            _pageController
+                .animateToPage(
+                  next,
+                  duration: Duration(milliseconds: 300 * (next - (prev)).abs()),
+                  curve: Curves.ease,
+                )
+                .then((_) {
+                  setState(() {
+                    _isAnimating = false;
+                  });
                 });
-              });
+          } else {
+            _pageController.jumpToPage(next);
+          }
+          _isAnimating = false;
         }
       });
     }
 
     final selectedNavbarIndex = ref.watch(selectedNavbarIndexProvider);
+    if (AppConstants.isAndroid) {
+      return Scaffold(
+        body: PageView(
+          controller: _pageController,
+          children: _pages,
+          onPageChanged: (value) {
+            if (!_isAnimating) {
+              ref
+                  .read(selectedNavbarIndexProvider.notifier)
+                  .update((state) => value);
+            }
+          },
+        ),
+        bottomNavigationBar: GNav(
+          color: colorScheme.primary,
+          backgroundColor: colorScheme.surface,
+          onTabChange: (value) {
+            ref
+                .read(selectedScreenIndexProvider.notifier)
+                .update((state) => value);
+          },
+          selectedIndex: selectedNavbarIndex,
+          gap: 4,
+          activeColor: colorScheme.primaryContainer,
+          tabMargin: EdgeInsetsGeometry.only(
+            bottom: 30,
+            left: 10,
+            right: 10,
+            top: 10,
+          ),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          tabBackgroundColor: colorScheme.primary,
+          tabs: [
+            GButton(icon: Icons.explore, text: 'Explore'),
+            GButton(icon: Icons.article, text: 'Posts'),
+            GButton(icon: Icons.add, text: 'Create'),
+            GButton(icon: Icons.bookmark, text: 'Saved'),
+            GButton(icon: Icons.account_circle, text: 'Profile'),
+          ],
+        ),
+      );
+    }
 
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60),
+        child: WebAppBar(),
+      ),
       body: PageView(
         controller: _pageController,
         children: _pages,
-        onPageChanged: (value) {
-          if (!_isAnimating) {
-            ref
-                .read(selectedNavbarIndexProvider.notifier)
-                .update((state) => value);
-          }
-        },
-      ),
-      bottomNavigationBar: GNav(
-        color: colorScheme.primary,
-        backgroundColor: colorScheme.surface,
-        onTabChange: (value) {
-          ref
-              .read(selectedScreenIndexProvider.notifier)
-              .update((state) => value);
-        },
-        selectedIndex: selectedNavbarIndex,
-        gap: 4,
-        activeColor: colorScheme.primaryContainer,
-        tabMargin: EdgeInsetsGeometry.only(
-          bottom: 30,
-          left: 10,
-          right: 10,
-          top: 10,
-        ),
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        tabBackgroundColor: colorScheme.primary,
-        tabs: [
-          GButton(icon: Icons.explore, text: 'Explore'),
-          GButton(icon: Icons.article, text: 'Posts'),
-          GButton(icon: Icons.add, text: 'Create'),
-          GButton(icon: Icons.bookmark, text: 'Saved'),
-          GButton(icon: Icons.account_circle, text: 'Profile'),
-        ],
+        // onPageChanged: (value) {
+        //   ref
+        //       .read(navigationNotifierProvider.notifier)
+        //       .setSelectedIndex(value);
+        // },
       ),
     );
   }

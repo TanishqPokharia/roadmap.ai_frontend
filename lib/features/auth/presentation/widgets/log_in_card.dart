@@ -6,7 +6,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:roadmap_ai/core/common/toast/error.dart';
-import 'package:roadmap_ai/core/common/toast/success.dart';
 import 'package:roadmap_ai/core/common/widgets/clickable_text.dart';
 import 'package:roadmap_ai/core/constants/constants.dart';
 import 'package:roadmap_ai/core/extensions/responsive_extensions.dart';

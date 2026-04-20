@@ -140,28 +140,12 @@ class PostTile extends ConsumerWidget {
                   children: [
                     PostViewsWidget(views: post.views),
                     const Spacer(),
-                    GestureDetector(
-                      onTap: () {
+                    PostLikeButton(
+                      likes: post.likes,
+                      onLike: () {
                         ref.read(postsProvider.notifier).toggleLike(index);
                       },
-                      child: AnimatedContainer(
-                        duration: Durations.long1,
-                        child: Row(
-                          spacing: 6,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              post.isLiked
-                                  ? Icons.favorite
-                                  : Icons.favorite_outline,
-                              color: post.isLiked
-                                  ? Colors.red
-                                  : Colors.blueGrey,
-                            ),
-                            Text('${post.likes} likes'),
-                          ],
-                        ),
-                      ),
+                      isLiked: post.isLiked,
                     ),
                     const SizedBox(),
                     FilledButton(
